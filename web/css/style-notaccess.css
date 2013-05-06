@@ -1,0 +1,52 @@
+@import url('http://fonts.googleapis.com/css?family=Acme');
+@import url('http://fonts.googleapis.com/css?family=Gabriela');	
+
+::selection
+{
+	background-color: rgba(6,6,6,.8);
+}
+article
+{
+	position: relative;
+	width: 27em;
+	margin-left: 8em;
+	margin-top: -6em;
+}
+p{
+	color: #FFF;
+	font-family: 'Gabriela', serif;
+	padding: 0 3em 0 2em;
+}
+h3
+{
+	color: #FFF;
+	font-family: 'Acme', sans-serif;
+	font-size: 1.5em;
+	margin: 0em;
+	padding: .5em 1em 0 1em;
+}
+body
+{
+	background-color: #272822;
+}
+label
+{
+	color: rgba(255,255,255,.9);
+	font-family: cursive;
+	font-size: 13px;
+}
+#cont
+{
+	background-color: #770000;
+	border: 1px solid #000;
+	border-radius: 1.5em;
+	box-shadow: 0 0 1em rgba(0,0,0,1);
+	height: 17em;
+	margin-left: -19em;
+	margin-top: -8em;
+	left: 50%;
+	padding: 2em 1em 2em 1em;
+	position: absolute;
+	top: 35%;
+	width: 36em;
+}

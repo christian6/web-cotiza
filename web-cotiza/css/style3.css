@@ -1,0 +1,147 @@
+#datospro
+{
+	background-color: #E6E6E6;
+	font-family: 'Lucida Sans', Arial;
+	font-size: 10px;
+	margin: 0 auto;
+	padding-left: 30px;
+	padding-right: 30px;
+}
+#datospro p
+{
+	margin-top: 0;
+	margin-bottom: 0;
+}
+#detalle
+{
+	background-color: #FAFAD2;
+	border-radius: 3px;
+	font-size: 12px;
+	font-family: 'Lucida Sans', Arial;
+	margin:0 auto;
+	margin-left: 30px;
+	margin-right: 30px;
+	padding: 20px;
+	padding-top: 0px;
+}
+#detalle h4
+{
+	background-color: #8B0000;
+	border-radius: 4px;
+	color: #FFF;
+	height: 2.2em;
+	line-height: 2.2em;
+	margin-bottom: 0px;
+	margin-top: 0px;
+	margin-right: -20px;
+	margin-left: -20px;
+	padding-left: 20px;
+	vertical-align: middle;
+}
+#detalle h4 a
+{
+	color: #FFF;
+	font-size: 14px;
+	text-decoration: none;
+}
+#detalle h4 a:visited{color: #FFF;}
+#detalle h4 a:hover{color: #FFF;}
+#detalle h4 a:active{color: #FFF;}
+#detalle h4 a:hover{ color: #FFF;}
+#refresh
+{
+	background-color: #B40404;
+	border-width: 1px;
+	border-color: #818181;
+	border-radius: 5px;
+	box-shadow: 0px 0px 12px #000;
+	color: #FFF;
+	font-family: Arial;
+	font-size: 9px;
+	margin-bottom: 3px;
+}
+#tdetalle
+{
+	background-color: #084B8A;
+	color: #FFF;
+	font-family: 'Lucida Sans', Arial;
+	height: 25px;
+	margin-top: -18px;
+	margin-bottom: 0px;
+	padding-left: 50px;
+}
+/*display form save*/
+#fullscreen
+{
+	display   :none;
+	width     :100%;
+	height    :100%;
+	background:#000;
+	position  :fixed;
+	top       :0;
+	left      :0;
+	z-index   :10;
+	opacity   :0.6;
+	filter    :alpha(opacity=60);
+}
+#Form
+{
+	display      : none;
+	width        : 20em;
+	height       : 13em;
+	background   : #eeeeee;;
+	position     : fixed;
+	left         : 50%;
+	top          : 50%;
+	z-index      : 10;
+	margin-top   : -7em;
+	margin-left  : -10em;
+	overflow     : hidden;
+	/*padding    : 5px;*/
+	box-shadow   : 10px 10px 10px #000000;
+	border-radius: 10px;
+}
+#cagen
+{
+	font-family: 'Lucida Sans', Arial;
+	font-size: 11px;
+	font-weight: bold;
+	margin: 0 auto;
+}
+#cagen h4
+{
+	background-color: #73880a;
+	border-radius: 5px 5px 0 0;
+	box-shadow: 0 2px 15px #FFF;
+	color: #FFF;
+	height: 3em;
+	line-height: 3em;
+	margin-top: -.01em;
+	text-align: center;
+	text-shadow: 1px 0px 8px #FFF;
+	vertical-align: middle;
+}
+#cagen button
+{
+	border-radius: .4em;
+	border-width: 1px;
+	border-color: #FFF;
+	box-shadow: 0 0 8px #000;
+	font-weight: bold;
+	margin-left: 30px;
+	margin-top: 8px;
+	padding: .5em;
+	width: 8em;
+}
+#cagen input
+{
+	border-radius: .4em;
+	border-width: 1px;
+	padding: .3em 0em .3em .5em;
+	width: 11em;
+}
+#msg{ color: #F00000; margin-left: 2em; }
+a{ margin-left: 25px; text-shadow:1px 1px 5px #FFF;}
+a:visited{color: #818181;}
+a:hover{color: #AB2A2A;}
+a:active{color: #818181;}

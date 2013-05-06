@@ -1,0 +1,120 @@
+@import url('http://fonts.googleapis.com/css?family=Archivo+Narrow');
+
+body
+{
+	background-image: url('../resource/textura/deep.jpg');
+	height: 100%;
+	margin: 0 auto;
+	width: 100%;
+}
+#login-box
+{
+	background-color: rgba(2,2,2,.5);
+	margin-top: -5em;
+	padding: 1em;
+	position: fixed;
+	top: 50%;
+	width: 100%;
+}
+.textbox
+{
+	background-color: rgba(255,255,240,.4);
+	border-radius: 1em;
+	left: 50%;
+	margin-left: -10em;
+	position: relative;
+	text-align: center;
+	width: 20em;
+}
+.username,#username{ display: inline-block; }
+.password,#password{ display: inline-block; }
+.username span,.password span, a{
+	color: rgba(0,0,0,1);
+	font-family: 'Archivo Narrow', sans-serif;
+	font-weight: 400;
+}
+input{
+	border-radius: 1em;
+	border: .1em solid #818181;
+	height: 2em;
+	margin: .5em .5em 0em 0em;
+	padding-left: 1em;
+	width: 14em; 
+}
+input:focus{ border-color: rgb(73,192,240); box-shadow: 0em 0em .8em rgb(73,192,240); }
+.button {
+	background: rgb(241,231,103); /* Old browsers */
+	background: -moz-linear-gradient(top,  rgba(241,231,103,1) 0%, rgba(254,182,69,1) 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(241,231,103,1)), color-stop(100%,rgba(254,182,69,1))); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  rgba(241,231,103,1) 0%,rgba(254,182,69,1) 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  rgba(241,231,103,1) 0%,rgba(254,182,69,1) 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  rgba(241,231,103,1) 0%,rgba(254,182,69,1) 100%); /* IE10+ */
+	background: linear-gradient(to bottom,  rgba(241,231,103,1) 0%,rgba(254,182,69,1) 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f1e767', endColorstr='#feb645',GradientType=0 ); /* IE6-9 */
+
+	border-color: rgb(255,200,64);
+	border-width: 2px;
+    border-radius: .5em;
+    border-style: solid;
+	-moz-border-radius: .5em;
+    -webkit-border-radius: .5em;
+	color: #333;
+	cursor: pointer;
+	display: inline-block;
+	font-family: 'Archivo Narrow', sans-serif;
+	padding: 6px 6px 4px;
+	margin-top: 10px;
+	font: 14px;
+	font-weight: bold;
+	width: 214px;
+}
+.button:hover { 
+	background: rgb(241,231,103); /* Old browsers */
+	background: -moz-linear-gradient(top,  rgba(241,210,93,1) 0%, rgba(254,168,69,1) 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(241,180,93,1)), color-stop(100%,rgba(254,168,69,1))); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  rgba(241,210,93,1) 0%,rgba(254,168,69,1) 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  rgba(241,210,93,1) 0%,rgba(254,168,69,1) 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  rgba(241,210,93,1) 0%,rgba(254,168,69,1) 100%); /* IE10+ */
+	background: linear-gradient(to bottom,  rgba(241,210,93,1) 0%,rgba(254,168,69,1) 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f1e767', endColorstr='#feb645',GradientType=0 ); /* IE6-9 */
+}
+p
+{
+	margin: .3em .3em 0 0;
+	text-align: right;
+}
+.forgot
+{
+	color: rgba(41,41,41,1);
+	font-size: 12px;
+	font-weight: normal;
+	text-decoration: none;
+}
+
+/*
+######################
+*/
+
+.error{
+    background-color: rgb(224,0,0);
+    box-shadow: 0em 0em 2em rgba(255,255,255,.8);
+    color: rgba(255,255,255,1);
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: bold;
+    margin-left: 16px;
+    margin-top: 6px;
+    position: absolute;
+    width: 8em;
+}
+.error:before{ /* Este es un truco para crear una flechita */
+    content: '';
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    border-right: 8px solid rgb(224,0,0);
+    border-left: 8px solid transparent;
+    left: -16px;
+    position: absolute;
+    top: 5px;
+}

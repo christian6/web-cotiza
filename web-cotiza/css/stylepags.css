@@ -1,0 +1,128 @@
+#cabeza
+{
+	background-color: #2E2D2D;
+	border-radius: 0 0 0 5px;
+	height: 45px;
+	margin-top: -20px;
+}
+#err{
+color: red;
+font-size: 9px;
+margin-left: 3px;
+}
+#sess
+{
+	background: rgb(255,255,255);
+	background: -moz-linear-gradient(top,  rgba(255,255,255,1) 0%, rgba(241,241,241,1) 50%, rgba(225,225,225,1) 51%, rgba(246,246,246,1) 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(255,255,255,1)), color-stop(50%,rgba(241,241,241,1)), color-stop(51%,rgba(225,225,225,1)), color-stop(100%,rgba(246,246,246,1)));
+	background: -webkit-linear-gradient(top,  rgba(255,255,255,1) 0%,rgba(241,241,241,1) 50%,rgba(225,225,225,1) 51%,rgba(246,246,246,1) 100%);
+	background: -o-linear-gradient(top,  rgba(255,255,255,1) 0%,rgba(241,241,241,1) 50%,rgba(225,225,225,1) 51%,rgba(246,246,246,1) 100%);
+	background: -ms-linear-gradient(top,  rgba(255,255,255,1) 0%,rgba(241,241,241,1) 50%,rgba(225,225,225,1) 51%,rgba(246,246,246,1) 100%);
+	background: linear-gradient(to bottom,  rgba(255,255,255,1) 0%,rgba(241,241,241,1) 50%,rgba(225,225,225,1) 51%,rgba(246,246,246,1) 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f6f6f6',GradientType=0 );
+
+	border-radius: 0 0 0 80px;
+	border-width: 2px;
+	box-shadow: 0px 0px 10px gray;
+	color: #1A1818;
+	/*float: right;*/
+	font-family: 'Lucida Sans',arial;
+	font-size: 9px;
+	font-weight: bold;
+	height: 40px;
+	right: 0px;
+	top: 0px;
+	padding-left: 15px;
+	position: absolute;
+	width: 350px;
+}
+#sess input
+{
+	border-width: 1px;
+	border-color: gray;
+	border-radius: 5px;
+	font-family: 'Lucida Sans', Arial;
+	padding-left: 4px;
+	width: 78px;
+}
+#btnclose, #btninit,#btnse{
+	background-color: #8F0000; 
+	border-radius: 5px;
+	color: #FFF;
+	font-family: 'Lucida Sans', Arial;
+	font-size: 11px;
+	font-weight: bold;
+	float: right;
+	margin-right: 10px;
+	width: 108px;
+}
+#btnin{
+	background-color: #8F0000; 
+	border-radius: 5px;
+	color: #FFF;
+	font-family: 'Lucida Sans', Arial;
+	font-size: 11px;
+	font-weight: bold;
+}
+#sess input:focus{	box-shadow: 0px 0px 10px #000;	font-size: 12px;}
+a{ margin-left: 25px; text-shadow:1px 1px 5px #FFF;}
+a:visited{color: #818181;}
+a:hover{color: #AB2A2A;}
+a:active{color: #818181;}
+body
+{
+	background: -webkit-linear-gradient(top, #fefcea 0%, #f1da36 100%);
+	background: -moz-linear-gradient(top, #fefcea 0%, #f1da36 100%);
+	background: -o-linear-gradient(top, #fefcea 0%, #f1da36 100%);
+	background: -ms-linear-gradient(top, #fefcea 0%, #f1da36 100%);
+	background: linear-gradient(top bottom,  #fefcea 0%,#f1da36 100%);
+	height: 100%;
+    margin: 0;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    font-family: 'Lucida-Sans',Helvetica,Arial;
+}
+header hgroup h1
+{
+  	color: rgba(255,255,255,.6);
+  	margin-left: 2em;
+}
+footer
+{
+    background-color: #8B0000;
+    border-radius: 5px 5px 0 0;
+    clear:both;
+    margin-top: 20px;
+    padding:0;
+    letter-spacing:.1em;
+    position:fixed;
+    left:0;
+    bottom:0;
+    height:45px;
+    width:100%;
+    border-top:1px solid #191616;
+    -moz-box-shadow: 1px 2px 11px #000;
+    -webkit-box-shadow: 1px 2px 11px #000;
+}
+#navegacion{
+	background: url("../source/texturas/cueroblack.jpg");
+	height: 2.5em;
+	line-height: 2.5em;
+	margin-top: -16px;
+	vertical-align: middle;
+}
+#navegacion ul li {
+	display: inline-block;
+}
+#navegacion ul li a
+{
+	color: #FFF;
+	font-family: 'Paprika',Helvetica;
+	font-weight: bold;
+	text-decoration: none;
+}
+#navegacion ul li a:hover
+{
+	color: #F46B16;
+	text-shadow: 2px 2px 3px rgba(255,255,255,0);
+}

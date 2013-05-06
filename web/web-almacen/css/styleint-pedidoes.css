@@ -1,0 +1,51 @@
+@import url('http://fonts.googleapis.com/css?family=Roboto+Condensed');
+@import url('http://fonts.googleapis.com/css?family=Special+Elite');
+
+section
+{
+	margin: 0 auto;
+	margin-left: auto;
+	margin-right: auto;
+}
+section hgroup h4
+{
+	font-family: 'Special Elite', cursive;
+	text-decoration: underline;
+	margin-left: 10%;
+}
+.table
+{
+	background-color: #FFF;
+	box-shadow: .2em .5em 1em rgba(40,40,40,1);
+	border-spacing: 0;
+	margin-top: 1.5em;
+}
+
+.table tbody tr td a img
+{
+	height: 24px;
+	width: 24px;
+}
+.table tbody tr td
+{
+	font-family: 'Roboto Condensed', sans-serif;
+	padding: 0 1em 0 1em;
+}
+::selection{
+background:#1D1D1D; color:#FFF; text-shadow: none;
+}
+.table thead tr
+{
+	background-color: rgba(91,0,0,0.9);
+	color: #FFF;
+	text-align: center;
+}
+.table thead tr th{
+	text-align: center;
+}
+.cont
+{
+	margin-left: auto;
+	margin-right: auto;
+	width: 62em;
+}

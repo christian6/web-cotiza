@@ -1,0 +1,172 @@
+#cu
+{
+	background: rgb(63,63,63); /* Old browsers */
+background: -moz-linear-gradient(top,  rgba(63,63,63,1) 0%, rgba(14,14,14,1) 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(63,63,63,1)), color-stop(100%,rgba(14,14,14,1))); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(top,  rgba(63,63,63,1) 0%,rgba(14,14,14,1) 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(top,  rgba(63,63,63,1) 0%,rgba(14,14,14,1) 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(top,  rgba(63,63,63,1) 0%,rgba(14,14,14,1) 100%); /* IE10+ */
+background: linear-gradient(to bottom,  rgba(63,63,63,1) 0%,rgba(14,14,14,1) 100%); /* W3C */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#3f3f3f', endColorstr='#0e0e0e',GradientType=0 ); /* IE6-9 */
+height: 100%;
+margin: auto;
+position: absolute;
+width: 100%;
+}
+header h1
+{
+	background: -webkit-gradient(linear,left top, left bottom, from(#C20303), to(#F3D422));
+	-webkit-background-clip: text;
+  	-webkit-text-fill-color: transparent;
+  	background: -moz-gradient(linear, left top, left bottom, from(#C20303), to(#F3D422));
+  	-moz-background-clip: text;
+  	-moz-text-fill-color: transparent;
+  	border-style: hidden;
+  	border-radius: 80px;
+	font-family: 'Finger Paint';
+	font-size: 52px;
+	font-style: oblique;
+	margin-left: 50px;
+	overflow: hidden;
+	padding: 30px;
+	position: absolute;
+	width: 400px;
+	transform:  rotate(-18deg) scale(1) skew(0deg) translate(0px);
+     -webkit-transform:  rotate(-18deg) scale(1) skew(0deg) translate(0px);
+     -moz-transform:  rotate(-18deg) scale(1) skew(0deg) translate(0px);
+     -o-transform:  rotate(-18deg) scale(1) skew(0deg) translate(0px);
+}
+nav
+{
+	background: #EEE;
+	border-radius: 15px;
+	box-shadow: 0px 0px 15px #FFF;
+	margin: 5% auto;
+	left: 50%;
+	margin-top: -120px;
+	margin-left: -100px;
+	padding: 10px;
+	position: absolute;
+	top: 50%;
+	width: 220px;
+}
+nav li
+{
+	box-shadow: 0 0 3px #3D2A04;
+	list-style: none;
+	position: relative;
+}
+nav li a
+{
+	color: #444;
+	display: block;
+	padding: 5px;
+	text-decoration: none;
+}
+nav li a:hover
+{
+	color: #3D2A04;
+	font-weight: bold;
+}
+nav li.parent:hover
+{
+	background: #6BA7DF;
+	border: 1px #ccc solid;
+	margin: -1px;
+}
+nav li li a
+{
+	display: block;
+	width: 150px;	
+}
+nav li ul {
+	content: '';
+	width: 0; /*Cambiamos la linea */
+	margin:0;
+		/*display:none; Lo Eliminamos */
+	background:#FFF;
+	border:1px #ccc solid;
+	box-shadow: 2px 2px 8px rgba(255,255,255,0.5);
+	position: absolute;
+	left: 100%;
+	top:-1px;
+	overflow:hidden; /* Para evitar Que se salgan los links */
+	z-index:-1;/*El Submenu tiene que ir atras, para evitar que los 0 pixeles causen problema al :hover*/
+	opacity: 0;
+	filter: alpha(opacity=0); /* Internet Explorer*/
+	-webkit-transition: opacity 1s ease-in 0.3s, width 1s ease-in 0.3s;/* Chrome, Safari*/
+	transition: opacity 1s ease-in  0.3s, width 1s ease-in 0.3s;/* Navegadores CSS3 */
+	-moz-transition: opacity 1s ease-in  0.3s, width 1s ease-in 0.3s; /* Firefox 4 */
+	-o-transition: opacity 1s ease-in 0.3s, width 1s ease-in 0.3s; /*Opera */
+	-ms-transition: opacity 1s ease-in 0.3s, width 1s ease-in 0.3s; /*IE */
+}
+nav li:hover ul {
+		/*display:block; Lo Eliminamos */
+	width: 190px; /*La animación de 0 a 250px*/
+	z-index:1000;
+	opacity: 1;
+	filter: alpha(opacity=100);/* Internet Explorer*/
+	-webkit-transition: opacity 1s linear 0s, width 1s ease-out 0s;/* Chrome, Safari*/
+	transition: opacity 1s linear 0s, width 1s ease-out 0s;/* Navegadores CSS3 */
+	-moz-transition: opacity 1s linear 0s, width 1s ease-out 0s; /* Firefox 4+ */
+	-o-transition: opacity 1s linear 0s, width 1s ease-out 0s; /* Opera */
+	-ms-transition: opacity 1s linear 0s, width 1s ease-out 0s; /* IE */
+}
+img
+{
+	height: 32px;
+	width: 32px;
+}
+nav ul li a img{height: 25px;width: 25px;}
+span
+{
+	font-size: 20px;
+	font-family: 'Redressed',Verdana,Helvetica;
+	margin-left: 10px;
+	opacity: 0.8;
+	padding-top: 8px;
+	padding-bottom: 8px;
+	padding-left: 15px;
+	position: absolute;
+}
+nav li ul li a span{font-size: 16px;font-family: 'Redressed',Verdana; padding-left: 5px;}
+nav li ul li{box-shadow: 0px 0px 2px #000; border-radius: 10px;}
+
+ul{border-radius: 20px; padding-left: 12px;}
+
+.lihome:hover .home{background-color: #b4df5b; opacity: 1;}
+.lihome{border-radius: 15px;background: #b4df5b;}
+
+.parent{border-radius: 15px; background-color: #6BA7DF;}
+.parent:hover .coti{background-color:#6BA7DF; opacity: 1;}
+.parent ul{background-color: #6BA7DF;}
+
+.limant{border-radius: 15px; background-color: #ff7400;}
+.limant:hover .mant{background-color: #ff7400; opacity: 1;}
+.limant ul{background-color: #ff7400;}
+
+.lireport{border-radius: 15px; background-color: #B066FF;}
+.lireport:hover .report{background-color: #B066FF; opacity: 1;}
+.lireport ul{background-color: #B066FF;}
+
+.liabout{border-radius: 15px; background-color: #F8F54A}
+.liabout:hover .about{background-color: #F8F54A; opacity: 1;}
+
+.parent ul li:hover a span{opacity: 1;}
+.limant ul li:hover a span{opacity: 1;}
+.report ul li:hover a span{opacity: 1;}
+
+footer button
+{
+	background-color: transparent;
+	border-radius: 8px;
+	margin-left: 50%;
+}
+footer button:hover{
+	background-color: #1D1D1D;
+}
+footer button img
+{
+	height: 40px;
+	width: 40px;
+}

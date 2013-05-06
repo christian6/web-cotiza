@@ -1,0 +1,53 @@
+#changepwd
+{
+	display: none;
+}
+#cont
+{
+	background-color: rgba(255,255,255,0.4);
+	border-radius: 20px;
+	box-shadow: 0px 0px 20px #1D1D1D;
+	margin-left: auto;
+	margin-right: auto;
+	padding: 20px;
+	text-align: left;
+	width: 500px;
+}
+#cont p
+{
+	font-size: 13px;
+	margin:0;
+}
+#cont button
+{
+	background-color: #FFF;
+	border-radius: 8px;
+	border-style: ridge;
+	margin-right: 8px;
+}
+#cont button:hover
+{
+	background-color: #045FB4;
+}
+#cont button img
+{
+	height: 24px;
+	width: 24px;
+}
+#cont label
+{
+	font-weight: bold;
+}
+#msg{color: red; font-size: 12px;}
+h3
+{
+	font-size: 15px;
+}
+section
+{
+	text-align: center;
+}
+table
+{
+	font-size: 13px;
+}

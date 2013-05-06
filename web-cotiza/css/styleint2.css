@@ -1,0 +1,107 @@
+.nrocot
+{
+	font-family: 'Lucida Sans',Arial;
+	font-size: 12px;
+	margin: 8px;
+	margin-left: auto;
+	margin-right: auto;
+	padding: 8px;
+}
+.fec2
+{
+	font-family: 'Lucida Sans',Arial;
+	font-size: 12px;
+	margin: 8px;
+	margin-left: auto;
+	margin-right: auto;
+	padding: 8px;
+}
+#radios{
+	text-align: center;
+}
+#dgen
+{
+	background-color: #FBFBEF;
+	border-radius: 10px;
+	border-style: hidden outset outset hidden;
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: 15px;
+	width: 630px;
+}
+#cont
+{
+	background-color: #FFFFCA;
+	border-radius: 12px;
+	margin-left: auto;
+	margin-right: auto;
+	padding: 15px;
+	width: 850px;
+	transition: width 1s ease-out;	/*w3*/
+	-moz-transition: width 1s ease-out; /* Firefox 4 */
+	-webkit-transition: width 1s ease-out; /* Safari and Chrome */
+	-o-transition: width 1s ease-out; /* Opera */
+}
+#cont:hover{
+	background-color: #FFFF83;
+	width: 950px;
+	transition: all 1s ease-in;	/*w3*/
+	-moz-transition: all 1s ease-in; /* Firefox 4 */
+	-webkit-transition: all 1s ease-in; /* Safari and Chrome */
+	-o-transition: all 1s ease-in; /* Opera */
+}
+fieldset span input
+{
+	border-radius: 10px;
+	border-style: none;
+	box-shadow: 0px 0px 4px #000;
+	padding: 5px 5px 5px 5px;
+}
+fieldset button
+{
+	background-color: #045FB4;
+	border-style: none;
+	border-radius: 8px;
+	color: #FFF;
+	padding: 5px 8px 5px 8px;
+}
+fieldset select
+{
+	border-radius: 15px;
+	box-shadow: 4px 4px 4px #000;
+	font-size: 12px;
+	margin: 10px;
+	padding: 3px;
+}
+fieldset label
+{
+	font-size: 12px;
+}
+section h4
+{
+	text-align: center;
+	text-shadow: 2px 2px 4px #FFF;
+}
+table
+{
+	*border-collapse: collapse;
+    border-spacing: 0;
+    border:solid #000 1px;
+    border-radius: 6px;
+    box-shadow: 0px 0px 15px #08298A;
+    font-family: 'Lucida Sans' ,Arial;
+	margin-left: auto;
+	margin-right: auto;
+}
+table thead
+{
+	background-color: #084B8A;
+	color: silver;
+}
+table thead th {padding: 5px;}
+table tbody
+{
+	background-color: #EFF8FB;
+}
+table tbody td {font-size: 12px; padding-left: 8px; padding-right: 8px;}
+table tbody tr:hover {background-color: #FFF; color: #B00}

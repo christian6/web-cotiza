@@ -1,0 +1,133 @@
+@import url('http://fonts.googleapis.com/css?family=Roboto+Condensed');
+@import url('http://fonts.googleapis.com/css?family=Text+Me+One');
+@import url('http://fonts.googleapis.com/css?family=Archivo+Narrow');
+
+#fullscreem
+{
+	display   :none;
+	width     :100%;
+	height    :100%;
+	background:#000;
+	position  :fixed;
+	top       :0;
+	left      :0;
+	z-index   :10;
+	opacity   :0.8;
+}
+
+#frmos
+{
+	display      : none;
+	width        : 30em;
+	height       : 24em;
+	background   : #ffffff; /* Old browsers */
+	background   : -moz-linear-gradient(top,  #ffffff 0%, #f1f1f1 50%, #e1e1e1 51%, #f6f6f6 100%); /* FF3.6+ */
+	background   : -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(50%,#f1f1f1), color-stop(51%,#e1e1e1), color-stop(100%,#f6f6f6)); /* Chrome,Safari4+ */
+	background   : -webkit-linear-gradient(top,  #ffffff 0%,#f1f1f1 50%,#e1e1e1 51%,#f6f6f6 100%); /* Chrome10+,Safari5.1+ */
+	background   : -o-linear-gradient(top,  #ffffff 0%,#f1f1f1 50%,#e1e1e1 51%,#f6f6f6 100%); /* Opera 11.10+ */
+	background   : -ms-linear-gradient(top,  #ffffff 0%,#f1f1f1 50%,#e1e1e1 51%,#f6f6f6 100%); /* IE10+ */
+	background   : linear-gradient(to bottom,  #ffffff 0%,#f1f1f1 50%,#e1e1e1 51%,#f6f6f6 100%); /* W3C */
+	filter       : progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f6f6f6',GradientType=0 ); /* IE6-9 */
+	position     : fixed;
+	left         : 50%;
+	top          : 50%;
+	z-index      : 10;
+	margin-top   : -13em;
+	margin-left  : -15em;
+	overflow     : hidden;
+	padding      : 1em;
+	box-shadow   : 10px 10px 10px #000000;
+	border-radius: 10px;
+}
+
+#frmos table tr td input{
+	border-color: rgba(80,80,80,.6); 
+	border-radius: .4em;
+	border-style: solid;
+	border-width: .1em;
+	height: 1.5em;
+	padding-left:.5em; 
+}
+#frmos table tr td input:focus{
+	box-shadow: 0em 0em .8em rgba(0,183,234,.9); 
+}
+#txtalid, #txtempid { width: 5em;}
+#txtalnom, #txtempnom { width: 18em; }
+
+#generator{
+	display: none;
+	width: 14em;
+	height: 7em;
+	background: linear-gradient(top, #FFF 0%, #F1F1F1 50%, #E1E1E1 51%, #F6F6F6 100%);
+	background: -webkit-linear-gradient(top, #FFF 0%, #F1F1F1 50%, #E1E1E1 51%, #F6F6F6 100%);
+	background: -moz-linear-gradient(top, #FFF 0%, #F1F1F1 50%, #E1E1E1 51%, #F6F6F6 100%);
+	background: -ms-linear-gradient(top, #FFF 0%, #F1F1F1 50%, #E1E1E1 51%, #F6F6F6 100%);
+	border-radius: 1em;
+	box-shadow: 0em 0em 2em rgba(20,20,20,1);
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	z-index: 10;
+	margin-left: -6em;
+	margin-top: -7em;
+	overflow: hidden;
+	padding: 1em;
+	text-align: center;
+}
+#frmd{
+	background: #bfd255; /* Old browsers */
+	background: -moz-linear-gradient(top, #bfd255 0%, #8eb92a 50%, #72aa00 51%, #9ecb2d 100%);
+	background: -webkit-linear-gradient(top #bfd255 0%, #8eb92a 50%, #72aa00 51%, #9ecb2d 100%);
+	background: -o-linear-gradient(top #bfd255 0%, #8eb92a 50%, #72aa00 51%, #9ecb2d 100%);
+	background: ms-linear-gradient(top #bfd255 0%, #8eb92a 50%, #72aa00 51%, #9ecb2d 100%);
+	background: linear-gradient(top #bfd255 0%, #8eb92a 50%, #72aa00 51%, #9ecb2d 100%);
+	border-radius: .8em;
+	border-style: dotted;
+	box-shadow: 0em 0em .5em rgba(81,81,81,8);
+	cursor: move;
+	font-family: 'Roboto Condensed';
+	margin-left: 5%;
+	margin-top: 6em;
+	padding: 0 1em 1em 1em;
+	position: fixed;
+	width: 12em;
+}
+#frmd legend {
+	font-family: 'Roboto Condensed';
+	font-size: 14px;
+	font-weight: bold;
+}
+h2,h4 ,label { font-family: 'Roboto Condensed';}
+h2 { margin-left: 10%;}
+h4{ margin: 0 auto;}
+input[type='search']{ width: 11em;}
+input[type='number']{ width: 5.5em; text-align: right;}
+#tbldet
+{
+	border-radius: 10px;
+	border-spacing: 0;
+	background-color: rgba(255,255,255,0.5);
+	margin-left: auto;
+	margin-right: auto;
+}
+#tbldet thead tr{
+	background-color: rgba(158,19,19,1);
+	color: rgba(255,255,255,.9);
+}
+#tbldet thead tr th{
+	font-family: 'Text Me One', sans-serif;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+#tbldet thead tr th:first-child{
+	border-radius: 10px 0 0 0;
+}
+#tbldet thead tr th:last-child{
+	border-radius: 0 10px 0 0;
+}
+#tbldet tbody tr td{font-family:'Archivo Narrow', sans-serif; padding-left: 10px; padding-right: 10px;}
+#tbldet tbody tr:hover{
+	cursor: pointer;
+	background-color: #0080FF;
+}
+.nothing{background-color: rgba(254,46,46,.8);}

@@ -1,0 +1,44 @@
+section #contenedor h4
+{
+	font-family: 'Croissant One', cursive;
+	text-align: center;
+	text-decoration: underline;
+}
+#contenedor h3{
+	background-color: #0B243B;
+	border-radius: 8px 8px 0 0;
+	color: rgba(255,255,255,0.8);
+	font-size: 13px;
+	margin: 0;
+	margin-left: 10%;
+	margin-right: 10%;
+	padding: 5px;
+	padding-left: 20px;
+}
+#contenedor li{
+	list-style: none;
+	margin-bottom: 5px;
+	margin-left: 10%;
+	margin-right: 10%;
+	padding-left: 2%;
+}
+#contenedor li:hover{
+	background-color: rgba(8,8,8,0.5);
+	border-radius: 0 0 8px 8px;
+	cursor: default;
+	/*margin-left: 10%;
+	margin-right: 10%;*/
+	padding: 8px 5px 8px 2%;
+}
+#contenedor li p
+{
+	font-size: 12px;
+	margin: 0;
+	padding-left: 10px;
+}
+#contenedor img
+{
+	height: 42px;
+	position: static;
+	width: 42px;
+}
