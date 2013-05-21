@@ -3,6 +3,14 @@
 include ("../../datos/postgresHelper.php");
 
 if (isset($_REQUEST['tipo'])) {
+	$alid = "";
+	$cn = new PostgreSQL();
+	$query = $cn->consulta("SELECT almacenid FROM almacen.pedido WHERE nropedido LIKE '".$_REQUEST['nro']."'");
+	if ($cn->num_rows($query)) {
+		$result = $cn->ExecuteNomQuery($query);
+		$alid = $result['almacenid'];
+	}
+	$cn->close($query);
 
 switch ($_REQUEST['tipo']) {
 	case 'g':
@@ -53,6 +61,22 @@ switch ($_REQUEST['tipo']) {
 				$query2 = $cn->consulta("INSERT INTO almacen.detguiamat VALUES('$nguia','".$result['materialesid']."',".$result['cantidad'].")");
 				$cn2->affected_rows($query2);
 				$cn2->close($query2);
+				$ck = new PostgreSQL();
+				$qk = $ck->consulta("SELECT d.nroguia,d.materialesid, d.cantidad,(SELECT stock FROM almacen.inventario WHERE materialesid LIKE '".$result['materialesid']."' AND anio LIKE '".date("Y")."' AND almacenid LIKE '$alid') as stock,
+									(SELECT precio FROM almacen.inventario WHERE materialesid LIKE '".$result['materialesid']."' AND anio LIKE '".date("Y")."' AND almacenid LIKE '$alid') as precio
+									FROM  almacen.detguiamat d
+									WHERE d.materialesid like '".$result['materialesid']."' and nroguia like '$nguia'	
+									");
+				if ($ck->num_rows($qk) > 0) {
+					while ($rk = $ck->ExecuteNomQuery($qk)) {
+						$c = new PostgreSQL();
+						$q = $c->consulta("INSERT INTO almacen.entradasalida(tdoc,nrodoc,almacenid,materialesid,stkact,cantent,cantsal,saldo,precio,flag)
+    					VALUES ('GUIA','$nguia','$alid','".$result['materialesid']."',".(intval($result['cantidad']) + intval($rk['stock'])).", 0,".$result['cantidad'].", ".$rk['stock'].", ".$rk['precio'].",'1');");
+    					$c->affected_rows($q);
+    					$c->close($q);
+					}
+				}
+				$ck->close($qk);
 			}
 		}
 		$cn->close($query);
@@ -100,6 +124,22 @@ switch ($_REQUEST['tipo']) {
 				$query2 = $cn->consulta("INSERT INTO almacen.detnsalidamat VALUES(TRIM('$nnota'),'".$result['materialesid']."',".$result['cantidad'].")");
 				$cn2->affected_rows($query2);
 				$cn2->close($query2);
+				$ck = new PostgreSQL();
+				$qk = $ck->consulta("SELECT d.nronsalida,d.materialesid, d.cantidad,(SELECT stock FROM almacen.inventario WHERE materialesid LIKE '".$result['materialesid']."' AND anio LIKE '".date("Y")."' AND almacenid LIKE '$alid'),
+									(SELECT precio FROM almacen.inventario WHERE materialesid LIKE '".$result['materialesid']."' AND anio LIKE '".date("Y")."' AND almacenid LIKE '$alid')
+									FROM  almacen.detnsalidamat d
+									WHERE d.materialesid like '".$result['materialesid']."' and nronsalida like TRIM('$nnota')
+									");
+				if ($ck->num_rows($qk) > 0) {
+					while ($rk = $ck->ExecuteNomQuery($qk)) {
+						$c = new PostgreSQL();
+						$q = $c->consulta("INSERT INTO almacen.entradasalida(tdoc,nrodoc,almacenid,materialesid,stkact,cantent,cantsal,saldo,precio,flag)
+    					VALUES ('NSAL',TRIM('$nnota'),'$alid','".$result['materialesid']."', ".(intval($result['cantidad']) + intval($rk['stock'])).", 0,".$result['cantidad'].", ".$rk['stock'].", ".$rk['precio'].",'1');");
+    					$c->affected_rows($q);
+    					$c->close($q);
+					}
+				}
+				$ck->close($qk);
 			}
 		}
 		$cn->close($query);

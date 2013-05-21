@@ -20,7 +20,7 @@ function atender (cod) {
 					xmlhttp.onreadystatechange = function () {
 						if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 							if (xmlhttp.responseText == "hecho"){
-								location.href = "generardoc?nro="+encodeURIComponent(cod);
+								location.href = "generardoc.php?nro="+encodeURIComponent(cod);
 							}
 						}
 					}
@@ -35,7 +35,7 @@ function atender (cod) {
 				xmlhttp.onreadystatechange = function () {
 					if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 						if (xmlhttp.responseText == "hecho"){
-							location.href = "generardoc?nro="+encodeURIComponent(cod);
+							location.href = "generardoc.php?nro="+encodeURIComponent(cod);
 						}
 					}
 				}

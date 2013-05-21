@@ -24,11 +24,6 @@ header{
   height: 1.2em;
   width: 1.5em;
 }
-.icr-drop
-{
-  font-size: .8em;
-  color: #1D1D1D;
-}
 footer
 {
     background-color  : #8B0000;
@@ -90,4 +85,55 @@ section
 {
   padding-top: .2em;
   padding-bottom: .2em;
+}
+#fullscreen-icr{
+  background-color: rgba(16,16,16,.8);
+  cursor: wait;
+  display: none;
+  left: 0;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 10;
+}
+#loading-icr{
+  background-color: rgba(20,20,20,.6);
+  -webkit-border-radius: 1em;
+  -o-border-radius: 1em;
+  -moz-border-radius: 1em;
+  -ms-border-radius: 1em;
+  border-radius: 1em;
+  box-shadow: 0 0 1em rgba(240,240,240,.3);
+  color: #FFF;
+  cursor: wait;
+  font-weight: bold;
+  font-family: monospace;
+  margin-left: 40%;
+  margin-top: 20%;
+  padding: 1em;
+  position: fixed;
+  text-shadow: 0 0 1em rgba(255,255,255,.8);
+  -webkit-text-shadow: 0 0 1em rgba(255,255,255,.8);
+  -moz-text-shadow: 0 0 1em rgba(255,255,255,.8);
+  -o-text-shadow: 0 0 1em rgba(255,255,255,.8);
+  -ms-text-shadow: 0 0 1em rgba(255,255,255,.8);
+  text-shadow: 0 0 1em rgba(255,255,255,.8);
+}
+@-webkit-keyframes flash {
+  0%, 50%, 100% {opacity: 1;}
+  25%, 75% {opacity: 0;}
+}
+
+@keyframes flash {
+  0%, 50%, 100% {opacity: 1;}
+  25%, 75% {opacity: 0;}
+}
+#loading-icr {
+  -webkit-animation-name: flash;
+  animation-name: flash;
+  animation-duration: 2s;
+  -webkit-animation-duration: 2s;
+  -webkit-animation-iteration-count: infinite;
+  animation-iteration-count: infinite;
 }

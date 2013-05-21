@@ -301,7 +301,7 @@ $query = $cn->consulta("SELECT * FROM logistica.spconsultardetcompra('".$nro."')
     while($fila = $cn->ExecuteNomQuery($query)){
       $pdf->Row(array($i++,$fila['matnom'], $fila['matmed'], $fila['matund'], $fila['cantidad'],$fila['precio'],$fila['importe']));
       $sub += $fila['importe'];
-      }
+    }
       $cn->close($query);
     }
 $pdf->fnline();

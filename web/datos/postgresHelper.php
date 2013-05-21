@@ -1,5 +1,5 @@
 <?php
-define('PGHOST','127.0.0.1'); //Cambiar Esta linea
+define('PGHOST','172.16.0.90'); //Cambiar Esta linea
 define('PGPORT',5432);
 define('PGDATABASE','bdicrweb');
 define('PGUSER', 'postgres');

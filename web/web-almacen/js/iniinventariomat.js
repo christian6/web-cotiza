@@ -39,7 +39,7 @@ function addinvent () {
 		var op = cbo.options[cbo.selectedIndex].value;
 		xmlhttp = peticion();
 		xmlhttp.onreadystatechange = function () {
-			//alert(xmlhttp.responseText);
+			alert(xmlhttp.responseText);
 			if (xmlhttp.readyState ==4 && xmlhttp.status == 200) {
 				if (xmlhttp.responseText == "hecho") {
 					document.getElementById("als").style.display = 'block';

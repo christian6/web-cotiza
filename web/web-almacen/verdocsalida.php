@@ -18,8 +18,8 @@ include ("../datos/postgresHelper.php");
 	<link rel="stylesheet" href="css/styleint.css">
 	<link rel="stylesheet" href="../bootstrap/css/bootstrap.css">
 	<link rel="stylesheet" href="../bootstrap/css/bootstrap-responsive.css">
-	<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
-	<script src="http://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
+	<script src="../modules/jquery1.9.js"></script>
+	<script src="../modules/jquery-ui.js"></script>
 	<script src="../bootstrap/js/bootstrap.js"></script>
 	<script>
 		$(function() {
@@ -45,6 +45,7 @@ include ("../datos/postgresHelper.php");
 				xmlhttp = peticion();
 				xmlhttp.onreadystatechange=function()
 				{
+					alert(xmlhttp.responseText);
 					if (xmlhttp.readyState==4 && xmlhttp.status==200)
 					{
 						if(xmlhttp.responseText=="hecho"){

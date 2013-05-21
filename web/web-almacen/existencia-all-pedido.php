@@ -3,12 +3,12 @@
 include ("../includes/session-trust.php");
 
 if (sesaccess() == 'ok') {
-	if (sestrust('sk') == 0) {
+	if (sestrust('k') == 0) {
 		redirect(1);
 	}
 include ("../datos/postgresHelper.php");
 ?>
-<html lang="es">
+<html lang="es-ES">
 <head>
 	<meta charset="utf-8" />
 	<title>Existencia Fisica</title>
@@ -177,8 +177,8 @@ include ("../datos/postgresHelper.php");
 				<label for="lblemp">Empleado:</label>
 			</td>
 			<td>
-				<input type="text" id="txtempid" name="txtempid" title="Codigo de Personal" value="<?php echo $_SESSION['dni'];?>" DISABLED />
-				<input type="text" id="txtempnom" name="txtempnom" title="Nombre de Personl" value="<?php echo $_SESSION['nom'];?>" DISABLED />
+				<input type="text" id="txtempid" name="txtempid" title="Codigo de Personal" value="<?php echo $_SESSION['dni-icr'];?>" DISABLED />
+				<input type="text" id="txtempnom" name="txtempnom" title="Nombre de Personl" value="<?php echo $_SESSION['nom-icr'];?>" DISABLED />
 			</td>
 		</tr>
 		<tr>
@@ -193,9 +193,7 @@ include ("../datos/postgresHelper.php");
 </div>
 <div id="generator">
 <h4>Orden de Suministro Generado</h4>
-<hr />
 <h4 id="nrosu"></h4>
-<hr />
 <button type="Button" onclick="javascript:location.href='?';" title="Salir" > <img src="../resource/inicio32.png" /> </button>
 </div>
 <div style="height: 70px;"></div>

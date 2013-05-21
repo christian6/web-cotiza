@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="es-ES">
 <head>
 	<meta charset="utf-8" />
-	<title>No Permitido</title>
+	<title>ICR PERU S.A.</title>
+	<link rel="shortcut icon" href="ico/icrperu.ico" type="image/x-icon">
 	<link rel="stylesheet" type="text/css" href="css/style-notaccess.css">
 	 <meta http-equiv="Refresh" content="10;url=http://190.41.246.91/web/">
 </head>

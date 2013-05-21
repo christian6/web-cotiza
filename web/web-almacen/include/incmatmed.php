@@ -12,7 +12,7 @@ if($tipo == "nom"){
 	<select id="matmed" class="span3" name="matmed" onclick="dat();">
 <?php
 	$cn=new PostgreSQL();
-	$query=$cn->consulta("SELECT m.matmed FROM admin.materiales m INNER JOIN almacen.inventario i ON m.materialesid=i.materialesid WHERE matnom like '".$nom."'");
+	$query=$cn->consulta("SELECT m.matmed FROM admin.materiales m INNER JOIN almacen.inventario i ON m.materialesid=i.materialesid WHERE m.matnom like '".$nom."' AND i.anio LIKE '".date("Y")."'");
 	if ($cn->num_rows($query)>0) {
 		while ($result = $cn->ExecuteNomQuery($query)) {
 			echo "<option value='".$result['matmed']."'>".$result['matmed']."</option>";
@@ -32,7 +32,7 @@ $med = $_REQUEST['med'];
 if ($tipo == "med") {
 
 $cn = new PostgreSQL();
-$query = $cn->consulta("SELECT i.materialesid,m.matnom,m.matmed,m.matund FROM admin.materiales m INNER JOIN almacen.inventario i ON m.materialesid=i.materialesid WHERE matnom LIKE '$nom' and matmed LIKE '$med'");
+$query = $cn->consulta("SELECT i.materialesid,m.matnom,m.matmed,m.matund FROM admin.materiales m INNER JOIN almacen.inventario i ON m.materialesid=i.materialesid WHERE m.matnom LIKE '$nom' and m.matmed LIKE '$med' AND i.anio LIKE '".date("Y")."'");
 if ($cn->num_rows($query)>0) {
 	while ($result = $cn->ExecuteNomQuery($query)) {
 ?>
@@ -106,7 +106,7 @@ if ($tipo == "grilla") {
 }
 
 	$cn = new PostgreSQL();
-	$query = $cn->consulta("SELECT t.materialesid,m.matnom,m.matmed,m.matund,t.cantidad FROM almacen.tmppedido t INNER JOIN admin.materiales m ON t.materialesid=m.materialesid INNER JOIN almacen.inventario i ON m.materialesid=i.materialesid WHERE t.empdni LIKE '$dni' ORDER BY m.matnom ASC");
+	$query = $cn->consulta("SELECT t.materialesid,m.matnom,m.matmed,m.matund,t.cantidad FROM almacen.tmppedido t INNER JOIN admin.materiales m ON t.materialesid=m.materialesid INNER JOIN almacen.inventario i ON m.materialesid=i.materialesid WHERE t.empdni LIKE '$dni' AND i.anio LIKE '".date('Y')."' ORDER BY m.matnom ASC");
 	if ($cn->num_rows($query)>0) {
 ?>
 <table id="tbldetalle">

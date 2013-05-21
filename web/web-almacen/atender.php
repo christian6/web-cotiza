@@ -11,7 +11,7 @@ if (sesaccess() == 'ok') {
 <?php
 include ("../datos/postgresHelper.php");
 ?>
-<html lang="es">
+<html lang="es-ES">
 <head>
 	<meta charset="utf-8" />
 	<title>Atender Pedido</title>
@@ -22,8 +22,8 @@ include ("../datos/postgresHelper.php");
 	<link rel="stylesheet" type="text/css" href="../bootstrap/css/bootstrap.css">
 	<link rel="stylesheet" type="text/css" href="../bootstrap/css/bootstrap-responsive.css">
 	<link rel="stylesheet" type="text/css" href="css/styleint-pedido.css">
-	<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
-	<script src="http://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.js"></script>
 	<script src="../bootstrap/js/bootstrap.js"></script>
 	<script>
 		$(function() {
@@ -101,6 +101,7 @@ include ("../datos/postgresHelper.php");
 							</div>
 						</div>
 						<button type="Button" class="btn btn-primary" onclick="atender('<?php echo $nrop;?>');"><i class="icon-shopping-cart icon-white"></i> Despachar</button>
+						<button type="Button" class="btn btn-warning"onClick="location.href='verpedido.php'"><i class="icon-chevron-left"></i>Atras</button>
 					</div>
 				</div>
 				<img class='img1' src="../resource/cajas.gif">

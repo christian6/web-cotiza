@@ -25,7 +25,7 @@ include ("../datos/postgresHelper.php");
 		@import url('http://fonts.googleapis.com/css?family=Noto+Sans');
 
 		.container .control-group label { font-size: 12px; margin-top: 0em; margin-bottom: 0em; padding-left: 1em; }
-		#mtd2 .modal-body label { font-weight: bold; }
+		#mtd2 .modal-body label, #nronota { font-weight: bold; }
 		.table tbody tr td { font-family: 'Noto Sans', sans-serif; font-size: 12px; }
 		#tl{ text-align: center; }
 	</style>
@@ -65,7 +65,7 @@ include ("../datos/postgresHelper.php");
 						<label for="label"><strong>Estado:</strong> <?php echo $result['esnom']; ?></label>
 						<br>
 						<div class="controls">
-							<button class="btn btn-primary" OnClick="recibirmat();"><i class="icon-th-large icon-white"></i> Recibir Compra</button>
+							<button id="btnrecibirc" class="btn btn-primary" OnClick="recibirmat();"><i class="icon-th-large icon-white"></i> Recibir Compra</button>
 							<button class="btn btn-warning" OnClick="location.href='ingresoxcompra.php'"><i class="icon-hand-left icon-white"></i> Lista de Compras</button>
 						</div>
 					</div>
@@ -100,12 +100,13 @@ include ("../datos/postgresHelper.php");
 				<tbody>
 					<?php
 						$cn = new PostgreSQL();
-						$query = $cn->consulta("SELECT d.materialesid,m.matnom,m.matmed,m.matund,d.cantidad,d.precio,(d.cantidad * d.precio)as total
+						/// en la consulta se lista los materiales que estan en flag 0 o flag 1 respecivamente; 0 si es la primera vez y 1 si ya se re
+						$query = $cn->consulta("SELECT d.materialesid,m.matnom,m.matmed,m.matund,d.cantidad,d.cantstatic,d.precio,(d.cantstatic * d.precio)as total
 												FROM logistica.compras c INNER JOIN logistica.detcompras d
 												ON c.nrocompra LIKE d.nrocompra
 												INNER JOIN admin.materiales m
 												ON d.materialesid LIKE m.materialesid
-												WHERE c.nrocompra LIKE '".$_REQUEST['nro']."' AND d.flag LIKE '0' OR d.flag LIKE '1'
+												WHERE d.flag NOT LIKE '2' AND c.nrocompra LIKE '".$_REQUEST['nro']."'
 												");
 						if ($cn->num_rows($query) > 0) {
 							$i = 1;
@@ -118,7 +119,7 @@ include ("../datos/postgresHelper.php");
 								echo "<td>".$result['matmed']."</td>";
 								echo "<td id='tl'>".$result['matund']."</td>";
 								echo "<td id='tl'>".$result['cantidad']."</td>";
-								echo "<td><input type='number' id='cant".$i."' name='cants' class='input-small' value='".$result['cantidad']."' max='".$result['cantidad']."' min='0' OnBlur='valc(".$result['cantidad'].",this);' ></td>";
+								echo "<td><input type='number' id='cant".$i."' name='cants' class='input-small' value='".$result['cantidad']."' max='".$result['cantstatic']."' min='0' OnBlur='valc(".$result['cantstatic'].",this);' ></td>";
 								echo "<td><input type='text' id='fec".$i."' name='fecs' value='".date("Y-m-d")."' class='input-small'></td>";
 								echo "<td id='tl'>".$result['precio']."<input type='hidden' id='pre".$i."' name='precios' value='".$result['precio']."'></td>";
 								echo "<td id='tl'>".$result['total']."</td>";
@@ -145,16 +146,18 @@ include ("../datos/postgresHelper.php");
             		</center>
             	</caption>
 			</div>
-			<div class="modal-body well">
-				<label class="label"><b>Nro Orden de Compra </b></label>
+			<div class="modal-body">
+				<label class="label label-info"><b>Nro Orden de Compra </b></label>
 				<label><?php echo $_REQUEST['nro']; ?></label>
-				<label class="label"><b>Ruc Proveedor</b></label>
+				<label class="label label-info"><b>Ruc Proveedor</b></label>
 				<label><?php echo $ruc; ?></label>
-				<label class="label"><b>Razón Social</b></label>
+				<input type="hidden" id="txtrucpro" name="txtrucpro" value="<?php echo $ruc; ?>" />
+				<label class="label label-info"><b>Razón Social</b></label>
 				<label><?php echo $rz; ?></label>
-				<label class="label"><b>Fecha de Entrega</b></label>
+				<label class="label label-info"><b>Fecha de Entrega</b></label>
 				<label><?php echo $fe; ?></label>
-				<label class='label'><b>Almancen</b></label>
+				<label class='label label-info'><b>Almancen</b></label>
+				<div class="controls">
 				<?php
 					$cn = new PostgreSQL();
 					$query = $cn->consulta("SELECT m.almacenid,a.descri FROM almacen.sumcot s INNER JOIN logistica.compras c
@@ -182,6 +185,7 @@ include ("../datos/postgresHelper.php");
 					}
 					$cn->close($query);
 				?>
+				</div>
 			</div>
 			<div class="modal-footer">
 				<a href="#" class="btn" data-dismiss="modal">Cerrar</a>
@@ -206,14 +210,14 @@ include ("../datos/postgresHelper.php");
 						<div class="row show-grid">
 							<div class="span4">
 								<div class="control-group">
-									<label>Nro Guia:</label>
+									<label class="label label-info">Nro Guia:</label>
 									<div class="controls">
 										<input type="text" class="span2" id="txtnrog" placeholder="Nro Guia Remision" title="Ingrese Nro Guia Remision" />
 										<input type="hidden" id="ncom" name="ncom" value="<?php echo $_REQUEST['nro']; ?>" />
 									</div>
 								</div>
 								<div class="control-group">
-									<label>Nro Cotizacion</label>
+									<label class="label label-info">Nro Cotizacion</label>
 									<div class="controls">
 										<?php
 											$cn = new PostgreSQL();
@@ -228,32 +232,32 @@ include ("../datos/postgresHelper.php");
 									</div>
 								</div>
 								<div class="control-group">
-									<label>Nro Factura</label>
+									<label class="label label-info">Nro Factura</label>
 									<div class="controls">
 										<input type="text" class="span2" id='txtnrof' name="txtnrof" placeholder="Nro Factura" title="Ingrese Nro Factura" >
 									</div>
 								</div>
 								<div class="control-group">
-									<label>Movito</label>
+									<label class="label label-info">Movito</label>
 									<div class="controls">
 										<input type="text" class="span4" id="txtmot" name="txtmot" placeholder="Motivo del Ingreso" title="Ingrese Motivo">
 									</div>
 								</div>
 								<div class="control-group">
-									<label>Observación</label>
+									<label class="label label-info">Observación</label>
 									<div class="controls">
 										<textarea id="txtobser" name="txtobser" placehodel="Observación"></textarea>
 									</div>
 								</div>
 								<div class="control-group">
-									<label>Realizado</label>
+									<label class="label label-info">Realizado</label>
 									<div class="controls">
 										<input type="text" class="input-small inline" id="txtr" name="txtr" value="<?php echo $_SESSION['dni-icr']; ?>" DISABLED />
 										<input type="text" class="span3" id="txtrn" name="txtrn" value="<?php echo $_SESSION['nom-icr']; ?>" title="Realizado por" DISABLED />
 									</div>
 								</div>
 								<div class="control-group">
-									<label>Recibido</label>
+									<label class="label label-info">Recibido</label>
 									<div class="controls">
 										<select id="cbore" name="cbore">
 											<?php
@@ -274,7 +278,7 @@ include ("../datos/postgresHelper.php");
 									</div>
 								</div>
 								<div class="control-group">
-									<label>Inspeccionado</label>
+									<label class="label label-info">Inspeccionado</label>
 									<div class="controls">
 										<select id="cboins" name="cboins">
 											<?php
@@ -295,7 +299,7 @@ include ("../datos/postgresHelper.php");
 									</div>
 								</div>
 								<div class="control-group">
-									<label>V.B.</label>
+									<label class="label label-info">V.B.</label>
 									<div class="controls">
 										<select id="cbovb" name="cbovb">
 											<?php
@@ -322,7 +326,7 @@ include ("../datos/postgresHelper.php");
 			</div>
 			<div class="modal-footer">
 				<a href="javascript:back(2);" class="btn"><i class='icon-chevron-left'></i> Antras</a>
-              	<a href="javascript:guardar();" class="btn btn-primary">Guardar y Seguir <i class="icon-chevron-right icon-white"></i></a>
+              	<a href="javascript:valid();" class="btn btn-primary">Guardar y Seguir <i class="icon-chevron-right icon-white"></i></a>
 			</div>
 		</div>
 		<div id="mtd3" class="modal hide fade in">
@@ -338,16 +342,32 @@ include ("../datos/postgresHelper.php");
             	</caption>
 			</div>
 			<div class="modal-body">
+				<div class="alert alert-success">
+					<!--<a class="close" data-dismiss="alert">×</a>-->
+					<strong>Bien hecho!</strong> Se ha guardado correctamente la nota de Ingreso.
+					<p>
+						El número de la nota es: <label class="help-inline" id="nronota"></label>
+					</p>
+				</div>
+				<h5>Que desea hacer con la nota de Ingreso?</h5>
+				<hr>
+				<center>
+					<button type="Button" class="btn btn-primary" OnClick="printview();"><i class="icon-print icon-white"></i> Imprimir</button>
+					<button type="Button" class="btn btn-success" OnClick="location.href='ingresoxcompra.php'"><i class="icon-th icon-white"></i> Más Compras</button>
+					<button type="Button" class="btn" OnClick="report();"><i class="icon-list"></i> Reporte de Inspección</button>
+				</center>
+				<hr>
 			</div>
 			<div class="modal-footer">
 				<!--<a href="javascript:back(3);" class="btn"><i class='icon-chevron-left'></i> Antras</a>-->
-              	<a href="javascript:" class="btn btn-primary">Terminar</a>
+              	<a href="javascript:location.href='ingresoxcompra.php'" class="btn btn-primary">Terminar</a>
 			</div>
 		</div>
 	</section>
 	<div id="space">
 	</div>
 	<footer>
+		<!--<button onClick="next(3)">Click me</button>-->
 	</footer>
 </body>
 </html>

@@ -32,7 +32,7 @@ if (sesaccess() == 'ok') {
       			  duration: 1000
       			}
     		});
-
+			/*
 			$(".admin").click(function(){
 				$("#clog").hide(400);
 				$("#cal").hide(400);
@@ -50,7 +50,7 @@ if (sesaccess() == 'ok') {
 				$("#clog").hide(400);
 				$("#cal").show("slow");
   				$("#cal").css("background-color","rgba(254,191,1,1)");
-			});
+			});*/
 			$(".about").click(function(){
 				$( "#dialog" ).dialog( "open" );
 			});
@@ -83,8 +83,8 @@ if (sesaccess() == 'ok') {
 	<nav>
 		<ul>
 			<li class="admin">Administrador</li>
-			<li class="log">Logistica</li>
-			<li class="alm">Almacen</li>
+			<li class="log"><a href="../../web-cotiza/intranet/">Logistica</a></li>
+			<li class="alm"><a href="web-almacen/home.php">Almacen</a></li>
 			<li class="about">About</li>
 		</ul>
 	</nav>

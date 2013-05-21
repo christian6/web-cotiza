@@ -49,7 +49,7 @@ if ($_REQUEST['tipo'] == "a") {
 		$cn->close($query);
 		// Recuperando el stock actual del material
 		$cn = new PostgreSQL();
-		$query = $cn->consulta("SELECT stock FROM almacen.inventario WHERE materialesid LIKE '".$ar[$i]."' AND almacenid LIKE '$alid' AND esid LIKE '23'");
+		$query = $cn->consulta("SELECT stock FROM almacen.inventario WHERE materialesid LIKE '".$ar[$i]."' AND almacenid LIKE '$alid' AND anio LIKE '".date('Y')."' AND esid LIKE '23'");
 		if ($cn->num_rows($query)>0) {
 			$result = $cn->ExecuteNomQuery($query);
 			$stock = $result['stock'];
@@ -57,7 +57,7 @@ if ($_REQUEST['tipo'] == "a") {
 		$cn->close($query);
 		// Recuperando la cantidad de pendiente del material
 		$cn = new PostgreSQL();
-		$query = $cn->consulta("SELECT stockpen FROM almacen.inventario WHERE materialesid LIKE '".$ar[$i]."' AND almacenid LIKE '$alid' AND esid LIKE '23'");
+		$query = $cn->consulta("SELECT stockpen FROM almacen.inventario WHERE materialesid LIKE '".$ar[$i]."' AND almacenid LIKE '$alid' AND anio LIKE '".date('Y')."' AND esid LIKE '23'");
 		if ($cn->num_rows($query)>0) {
 			$result = $cn->ExecuteNomQuery($query);
 			$pen = $result['stockpen'];
@@ -71,9 +71,9 @@ if ($_REQUEST['tipo'] == "a") {
 			//echo "<br>";
 			$cn = new PostgreSQL();
 			if ($fin <= 0) {
-				$query = $cn->consulta("UPDATE almacen.inventario SET stock = 0, stockpen = $pen WHERE materialesid LIKE '".$ar[$i]."' AND almacenid LIKE '$alid' AND esid LIKE '23'");
+				$query = $cn->consulta("UPDATE almacen.inventario SET stock = 0, stockpen = $pen WHERE materialesid LIKE '".$ar[$i]."' AND almacenid LIKE '$alid' AND anio LIKE '".date('Y')."' AND esid LIKE '23'");
 			}else{
-				$query = $cn->consulta("UPDATE almacen.inventario SET stock = $fin, stockpen = $pen WHERE materialesid LIKE '".$ar[$i]."' AND almacenid LIKE '$alid' AND esid LIKE '23'");
+				$query = $cn->consulta("UPDATE almacen.inventario SET stock = $fin, stockpen = $pen WHERE materialesid LIKE '".$ar[$i]."' AND almacenid LIKE '$alid' AND anio LIKE '".date('Y')."' AND esid LIKE '23'");
 			}
 			$cn->affected_rows($query);
 			$cn->close($query);

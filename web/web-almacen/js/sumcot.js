@@ -62,10 +62,11 @@ function savedetpro () {
 	if (chk > 0) {
 		xmlhttp = peticion();
 		xmlhttp.onreadystatechange = function () {
+			//alert(xmlhttp.responseText);
 			if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 				if (xmlhttp.responseText == "hecho"){
-					document.getElementById("mend").style = 'Block';
-					setTimeout(function() { document.getElementById("mend").style = 'none'; }, 3000);
+					document.getElementById("mend").style.display = 'Block';
+					setTimeout(function() { document.getElementById("mend").style.display = 'none'; }, 3000);
 				}
 			}
 		}

@@ -19,6 +19,12 @@ if ($_REQUEST['tra']=='iii') {
 			);");
 		$cn->affected_rows($query);
 		$cn->close($query);
+
+		$ck = new PostgreSQL();
+		$qk = $ck->consulta("INSERT INTO almacen.entradasalida(tdoc,nrodoc,almacenid,materialesid,stkact,cantent,cantsal,saldo,precio,flag)
+    					VALUES ('II','0000000000000000','".$_REQUEST['cboal']."','".$result['matid']."',0, 0,0, 0, 0,'1');");
+		$ck->affected_rows($qk);
+		$ck->close($qk);
 		echo "hecho";
 	}else if($ex > 0){
 		echo "none";

@@ -9,7 +9,7 @@ if (sesaccess() == 'ok') {
 
 include ("../datos/postgresHelper.php");
 ?>
-<html lang="es">
+<html lang="es_ES">
 <head>
 	<meta charset="UTF-8">
 	<title>Stock Fisico</title>
@@ -153,7 +153,7 @@ include ("../datos/postgresHelper.php");
 							$qsql = $qsql." AND stock <= 0 AND stockmin <= ".$_POST['txtmin']."  ORDER BY matnom ASC";
 						}elseif ($_POST['chkf']=="f" && $_POST['chkm']=="" && $_POST['chkn']=="d") {
 							$qsql = $qsql." AND stock <= 0 AND lower(matnom) LIKE lower('%".$_POST['txtdes']."%') ORDER BY matnom ASC";
-						}elseif($_POST['chkf']=="" && $_POST['chkm']=="m" && $_POST['chkn']=="d"){
+						}elseif ($_POST['chkf']=="" && $_POST['chkm']=="m" && $_POST['chkn']=="d"){
 							$qsql = $qsql." AND stockmin <= ".$_POST['txtmin']." AND lower(matnom) LIKE lower('%".$_POST['txtdes']."%') ORDER BY matnom ASC";
 						}elseif ($_POST['chkf']=="f" && $_POST['chkm']=="" && $_POST['chkn']=="") {
 							$qsql = $qsql." AND stock <= 0 ORDER BY matnom ASC";

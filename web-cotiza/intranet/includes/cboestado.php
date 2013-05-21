@@ -32,7 +32,7 @@ if ($cn->num_rows($query)>0) {
 					?>
 				</tbody>
 			</table>
-<?
+<?php
 }
 }
 ?>

@@ -62,7 +62,7 @@ function chkfull(itemid)
 }
 function enviar()
 {
-	alert("Enviando");
+	//alert("Enviando");
 	var nro = document.getElementById("nrocom").value;
 	var ruc = document.getElementById("ruccom").value;
 	var cot = document.getElementById("nro").value;

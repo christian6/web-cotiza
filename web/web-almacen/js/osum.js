@@ -86,7 +86,7 @@ function genos () {
 	if (confirm("Desea Generar Orden de Suministro!")) {
 		xmlhttp = peticion();
 		xmlhttp.onreadystatechange = function () {
-			alert(xmlhttp.responseText);
+			//alert(xmlhttp.responseText);
 			if (xmlhttp.readyState ==4 && xmlhttp.status == 200) {
 				if(xmlhttp.responseText == "hecho"){
 					location.href = '';

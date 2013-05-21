@@ -2,7 +2,7 @@
 session_start();
 ?>
 <!DOCTYPE html>
-<html lang='es'>
+<html lang='es-ES'>
 <head>
 	<meta charset='utf-8' />
 	<title>Bienvenido a la Intranet ICR PERU</title>
@@ -38,22 +38,22 @@ $car = $_SESSION['car-icr'];
 ?>
 <p>
 <label for="user" style="font-weight: bold;">Cargo:</label>
-<?echo $car;?>&nbsp;
-<label for="nom" style="font-weight: bold;">Nombre: </label>
-<?echo $nom;?>
+<?php echo $car;?>&nbsp;
+<label for="nom" style="font-weight: bold;">Nombre:</label>
+<?php echo $nom;?>
 </p>
 <p>
 <label style="font-weight: bold;">Dni:</label>
-&nbsp;<?echo $_SESSION['dni-icr']?>&nbsp;
+&nbsp;<?php echo $_SESSION['dni-icr'];?>&nbsp;
 <label style="font-weight: bold;">User:</label>
-<?echo $_SESSION['user-icr'];?>
+<?php echo $_SESSION['user-icr'];?>
 <button id="btnclose" class="btn btn-mini btn-primary" onclick="javascript:document.location.href = '../../web/includes/session-destroy.php';"> <i class="icon-lock"></i> Cerrar Session</button>
 </p>
 </div>
 <header>
 <h1>ICR PERÚ S.A.</h1>
 </header>
-<?php if ($_SESSION['accessicr']==true) {?>
+<?php if ($_SESSION['accessicr']==true) { ?>
 <section>
 		<nav>
 			<li class="lihome"><a href="menu-int.php"><img src="../source/inicio48.png"><span class="home">Inicio</span></a></li>
@@ -85,7 +85,7 @@ $car = $_SESSION['car-icr'];
 			<li class="liabout"><a href=""><img src="../source/about48.png"><span class="about">About</span></a></li>
 		</nav>
 </section>
-<?}?>
+<?php }?>
 </div>
 <footer>
 		<button type="Button" title="Obtener Tipo de cambio" onClick=""><img src="../source/cambio64.png"></button>

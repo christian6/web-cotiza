@@ -62,7 +62,7 @@ function generar (doc,nro) {
 			xmlhttp.onreadystatechange = function () {
 				if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 					if (xmlhttp.responseText != ""){
-						location.href = 'generardoc?nrod='+xmlhttp.responseText+'&tdoc=GUIA DE REMISION&t=g';
+						location.href = 'generardoc.php?nrod='+xmlhttp.responseText+'&tdoc=GUIA DE REMISION&t=g';
 					}
 				}
 			}
@@ -92,7 +92,7 @@ function generar (doc,nro) {
 			xmlhttp.onreadystatechange = function () {
 				if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 					if (xmlhttp.responseText != ""){
-						location.href = 'generardoc?nrod='+xmlhttp.responseText+'&tdoc=NOTA DE SALIDA&t=n';
+						location.href = 'generardoc.php?nrod='+xmlhttp.responseText+'&tdoc=NOTA DE SALIDA&t=n';
 					}
 				}
 			}
@@ -137,4 +137,7 @@ function peticion(){
 		xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
 	}
 	return xmlhttp;
+}
+function verpedido () {
+	location.href='verpedido.php';
 }

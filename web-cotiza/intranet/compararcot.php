@@ -13,6 +13,8 @@ include("../datos/postgresHelper.php");
 	<script type="text/javascript" src="../js/verpre.js"></script>
 	<script type="text/javascript" src="../ajax/ajxnewnrocompra.js"></script>
 	<script src="../modules/mootools-core-1.3.2-full-compat-yc.js"></script>
+	<link rel="stylesheet" href="../../web/bootstrap/css/bootstrap.css">
+	<link rel="stylesheet" href="../../web/bootstrap/css/bootstrap-responsive.css">
 </head>
 <body>
 	<header>
@@ -50,7 +52,7 @@ $car = $_SESSION['car-icr'];
 				<form name="frmnro" method="POST" action="">
 				<label for="nrocot">Ingrese Nro de Cotización: </label>
 				<input type="text" maxlength="10" id="txtnro" name="txtnro" title="Ingrese Nro de Cotizacion" placeholder="Nro de Cotizacion" REQUIRED />
-				<button type="Submit">Ver</button>
+				<button class="btn btn-primary" type="Submit"><i class="icon-search icon-white"></i> Ver</button>
 				</form>
 			</span>
 		</article>
@@ -60,11 +62,20 @@ $car = $_SESSION['car-icr'];
 			$nro = $_POST['txtnro'];
 			if (isset($nro)) {
 					$cn = new PostgreSQL();
-					$query = $cn->consulta("SELECT DISTINCT d.rucproveedor,p.razonsocial FROM logistica.detcotizacion d INNER JOIN admin.proveedor p ON d.rucproveedor=p.rucproveedor WHERE d.nrocotizacion LIKE '$nro'");
+					$query = $cn->consulta("SELECT DISTINCT d.rucproveedor,p.razonsocial 
+											FROM logistica.detcotizacion d INNER JOIN admin.proveedor p 
+											ON d.rucproveedor=p.rucproveedor 
+											INNER JOIN logistica.cotizacion c
+											ON c.nrocotizacion LIKE d.nrocotizacion
+											WHERE d.nrocotizacion LIKE '$nro' AND TRIM(c.estado) NOT LIKE '03'");
 					if ($cn->num_rows($query)>0) {
 						while ($result = $cn->ExecuteNomQuery($query)) {
 							echo "<li>".$result['rucproveedor']."->".$result['razonsocial']."</li>";
 						}
+					}else{
+						echo "<div class='alert alert-warning'>
+								<strong>No se han encontrado resultados para su busqueda!</strong>
+								</div>";
 					}
 					$cn->close($query);
 					?>
@@ -87,7 +98,12 @@ $car = $_SESSION['car-icr'];
 							$tpro = array();
 							$j=0;
 							$cn = new PostgreSQL();
-							$query = $cn->consulta("SELECT DISTINCT d.rucproveedor FROM logistica.detcotizacion d INNER JOIN admin.proveedor p ON d.rucproveedor=p.rucproveedor WHERE d.nrocotizacion LIKE '$nro'");
+							$query = $cn->consulta("SELECT DISTINCT d.rucproveedor 
+													FROM logistica.detcotizacion d INNER JOIN admin.proveedor p 
+													ON d.rucproveedor=p.rucproveedor
+													INNER JOIN logistica.cotizacion c
+													ON c.nrocotizacion LIKE d.nrocotizacion
+													WHERE d.nrocotizacion LIKE '$nro' AND TRIM(c.estado) NOT LIKE '03'");
 							if ($cn->num_rows($query)>0) {
 								while ($result = $cn->ExecuteNomQuery($query)) {
 									echo "<th>".$result['rucproveedor']."</th>";
@@ -95,6 +111,8 @@ $car = $_SESSION['car-icr'];
 									$tpro[$j] = $result['rucproveedor'];
 									$j++;
 								}
+							}else{
+
 							}
 							$cn->close($query);
 							?>

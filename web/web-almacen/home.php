@@ -1,153 +1,140 @@
 <?php
 include ("../includes/session-trust.php");
-
 if (sesaccess() == 'ok') {
   if (sestrust('k') == 0) {
     redirect();
   }
-
+include ("../datos/postgresHelper.php");
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="es_ES">
 <head>
 	<meta charset="utf-8" />
 	<title>Inicio</title>
-  	<link rel="stylesheet" href="css/style-home.css">
-  	<script src="../modules/jquery1.9.js"></script>
-  	<script src="../modules/jquery-ui.js"></script>
-    <link rel="stylesheet" type="text/css" href="../bootstrap/css/bootstrap.css">
+    <link rel="shortcut icon" href="../ico/icrperu.ico" type="image/x-icon">
+    <!--<link rel="stylesheet" href="../css/styleint.css">-->
+    <link rel="stylesheet" href="css/style-home.css">
+  	<link rel="stylesheet" type="text/css" href="../bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../bootstrap/css/bootstrap-responsive.css">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.js"></script>
     <script src="../bootstrap/js/bootstrap.js"></script>
-  	<script>
-  		$(function() {
-  		  $("#tabs").tabs();
-        $(".dropdown-toggle").dropdown();
-  		});
-  	</script>
+    <script src="js/home.js"></script>
 </head>
 <body>
-<header>
-	<hgroup>
-		<h1>ICR PERÚ S.A.</h1>
-	</hgroup>
-</header>
-<div class="navbar navbar-inverse" style="width:6em; right:0em; position: absolute;">
-  <div class="navbar-inner">
-    <div class="container">
-      <div class="nav-collapse">
-        <ul class="nav pull-right">
-          <li class="dropdown">
-            <a href="" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-cog icon-white"></i></a>
-            <ul class="dropdown-menu">
-              <li><a href="#"><b>Nombre:</b><?php echo $_SESSION['nom-icr']?></a></li>
-              <li><a href="#"><b>Usuario:</b><?php echo $_SESSION['user-icr']?></a></li>
-              <li class="divider"></li>
-              <li><a href="../includes/session-destroy.php"><i class="icon-lock"></i><b>Cerrar Session</b></a></li>
-            </ul>
-          </li>
-        </ul>
+  <?php include("include/menu-al.inc"); ?>
+  <div class="view">
+    <div class="container-fluid">
+      <div class="row-fluid">
+        <div class="span3 well">
+          <div class="nav-header">Estados</div>
+            <div class="msg">
+              <div class="row-fuid">
+                <?php
+                  $cn = new PostgreSQL();
+                  $query = $cn->consulta("SELECT COUNT(*) FROM almacen.pedido WHERE esid LIKE '35'");
+                  $r = $cn->ExecuteNomQuery($query);
+                  $cn->close($query);
+                ?>
+                <label for="label" class="label label-inverse">Pedidos Aprobados <span class="badge pull-right"><?php echo $r[0]; ?></span></label>
+                <?php
+                  $cn = new PostgreSQL();
+                  $query = $cn->consulta("SELECT COUNT(*) FROM almacen.pedido WHERE esid LIKE '38'");
+                  $r = $cn->ExecuteNomQuery($query);
+                  $cn->close($query);
+                ?>
+                <label for="label" class="label label-inverse">Suministros Aprobados <span class="badge pull-right"><?php echo $r[0]; ?></span></label>
+              </div>  
+            </div>
+        </div>
+        <div class="span9 well">
+          <div class="nav-header">
+            <i class="icon-inbox"></i> mensajeria
+            <?php
+              $cn = new PostgreSQL();
+              $query = $cn->consulta("SELECT COUNT(*) FROM admin.mensaje WHERE empdni LIKE '".$_SESSION['dni-icr']."' AND esid NOT LIKE '57'");
+              $r = $cn->ExecuteNomQuery($query);
+              $cn->close($query);
+              echo "&nbsp;&nbsp;&nbsp; TOTAL <span class='badge badge-info'>".$r[0]."</span>";
+
+              $cn = new PostgreSQL();
+              $query = $cn->consulta("SELECT COUNT(*) FROM admin.mensaje WHERE empdni LIKE '".$_SESSION['dni-icr']."' AND esid LIKE '56'");
+              $r = $cn->ExecuteNomQuery($query);
+              $cn->close($query);
+              echo "&nbsp;&nbsp;&nbsp;NO LEIDOS <span class='badge badge-info'>".$r[0]."</span>";
+
+              $cn = new PostgreSQL();
+              $query = $cn->consulta("SELECT COUNT(*) FROM admin.mensaje WHERE empdni LIKE '".$_SESSION['dni-icr']."' AND esid LIKE '55'");
+              $r = $cn->ExecuteNomQuery($query);
+              $cn->close($query);
+              echo "&nbsp;&nbsp;&nbsp; LEIDOS <span class='badge badge-info'>".$r[0]."</span>";
+            ?>
+          </div>
+          <div class="msg">
+            <div id="message">
+              
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-</div>
-<section>
-	<div id="tabs">
-		<nav>
-		<ul>
-			<li id="t1"><a href="#tabs-1">Pedido al Almacen</a > </li>
-			<li id="t2"><a href="#tabs-2">Suministro</a> </li>
-			<li id="t3"><a href="#tabs-3">Existencia</a> </li>
-			<li id="t4"><a href="#tabs-4">Salida de Almacen</a> </li>
-			<li id="t5"><a href="#tabs-5">Ingreso al Almacen</a> </li>
-		</ul>
-		</nav>
-		<div id="tabs-1">
-    			<ul>
-    			<li><a href="pedidosal.php"><img src="../resource/lista32.png">&nbsp;Pedido Materiales</a></li>
-    			</ul>
-  		</div>
-  		<div id="tabs-2">
-    			<ul>
-    			<li><a href="aprobarpedido.php"><img src="../resource/check32.png">&nbsp;Aprobar Pedido</a></li>
-    			<li><a href="estadopedido.php"><img src="../resource/view32.png">&nbsp;Ver Estado de Pedido</a></li>
-    			</ul>
-  		</div>
-  		<div id="tabs-3">
-    			<ul>
-    			<li><a href=""><img src="../resource/compra32.png">&nbsp;Consultar Existencia por Almacen</a></li>
-    			<li><a href=""><img src="../resource/cajas.gif">&nbsp;Consultar Existencia todos  los Pedidos</a></li>
-    			</ul>
-  		</div>
-  		<div id="tabs-4">
-  				<ul>
-  				<li><a href=""><img src="../resource/list32.png">&nbsp;Aprobar Pedido de Almacen</a></li>
-    			<li><a href=""><img src="../resource/ok.png">&nbsp;Pedidos Aprobados</a></li>
-    			<li><a href=""><img src="../resource/camion32.png">&nbsp;Pedidos Atendidos</a></li>
-    			</ul>
-  		</div>
-  		<div id="tabs-5">
-  			   
-  		</div>
-	<script>
-		$("#t1").hover(
-  			function(){
-  				$("#tabs").css("background-color","rgba(143,200,0,1)");
-  			},function(){
-  				$("#tabs").css("background-color","rgba(143,200,0,0)");
-  		});
-  		$("#t2").hover(
-  			function(){
-  				$("#tabs").css("background-color","rgba(53,106,160,1)");
-  			},function(){
-  				$("#tabs").css("background-color","rgba(53,106,160,0)");
-  		});
-  		$("#t3").hover(
-  			function(){
-  				$("#tabs").css("background-color","rgba(255,255,136,1)");
-  			},function(){
-  				$("#tabs").css("background-color","rgba(255,255,136,0)");
-  		});
-  		$("#t4").hover(
-  			function(){
-  				$("#tabs").css("background-color","rgba(247,150,33,1)");
-  			},function(){
-  				$("#tabs").css("background-color","rgba(53,106,160,0)");
-  		});
-  		$("#t5").hover(
-  			function(){
-  				$("#tabs").css("background-color","rgba(229,230,150,1)");
-  			},function(){
-  				$("#tabs").css("background-color","rgba(53,106,160,0)");
-  		});
-  		$("#tabs-1").hover(
-  			function(){
-  				$("#tabs").css("background-color","rgba(143,200,0,1)");
-  			},function(){}
-  		);
-  		$("#tabs-2").hover(
-  			function(){
-  				$("#tabs").css("background-color","rgba(53,106,160,1)");
-  			},function(){}
-  		);
-  		$("#tabs-3").hover(
-  			function(){
-  				$("#tabs").css("background-color","rgba(255,255,136,1)");
-  			},function(){}
-  		);
-  		$("#tabs-4").hover(
-  			function(){
-  				$("#tabs").css("background-color","rgba(247,150,33,1)");
-  			},function(){}
-  		);
-  		$("#tabs-5").hover(
-  			function(){
-  				$("#tabs").css("background-color","rgba(229,230,150,1)");
-  			},function(){}
-  		);
-	</script>
-	</div>
-</section>
-<footer>
-</footer>
+  <div id="send" class="modal fade in hide">
+    <a class="close" data-dismiss="modal">×</a>
+    <div class="modal-body">
+      <span id="m" class="m">
+        <h4>Enviando Mensaje</h4>
+      </span>
+      <div class="container-fluid">
+        <div class="control-group">
+          <label for="label"><strong>Enviar a:</strong></label>
+          <div class="controls">
+            <select class="span3" name="cboemp" id="cboemp">
+              <?php
+                $cn = new PostgreSQL();
+                $query = $cn->consulta("SELECT empdni,empnom,empape FROM admin.empleados");
+                if ($cn->num_rows($query) > 0) {
+                  while ($result = $cn->ExecuteNomQuery($query)) {
+                    echo "<option value='".$result['empdni']."'>".$result['empnom']." ".$result['empape']."</option>";
+                  }
+                }
+                $cn->close($query);
+              ?>
+            </select>
+          </div>
+        </div>
+        <div class="control-group">
+          <label for="label">Asunto:</label>
+          <div class="controls">
+            <input type="text" name="txtasunto" id="txtasunto" placeholder="Asunto" title="Ingrese Asunto a tratar" class="span4">
+          </div>
+        </div>
+        <div class="control-group">
+          <div class="controls">
+            <textarea name="txtbody" id="txtbody" cols="5" rows="10"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="Button" onClick="send_display(false);" class="btn">Cancelar</button>
+      <button type="Button" onClick="send();" class="btn btn-primary">Enviar</button>
+    </div>
+  </div>
+  <footer>
+    <nav class="men">
+      <div class="navbar">
+        <div class="navbar-inner">
+          <ul class="nav pull-right">
+            <li class="divider-vertical"></li>
+            <li><a href="javascript:send_display(true);"><i class="icon-envelope"></i>  <strong>Redactar</strong></a></li>
+            <li class="divider-vertical"></li>
+            <li><a href="javascript:refresh_mail();"><i class="icon-refresh"></i> <b>Actualizar</b></a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </footer>
 </body>
 </html>
 <?php

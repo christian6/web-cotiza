@@ -48,7 +48,6 @@ function execute_en() {
               xmlhttp = peticion();
               xmlhttp.onreadystatechange=function()
               {
-		            alert(xmlhttp.responseText);
                 if (xmlhttp.readyState==4 && xmlhttp.status==200)
                 {
                       var tra = xmlhttp.responseText;

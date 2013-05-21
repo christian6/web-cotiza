@@ -11,7 +11,7 @@ if (sesaccess() == 'ok') {
 include ("../datos/postgresHelper.php");
 ?>
 <!doctype html>
-<html lang="Es">
+<html lang="es_ES">
 <head>
 	<meta charset="UTF-8">
 	<title>Ingreso Inventario de Materiales</title>
@@ -36,6 +36,7 @@ include ("../datos/postgresHelper.php");
 		<div class="container well">
 			<h4>Ingreso de Materiales al Inventario Inicial <?php echo date('Y'); ?></h4>
 			<hr>
+			<button class="btn" onClick="location.href='http://190.41.246.91/web/web-mantenice/materiales.php';"><i class="icon-plus"></i> Nuevo Material</button>
 			<div class="container">
 				<table class="table table-bordered table-hover">
 					<caption>
@@ -103,6 +104,7 @@ include ("../datos/postgresHelper.php");
 				</table>
 			</div>
 		</div>
+		
 		<div id="madd" class="modal hide fade in">
             <div class="modal-header">
                 <a class="close" data-dismiss="modal">×</a>

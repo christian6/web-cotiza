@@ -31,6 +31,14 @@ if (isset($_POST['btnanular'])) {
 	<link rel="stylesheet" type="text/css" href="../css/styleint-aprobar-suministro.css">
 	<script type="text/javascript" src="../js/aprobar-suministro.js"></script>
 	<link rel="stylesheet" type="text/css" href="../css/styleint.css">
+	<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+	<script src="http://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
+	<script>
+		$(function() {
+			$(".btnn").draggable();
+			$(".btnn").css("cursor","move")
+		});
+	</script>
 </head>
 <body>
 <div class="header">

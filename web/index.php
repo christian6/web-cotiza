@@ -2,7 +2,7 @@
 include ("includes/valsession.php");
 ?>
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es-ES">
 <head>
 	<meta chartset="utf-8" />
 	<title>Login</title>

@@ -1,120 +1,89 @@
-@import url('http://fonts.googleapis.com/css?family=Finger+Paint');
-@import url('http://fonts.googleapis.com/css?family=Oregano');
-@import url('http://fonts.googleapis.com/css?family=Simonetta:600');
-
-::selection{
-	background-color: rgba(0,0,0,.2);
+html {
+  background: url("../../resource/textura/almacen.jpg") no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  position: static;
 }
-body
-{
-	background-image: url('../../resource/textura/decorative.jpg');
+.view{
+  background-color: rgba(240,240,240,.6);
+  /*border-style: solid;*/
+  border-radius: 1em;
+  box-shadow: 0 0 1em rgba(0,0,0,1);
+  left: 50%;
+  margin: 0 auto;
+  margin-top: 4%;
+  margin-left: -40%;
+  padding: 1em;
+  position: fixed;
+  width: 80%;
 }
-header h1
-{
-	background: -webkit-gradient(linear,left top, left bottom, from(#C20303), to(#F3D422));
-	background: -moz-gradient(linear,left top, left bottom, from(#C20303), to(#F3D422));
-	background: -o-gradient(linear,left top, left bottom, from(#C20303), to(#F3D422));
-	background: -ms-gradient(linear,left top, left bottom, from(#C20303), to(#F3D422));
-	background: gradient(linear,left top, left bottom, from(#C20303), to(#F3D422));
-	-webkit-text-fill-color: transparent;
-	-moz-text-fill-color: transparent;
-	-o-text-fill-color: transparent;
-	-ms-text-fill-color: transparent;
-	-webkit-background-clip: text;
-	-moz-background-clip: text;
-	-o-background-clip: text;
-	-ms-background-clip: text;
-	border-style: hidden;
-	font-family: 'Finger Paint', cursive;
-	font-style: oblique;
-	font-size: 3em;
-	font-weight: bold;
-	padding: 30px;
-	position: absolute;
-	width: 400px;
+.icr-img {
+  border-radius: 3px;
+  box-shadow: 0px 0px 5px #fff;
+  height: 1.2em;
+  width: 1.5em;
 }
-#tabs
-{
-	border-radius: 1em 1em 0em 0em;
-	left: 50%;
-	height: 6em;
-	margin: 0 auto;
-	margin-left: -10em;
-	margin-right: -2em;
-	padding-top: 2em;
-	position: absolute;
-	top: 30%;
-	width: 26em;
+.msg{
+  background-color: rgba(255,255,255,1);
+  border-radius: .5em;
+  padding: .5em;
 }
-#tabs img{ height: 20px; width: 20px; }
-#tabs ul li
-{
-	border-radius: .5em;
-	display: inline-block;
-	padding-left: .5em;
-	padding-right: .5em;
-	vertical-align: .5em;
+.label-inverse{
+  width: 96%;
 }
-#tabs nav ul li a{
-	color: rgba(31,59,8,.9);
-	/*font-family: 'Peralta', cursive;*/
-	font-family: 'Oregano', cursive;
-	font-size: 1.5em;
-	text-decoration: none;
+#send{
+  width: 60%;
+  margin-left: -28%;
 }
-#tabs nav ul
-{
-	margin-left: -2em;
-	text-align: center;
+.well{
+  opacity: 0.8;
+  filter: alpha(opacity=80);
 }
-#t1{ background-color: rgba(143,200,0,1); }
-#t2{ background-color: rgba(53,106,160,1); }
-#t3{ background-color: rgba(255,255,136,1); }
-#t4{ background-color: rgba(247,150,33,1); }
-#t5{ background-color: rgba(229,230,150,1); }
-ul li a{
-	color: rgb(0,0,0);
-	font-family: 'Simonetta', cursive;
-	text-decoration: none;
+.men{
+  bottom:-.5em;
+  clear             : both;
+  height            : 45px;
+  left              : 0;
+  letter-spacing    : 0em;
+  padding           : 0;
+  position          : fixed;
+  width             : 100%;
 }
-#tabs-1
-{
-	background-color: rgba(143,200,0,1);
-	border-radius: 0em 0em 1em 1em;
-	margin-top: -.5em;
-	padding: 1em;
-	padding-left: 1em;
-	width: 24em;
+#txtbody{
+  max-width: 53em;
+  width: 100%;
+  max-height: 10em;
 }
-#tabs-2
-{
-	background-color: rgba(53,106,160,1);
-	border-radius: 0em 0em 1em 1em;
-	margin-top: -.5em;
-	padding: 1em;
-	padding-left: 1em;
+#m{
+  background-color: #ffffAA;
+  border-radius: 1em;
+  border-style: solid;
+  border-width: 2px;
+  box-shadow: 0 0 1em rgba(20,20,20,1);
+  color: #000;
+  display: none;
+  left: 45%;
+  padding: 1em;
+  position: absolute;
+  top: 45%;
 }
-#tabs-3
-{
-	background-color: rgba(255,255,136,1);
-	border-radius: 0em 0em 1em 1em;
-	margin-top: -.5em;
-	padding: 1em;
-	padding-left: 1em;
+table{
+  *border-collapse: collapse;
+  border-spacing: 0;
+  border-width: 0;
+  font-weight: bold;
+  font-size: 11px;
 }
-#tabs-4
-{
-	background-color: rgba(247,150,33,1);
-	border-radius: 0em 0em 1em 1em;
-	margin-top: -.5em;
-	padding: 1em;
-	padding-left: 1em;
+dl dt,dl dd{
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 11px;
+  margin-bottom: -5px;
+  color: #333333;
 }
-#tabs-5
-{
-	background-color: rgba(229,230,150,1);
-	border-radius: 0em 0em 1em 1em;
-	margin-top: -.5em;
-	padding: 1em;
-	padding-left: 1em;
+dl{ margin-left: 1em; margin-top: -3em; }
+#message{
+  max-height: 30em;
+  overflow-y: scroll;
 }

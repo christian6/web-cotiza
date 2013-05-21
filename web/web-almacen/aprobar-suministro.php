@@ -3,13 +3,13 @@
 include ("../includes/session-trust.php");
 
 if (sesaccess() == 'ok') {
-	if (sestrust('k') == 0) {
+	if (sestrust('sk') == 0) {
 		redirect(0);
 	}
 
 include ("../datos/postgresHelper.php");
 ?>
-<html lang="es">
+<html lang="es_ES">
 <head>
 	<meta charset="utf-8" />
 	<title>Aprobar Orden de Suministro</title>
@@ -21,8 +21,8 @@ include ("../datos/postgresHelper.php");
 	<link rel="stylesheet" type="text/css" href="../bootstrap/css/bootstrap.css">
 	<link rel="stylesheet" type="text/css" href="../bootstrap/css/bootstrap-responsive.css">
 	<link rel="stylesheet" type="text/css" href="css/styleint-pedido.css">
-	<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
-	<script src="http://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.js"></script>
 	<script src="../bootstrap/js/bootstrap.js"></script>
   	<script>
 		 $(function() {
@@ -162,6 +162,6 @@ include ("../datos/postgresHelper.php");
 </html>
 <?php
 }else{
-	redirect();
+	redirect(1);
 }
 ?>

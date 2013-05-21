@@ -3,7 +3,7 @@ include ("../includes/session-trust.php");
 
 if (sesaccess() == 'ok') {
 	if (sestrust('k') == 0) {
-		redirect(1);
+		redirect();
 	}
 ?>
 <!DOCTYPE html>
@@ -35,7 +35,7 @@ include ("../datos/postgresHelper.php");
 </header>
 <section>
 	<?php include("include/menu-al.inc"); ?>
-	<div class="well" style="margin-top: -1em; padding:.1em 0 0 1em;">
+	<div class="container well" style="margin-top: -1em; padding:.1em 0 0 1em;">
 		<h3>Atender Pedido al Almacen:</h3>
 		<form name="frmal" method="POST" class="form-inline" action="">
 			<label for="lblal"><b>Seleccione un Almacen:</b></label>
@@ -56,8 +56,7 @@ include ("../datos/postgresHelper.php");
 			?>
 			</select>
 		</form>
-	</div>
-	<div id="det">
+		<div id="det">
 		<?php if (isset($_POST['cboal'])) { ?>
 		<div class="cont">
 		<table class="table table-bordered table-hover">
@@ -114,8 +113,9 @@ include ("../datos/postgresHelper.php");
 		</div>
 		<?php } ?>
 	</div>
+	</div>
 </section>
-<div style="heigth: 70px;"></div>
+<div id="space"></div>
 <footer>
 </footer>
 </body>

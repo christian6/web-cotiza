@@ -57,7 +57,7 @@
 #generator{
 	display: none;
 	width: 14em;
-	height: 7em;
+	height: 10em;
 	background: linear-gradient(top, #FFF 0%, #F1F1F1 50%, #E1E1E1 51%, #F6F6F6 100%);
 	background: -webkit-linear-gradient(top, #FFF 0%, #F1F1F1 50%, #E1E1E1 51%, #F6F6F6 100%);
 	background: -moz-linear-gradient(top, #FFF 0%, #F1F1F1 50%, #E1E1E1 51%, #F6F6F6 100%);

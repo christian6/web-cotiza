@@ -14,7 +14,7 @@ for ($i=0; $i < count($matarr); $i++) {
 	if ($cn->num_rows($query)>0) {
 		while ($result = $cn->ExecuteNomQuery($query)) {
 			$cn2 = new PostgreSQL();
-			$query2 = $cn2->consulta("INSERT INTO logistica.detcompras VALUES('$nrocompra','".$matarr[$i][0]."',".$result['cantidad'].",".$matarr[$i][1].")");
+			$query2 = $cn2->consulta("INSERT INTO logistica.detcompras VALUES('$nrocompra','".$matarr[$i][0]."',".$result['cantidad'].",".$matarr[$i][1].",".$result['cantidad'].",'0')");
 			$cn2->affected_rows($query2);
 			$cn2->close($query2);
 		}

@@ -97,12 +97,12 @@ include ("../datos/postgresHelper.php");
 								 ";
 						$lq = strlen($qsql);
 						if ($_POST['rbtn'] == "c") {
-							$qsql .= "WHERE nrocompra LIKE '".$_POST['txtnco']."' AND c.esid LIKE '12' OR c.esid LIKE '50'";
+							$qsql .= "WHERE nrocompra LIKE '".$_POST['txtnco']."' AND c.esid NOT LIKE '13'  ORDER BY c.fecha ASC";
 						}elseif ($_POST['rbtn'] == "f") {
 							if ($_POST['txtfini']!="" && $_POST['txtffin']=="") {
-								$qsql .= " WHERE fecha::date = '".$_POST['txtfini']."'::date  AND c.esid LIKE '12' OR c.esid LIKE '50' ";
+								$qsql .= " WHERE fecha::date = '".$_POST['txtfini']."'::date  AND c.esid NOT LIKE '13' ORDER BY c.fecha ASC";
 							}elseif ($_POST['txtfini']!="" && $_POST['txtffin']!="") {
-								$qsql .= " WHERE fecha::date BETWEEN '".$_POST['txtfini']."'::date AND '".$_POST['txtffin']."'::date  AND c.esid LIKE '12' OR c.esid LIKE '50'";
+								$qsql .= " WHERE fecha::date BETWEEN '".$_POST['txtfini']."'::date AND '".$_POST['txtffin']."'::date  AND c.esid NOT LIKE '13' ORDER BY c.fecha ASC";
 							}
 						}
 						if (strlen($qsql) > $lq) {

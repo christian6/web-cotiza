@@ -17,14 +17,14 @@ include ("../datos/postgresHelper.php");
 	<link rel="shortcut icon" href="../ico/icrperu.ico" type="image/x-icon">
 	<link rel="stylesheet" type="text/css" href="css/styleint.css">
 	<link rel="stylesheet" type="text/css" href="css/styleint-generardoc.css">
-	<link rel="stylesheet" href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css" />
+	<link rel="stylesheet" href="../modules/jquery-ui.css" />
 	<link rel="stylesheet" type="text/css" href="css/styleint-pedido.css">
 	<script type="text/javascript" src="js/gendoc.js"></script>
 	<link rel="stylesheet" type="text/css" href="../bootstrap/css/bootstrap.css">
 	<link rel="stylesheet" type="text/css" href="../bootstrap/css/bootstrap-responsive.css">
 	<link rel="stylesheet" type="text/css" href="css/styleint-pedido.css">
-	<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
-	<script src="http://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
+	<script src="../modules/jquery1.9.js"></script>
+	<script src="../modules/jquery-ui.js"></script>
 	<script src="../bootstrap/js/bootstrap.js"></script>
 	<script>
 		 $(function() {
@@ -158,16 +158,19 @@ include ("../datos/postgresHelper.php");
 <?php
 if($_REQUEST['nrod'] != ""){
 ?>
+<div class="container well span2">
+	<button class="btn btn-success" onClick="verpedido();"><i class="icon-hand-left icon-white"></i> Atender más Pedidos</button>
+</div>
 <div id="generator">
 <h4>Impresión</h4>
 <h6><?php echo $_GET['tdoc']." ".$_GET['nrod'];?></h6>
-<hr>
+<hr style="margin-top: -.1em;">
 <?php if ($_GET['t'] == "g") { ?>
-		<button type="Button" id="cg" class="btn btn-success" onclick="javascript:window.open('../reports/almacen/pdf/rptguiaremision?nro=<?echo $_GET['nrod']?>');" > <img src="../resource/formato32.png" /><br > Con Formato </button>
-		<button type="Button" id="sg" class="btn btn-info" onclick="javascript:window.open('../reports/almacen/pdf/rptguiaremisionsin?nro=<?echo $_GET['nrod']?>');"> <img src="../resource/imprimir32.png" /><br >Sin Formato</button>
+		<button type="Button" id="cg" class="btn btn-success" onclick="javascript:window.open('../reports/almacen/pdf/rptguiaremision.php?nro=<?echo $_GET['nrod']?>');" > <img src="../resource/formato32.png" /><br > Con Formato </button>
+		<button type="Button" id="sg" class="btn btn-info" onclick="javascript:window.open('../reports/almacen/pdf/rptguiaremisionsin.php?nro=<?echo $_GET['nrod']?>');"> <img src="../resource/imprimir32.png" /><br >Sin Formato</button>
 <?php	}else if($_GET['t']== "n"){ ?>
-		<button type="Button" id="cg" class="btn" onclick="javascript:window.open('../reports/almacen/pdf/rptnotasalida?nro=<?echo $_GET['nrod']?>');" > <img src="../resource/formato32.png" /><br > Con Formato </button>
-		<button type="Button" id="sg" class="btn" onclick="javascript:window.open('../reports/almacen/pdf/rptnotasalidasin?nro=<?echo $_GET['nrod']?>');"> <img src="../resource/imprimir32.png" /><br >Sin Formato</button>
+		<button type="Button" id="cg" class="btn" onclick="javascript:window.open('../reports/almacen/pdf/rptnotasalida.php?nro=<?echo $_GET['nrod']?>');" > <img src="../resource/formato32.png" /><br > Con Formato </button>
+		<button type="Button" id="sg" class="btn" onclick="javascript:window.open('../reports/almacen/pdf/rptnotasalidasin.php?nro=<?echo $_GET['nrod']?>');"> <img src="../resource/imprimir32.png" /><br >Sin Formato</button>
 <?php	} ?>
 
 <hr />
@@ -175,7 +178,7 @@ if($_REQUEST['nrod'] != ""){
 </div>
 <?php } ?>
 </section>
-<div style="height: 75px;"></div>
+<div id="space"></div>
 <footer>
 </footer>
 </body>

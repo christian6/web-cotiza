@@ -44,15 +44,15 @@ $car = $_SESSION['car-icr'];
 ?>
 <p>
 <label for="user" style="font-weight: bold;">Cargo:</label>
-<?echo $car;?>&nbsp;
+<?php echo $car;?>&nbsp;
 <label for="nom" style="font-weight: bold;">Nombre: </label>
-<?echo $nom;?>
+<?php echo $nom;?>
 </p>
 <p>
 <label style="font-weight: bold;">Dni:</label>
-&nbsp;<?echo $_SESSION['dni-icr']?>&nbsp;
+&nbsp;<?php echo $_SESSION['dni-icr']?>&nbsp;
 <label style="font-weight: bold;">User:</label>
-<?echo $_SESSION['user-icr'];?>
+<?php echo $_SESSION['user-icr'];?>
 <button id="btnclose" class="btn btn-mini btn-primary" onclick="javascript:document.location.href = '../../web/includes/session-destroy.php';"> <i class="icon-lock"></i> Cerrar Session</button>
 </p>
 </div>
@@ -71,11 +71,10 @@ $car = $_SESSION['car-icr'];
 			$query = $cn->consulta("SELECT DISTINCT estid,estnom FROM admin.estado ORDER BY estnom ASC");
 			?>
 			<select id="cbogen">
-				<option>--seleccione--</option>
-				<?
-				if ($cn->num_rows($query)>0) {
+				<?php
+				if ($cn->num_rows($query) > 0) {
 					while ($result = $cn->ExecuteNomQuery($query)) {
-						echo "<option value=".$result['estid'].">".$result['estnom']."</option>";
+						echo "<option value='".$result['estid']."'>".$result['estnom']."</option>";
 					}
 				}
 				$cn->close($query);
@@ -101,7 +100,7 @@ $car = $_SESSION['car-icr'];
 			<hr />
 			<select id="cbogen2" onChange="estados();">
 				<option>-- Seleccionar --</option>
-				<?
+				<?php
 					$cn = new PostgreSQL();
 					$query = $cn->consulta("SELECT DISTINCT estid,estnom FROM admin.estado ORDER BY estnom ASC");
 					if ($cn->num_rows($query)>0) {
@@ -116,7 +115,7 @@ $car = $_SESSION['car-icr'];
 			<div id="tbl"></div>
 		</div>
 	</section>
-	<?}?>
+	<?php }?>
 	<footer>
 	</footer>
 </body>
