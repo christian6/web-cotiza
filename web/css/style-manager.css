@@ -1,132 +1,83 @@
-@import url('http://fonts.googleapis.com/css?family=Gabriela');
-
-body
+html
 {
 	background-image: url('../resource/textura/redhat.jpg');
 	/*background-color: rgba(41,50,30,1);*/
-	margin: 0 auto;
+	/*margin: 0 auto;*/
+	overflow: scroll;
 }
 ::selection{
 	background-color: rgba(1,1,1,.8);
 
 }
-header hgroup h1
-{  
-  	background: -webkit-gradient(linear, left top, left bottom, from(#C20303), to(#F3D422));  
-  	-webkit-background-clip: text;  
-  	-webkit-text-fill-color: transparent;
-  	background: -moz-gradient(linear, left top, left bottom, from(#C20303), to(#F3D422));  
-  	-moz-background-clip: text;  
-  	-moz-text-fill-color: transparent;
-    font-size: 30px;  
-    font-family: 'Lucida Sans', Arial;
-    font-weight: bold;
-    line-height: 160%;
-    padding-left: 100px;
-  	text-shadow: 0px 0px 30px #FAFAD2;
-  	vertical-align: middle;
+.img{
+	float:left;
+	-webkit-transition-duration: 0.5s;
+	-o-transition-duration: 0.5s;
+	-moz-transition-duration: 0.5s;
+	-ms-transition-duration: 0.5s;
 }
-nav {
-	background-color: rgba(255,255,255,.4);
-	border: solid .1em #FFF;
-	border-radius: 1em;
-	box-shadow: 0 0 1em rgba(255,255,255,.9);
-	height: 14em;
-	margin: 0 auto;
-	margin-left: -6em;
-	margin-top: -8em; 
-	left: 50%;
-	text-align: center; 
-	top: 50%;
-	padding-left: 1em;
-	padding-top: 1em;
-	position: absolute;
-	width: 12em;
+.img img{
+	padding: 10px;
+	border: 1px solid #fff;
 }
-nav:hover{ background-color: rgba(255,255,255,.5); }
-nav ul li
-{
-	display: block;
-	border-style: solid;
-	border-width: .1em;
-	border-radius: 1em;
-	color: rgba(33,25,0,.9);
-	cursor: pointer;
-	font-family: 'Gabriela', serif;
-	font-weight: 600;
-	margin:  .1em 0 .1em -1.6em;
-	padding: .7em 0 .7em 0;
-	width: 10em;
+.img:hover{
+	-webkit-transform:scale(0.8);
+	-moz-transform:scale(0.8);
+	-o-transform:scale(0.8);
+	-ms-transform:scale(0.8);
+	-webkit-box-shadow:0px 0px 30px #ccc;
+	-moz-box-shadow:0px 0px 30px #ccc;
+	-o-box-shadow:0px 0px 30px #ccc;
+	-ms-box-shadow:0px 0px 30px #ccc;
 }
-a, a:visited, a:link, a:active, a:hover{ 
-	color: rgba(33,25,0,.9);
-	text-decoration: none;
-}
-p{font-size: 14px;}
-.admin{
-	border-color: rgb(182,224,38);
-	background-color: rgba(182,224,38,.5);
-}
-.admin:hover{ background-color: rgb(182,224,38); box-shadow: 0 0 .5em rgb(182,224,38); }
-.log{
-	border-color: rgb(255,255,136);
-	background-color: rgba(255,255,136,.5);
-}
-.log:hover{ background-color: rgb(255,255,136); box-shadow: 0 0 .5em rgb(255,255,136); }
-.alm{
-	border-color: rgb(254,191,1);
-	background-color: rgba(254,191,1,.5);
-}
-.alm:hover{ background-color: rgb(254,191,1); box-shadow: 0 0 .5em rgb(254,191,1); }
-.about{
-	border-color: rgb(73,192,240);
-	background-color: rgba(73,192,240,.5);
-}
-.about:hover{ background-color: rgb(73,192,240); box-shadow: 0 0 .5em rgb(73,192,240); }
-#cadmin,#clog,#cal
-{
-	display: none;
-	border-radius: 1em;
-	border: solid .1em #FFF;
-	height: 14.5em;
-	margin-top: -8em;
-	left: 50%;
-	position: absolute;
-	top: 50%;
-	width: 12em;
-}
-#cadmin:before,#clog:before,#cal:before
-{
-	content: '';
-	border-top: 12px solid transparent;
-	border-bottom: 12px solid transparent;
-	border-left: 12px solid transparent;
-	left: -25px;
-	position: absolute;
-}
-#cadmin:before{ border-right: 12px solid rgb(182,224,38); top: 1.8em; }
-#clog:before{ border-right: 12px solid rgb(255,255,136); top: 4.5em; }
-#cal:before{ border-right: 12px solid rgb(254,191,1); top: 7.5em; }
-
-.pull-right
-{
-	right: 0em;
-	position: absolute;
-	top: 0;
-	width: 20em;
-}
-#session
-{
-	background-color: #FFF;
+.mar{
+	border: 1px solid #FFF;
 	border-radius: .5em;
-	width: 15em;
+	padding: 10px;
 }
-#session ul li{
-	display: block;
-	cursor: pointer;
-	font-size: 12px;
-	margin: 0em;
+section{
+	-moz-box-sizing:border-box;
+    -webkit-box-sizing:border-box;
+    -o-box-sizing:border-box;
+    box-sizing:border-box; 
+	background-color: rgba(0,0,0,.5);
+	border-radius: 2em;
+	margin-top: 10%;
+	margin-left: 5%;
+	margin-right: 5%;
+	padding: 2em;
+	position: absolute;
+	text-align: center;
+	max-width: 90%;
+	width: 90%;
 }
-#session ul hr{
-	margin: .1em;
+#manager,#logistic,#almacen,#venta,#about{ 
+	border-radius: 1em;
+	color: rgba(30,51,0,1);
+	font-weight: bold;
+	font-size: 1.5em;
+	line-height: 4em;
+	height: 4em;
+	text-decoration: none;
+	width: 100%;
+}
+#manager{
+	background-color: rgba(241,218,54,1);
+	box-shadow: 0 0 1em rgba(241,218,54,1);
+}
+#logistic{
+	background-color: rgba(171,220,40,1);
+	box-shadow: 0 0 1em rgba(171,220,40,1);	
+}
+#almacen{
+	background-color: rgba(254,191,34,1);
+	box-shadow: 0 0 1em rgba(254,191,34,1);
+}
+#venta{
+	background-color: rgba(255,0,0,1);
+	box-shadow: 0 0 1em rgba(255,0,0,1);
+}
+#about{
+	background-color: rgba(53,106,160,1);
+	box-shadow: 0 0 1em rgba(53,106,160,1);
 }
