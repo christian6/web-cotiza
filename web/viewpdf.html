@@ -1,0 +1,77 @@
+<!DOCTYPE HTML>
+<head>
+<script type="text/javascript">
+
+function retornarLienzo(x)
+{
+   var canvas = document.getElementById(x);
+   if (canvas.getContext) 
+   {
+     var lienzo = canvas.getContext("2d");   
+     return lienzo;
+   }
+   else
+     return false;
+}
+
+function dibujar(ix,iy,fx,fy)
+{
+   var lienzo=retornarLienzo("lienzo1");
+   if (lienzo)
+   { 
+     lienzo.strokeStyle = "rgba(200,0,0,8)";
+    //Inicio de camino
+    lienzo.beginPath();
+    lienzo.moveTo(ix,iy);
+    lienzo.lineTo(fx,fy);
+    lienzo.lineWidth = 3;
+    //Trazar linea
+    lienzo.stroke();
+   }
+}
+var pix=0,piy=0,pfx=0,pfy=0;
+function coordenadas(event) {
+ x=event.clientX;
+ y=event.clientY;
+
+ //dibujar();
+
+ document.getElementById("ix").value = x;
+ document.getElementById("iy").value = y;
+ pix = x;
+ pfx = y;
+}
+function libera (event) {
+	x=event.clientX;
+	y=event.clientY;
+
+	 //dibujar();
+
+	document.getElementById("fx").value = x;
+	document.getElementById("fy").value = y;
+	pfx = x;
+	pfy = y;
+
+	dibujar(pix,piy,pfx,pfy);
+}
+</script>
+	<style>
+		canvas{
+			border: solid 1px #000;
+			border-radius: 1em;
+			padding: 2em;
+		}
+	</style>
+</head>
+<body onLoad="">
+	<form action="#">
+		<label for="x">inicio X: </label><input type="text" id="ix">
+		<label for="y">inicio Y: </label><input type="text" id="iy">
+		<label for="x">fin X: </label><input type="text" id="fx">
+		<label for="y">fin Y: </label><input type="text" id="fy">
+	</form>
+<canvas id="lienzo1" width="300" height="300" onmousedown="coordenadas(event);" onmouseup="libera(event);">
+Su navegador no permite utilizar canvas.
+</canvas>
+</body>
+</html>

@@ -1,0 +1,196 @@
+.btnform{
+	margin-left: 15%;
+	position: relative;
+}
+.btnform button{ 
+	background-color: #FFF;
+	border-radius: 15px;
+	border-style: inset;
+	border-width: 1.5px;
+	cursor: pointer;
+	margin-top: 10px;
+	padding: 8px;
+}
+.btnform button:hover{box-shadow: 0px 0px 15px #000;}
+.btnform button img{height: 36px;width: 36px;}
+#buttonera
+{
+	border-radius: 5px;
+	position: fixed;
+	top: 120px;
+	left: 30px;
+}
+#buttonera fieldset button img{height: 36px; width: 36px;}
+#buttonera fieldset {
+background: rgb(245,246,246); /* Old browsers */
+background: -moz-linear-gradient(top,  rgba(245,246,246,1) 0%, rgba(219,220,226,1) 21%, rgba(184,186,198,1) 49%, rgba(221,223,227,1) 80%, rgba(245,246,246,1) 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(245,246,246,1)), color-stop(21%,rgba(219,220,226,1)), color-stop(49%,rgba(184,186,198,1)), color-stop(80%,rgba(221,223,227,1)), color-stop(100%,rgba(245,246,246,1))); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(top,  rgba(245,246,246,1) 0%,rgba(219,220,226,1) 21%,rgba(184,186,198,1) 49%,rgba(221,223,227,1) 80%,rgba(245,246,246,1) 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(top,  rgba(245,246,246,1) 0%,rgba(219,220,226,1) 21%,rgba(184,186,198,1) 49%,rgba(221,223,227,1) 80%,rgba(245,246,246,1) 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(top,  rgba(245,246,246,1) 0%,rgba(219,220,226,1) 21%,rgba(184,186,198,1) 49%,rgba(221,223,227,1) 80%,rgba(245,246,246,1) 100%); /* IE10+ */
+background: linear-gradient(to bottom,  rgba(245,246,246,1) 0%,rgba(219,220,226,1) 21%,rgba(184,186,198,1) 49%,rgba(221,223,227,1) 80%,rgba(245,246,246,1) 100%); /* W3C */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f5f6f6', endColorstr='#f5f6f6',GradientType=0 ); /* IE6-9 */
+
+ border-radius: 5px; box-shadow: 0px 0px 10px #808080; text-align: center;}
+#buttonera fieldset button {background-color: #FFF; border-radius: 5px;}
+#buttonera fieldset button:hover {background-color: #0040FF;}
+#buttonera fieldset legend {font-family: verdana; font-size: 9px; font-weight: bold;}
+#solicitud
+{
+	background-color: #FFF;
+	border-color: #000;
+	border-radius: 20px;
+	border-style: double;
+	border-width: 2px;
+	margin: 0 auto;
+	margin-left: auto;
+	margin-right: auto;
+	padding: 5px 30px 12px 30px;
+	width: 960px;
+}
+#space
+{
+	height: 55px;
+}
+#pieinfo label
+{
+	font-family: 'Lucida Sans', Arial;
+	font-size: 12px;
+	font-weight: bold;
+}
+#pieinfo select{
+	border-radius: 5px;
+	margin-left: 30px; 
+	width: 270px;
+}
+#pieinfo #cont{margin-left: 75px}
+#pieinfo #dpvalidez{margin-left: 12px;}
+#pieinfo #scot{margin-left: 20px;}
+#solcot
+{
+	position: relative;
+	left: 32%;
+	text-align: center;
+	top: 30px;
+}
+#solcot h4, #colcot h5{margin: 0 auto; margin-bottom: -15px;}
+.cant
+{
+	text-align: center;
+}
+.files{text-align: left;}
+h5 p
+{
+	margin-top: -5px;
+	margin-left: 10px;
+	text-align: center;
+}
+h6
+{
+	font-style: italic;
+	margin: 0px;
+}
+header h3
+{
+	background: rgb(255,255,255);
+background: -moz-linear-gradient(top,  rgba(255,255,255,1) 0%, rgba(241,241,241,1) 50%, rgba(225,225,225,1) 51%, rgba(246,246,246,1) 100%);
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(255,255,255,1)), color-stop(50%,rgba(241,241,241,1)), color-stop(51%,rgba(225,225,225,1)), color-stop(100%,rgba(246,246,246,1)));
+background: -webkit-linear-gradient(top,  rgba(255,255,255,1) 0%,rgba(241,241,241,1) 50%,rgba(225,225,225,1) 51%,rgba(246,246,246,1) 100%);
+background: -o-linear-gradient(top,  rgba(255,255,255,1) 0%,rgba(241,241,241,1) 50%,rgba(225,225,225,1) 51%,rgba(246,246,246,1) 100%);
+background: -ms-linear-gradient(top,  rgba(255,255,255,1) 0%,rgba(241,241,241,1) 50%,rgba(225,225,225,1) 51%,rgba(246,246,246,1) 100%);
+background: linear-gradient(to bottom,  rgba(255,255,255,1) 0%,rgba(241,241,241,1) 50%,rgba(225,225,225,1) 51%,rgba(246,246,246,1) 100%);
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f6f6f6',GradientType=0 );
+
+	color: #191970;
+	font-family: 'Lucida Sans', Arial;
+	font-style: oblique;
+	height: 30px;
+	line-height: 150%;
+	margin: 0 auto;
+	padding-left: 20px;
+	text-shadow: 0px 0px 10px #FFFF00;
+	vertical-align: middle;
+}
+fieldset
+{
+border-radius: 5px;
+}
+hr{
+	margin-top: 0px;
+	margin-bottom: 0px;
+}
+section
+{
+	background: #fefcea; /* Old browsers */
+	background: -moz-linear-gradient(top,  #fefcea 0%, #f1da36 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#fefcea), color-stop(100%,#f1da36)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  #fefcea 0%,#f1da36 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  #fefcea 0%,#f1da36 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  #fefcea 0%,#f1da36 100%); /* IE10+ */
+	background: linear-gradient(to bottom,  #fefcea 0%,#f1da36 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fefcea', endColorstr='#f1da36',GradientType=0 ); /* IE6-9 */
+	height: 100%;
+	margin: 0 auto;
+	//position: fixed;
+	width: 100%;
+}
+section article div img 
+{
+	height: 65px;
+	margin-top: -70px;
+	margin-right: 5px;
+	margin-left: 10px;
+	position: absolute;
+	width: 95px;
+}
+p
+{
+	font-family: 'Lucida Sans', Arial;
+	font-size: 11px;
+	margin: 0 auto;
+}
+table
+{
+	*border-collapse: collapse;
+    border-spacing: 0;
+    border:solid #000 1px;
+    border-radius: 6px;
+    box-shadow: 5px 5px 15px #000000;
+	margin-left: auto;
+	margin-right: auto;
+	width: 950px;
+}
+table tr:hover{
+    background-color: #82FA58;
+    cursor: default;
+    transition:all 0.1s ease-in-out;
+    -o-transition:all 0.1s ease-in-out;
+    -webkit-transition:all 0.1s ease-in-out;
+    -moz-transition:all 0.1s ease-in-out;
+    -ms-transition:all 0.1s ease-in-out;
+}
+table tr:first-child{
+    background-color: #800000;
+    color: #FFF;
+}
+table th:first-child{
+    border-radius: 6px 0 0 0;
+}
+table th:last-child{
+    border-radius: 0 6px 0 0;
+}
+table th{font-size: 12px; padding-bottom: 5px; padding-top: 5px;}
+table td{
+    font-size: 11px;
+    font-family: 'Lucida sans', Arial;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+table td:last-child{
+    text-align: center;
+}
+table td input
+{
+	text-align: right;
+	width: 80px;
+}
