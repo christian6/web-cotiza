@@ -10,22 +10,20 @@ if ($_POST['tra'] == 'pro') {
 	$qsql = "SELECT p.proyectoid,p.descripcion,p.fecent,e.esnom FROM ventas.proyectos p
 			INNER JOIN admin.estadoes e
 			ON p.esid = e.esid
-			INNER JOIN ventas.proyectopersonal r
-			ON p.proyectoid LIKE r.proyectoid
 			WHERE  ";
 
 	if (sestrust('sk') == 1) {
 		if ($_POST['anio'] == 'all') {
-			$qsql .= " lower(p.descripcion) LIKE lower('%".$_POST['nom']."%') ORDER BY p.fecha DESC";
+			$qsql .= " lower(p.descripcion) LIKE lower('%".$_POST['nom']."%') AND p.esid LIKE '59' ORDER BY p.fecha DESC";
 		}else{
-			$qsql .= " lower(p.descripcion) LIKE lower('%".$_POST['nom']."%') AND extract(year from p.fecha)::char(4) LIKE '".$_POST['anio']."' ORDER BY p.fecha DESC";
+			$qsql .= " lower(p.descripcion) LIKE lower('%".$_POST['nom']."%') AND extract(year from p.fecha)::char(4) LIKE '".$_POST['anio']."' AND p.esid LIKE '59' ORDER BY p.fecha DESC";
 		}
 		
 	}else if (sestrust('sk') == 0) {
 		if ($_POST['anio'] == 'all') {
-			$qsql .= " lower(p.descripcion) LIKE lower('%".$_POST['nom']."%') AND r.empdni LIKE '".$_SESSION['dni-icr']."' ORDER BY p.fecha DESC";
+			$qsql .= " lower(p.descripcion) LIKE lower('%".$_POST['nom']."%') AND p.esid LIKE '59' ORDER BY p.fecha DESC";
 		}else{
-			$qsql .= " lower(p.descripcion) LIKE lower('%".$_POST['nom']."%') AND extract(year from p.fecha)::char(4) LIKE '".$_POST['anio']."' AND r.empdni LIKE '".$_SESSION['dni-icr']."' ORDER BY p.fecha DESC";
+			$qsql .= " lower(p.descripcion) LIKE lower('%".$_POST['nom']."%') AND extract(year from p.fecha)::char(4) LIKE '".$_POST['anio']."' AND p.esid LIKE '59' ORDER BY p.fecha DESC";
 		}
 		
 	}

@@ -14,29 +14,185 @@ include ("../datos/postgresHelper.php");
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	<link rel="shortcut icon" href="../ico/icrperu.ico" type="image/x-icon">
+	<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
 	<link rel="stylesheet" href="../css/styleint.css">
 	<link rel="stylesheet" href="../bootstrap/css/bootstrap.css">
 	<link rel="stylesheet" href="../bootstrap/css/bootstrap-responsive.css">
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
 	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.js"></script>
-	<!--<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />-->
-    	<!--<script src="../modules/jquery1.9.js"></script>
-	<script src="../modules/jquery-ui.js"></script>-->
-    <script type="text/javascript" src="../web-almacen/js/autocomplete.js"></script>
+    <script type="text/javascript" src="js/autocomplete.js"></script>
 	<script src="../bootstrap/js/bootstrap.js"></script>
 	<script src="js/sectores.js"></script>
+	<style>
+		#upload{
+			background-color: #313437;
+			background-image:-webkit-gradient(linear, 0 0, 0 100%, from(#373a3d), to(#313437));
+			background-image:-webkit-linear-gradient(#373a3d, #313437);
+			background-image:-moz-linear-gradient(#373a3d, #313437);
+			background-image:-o-linear-gradient(#373a3d, #313437);
+			background-image:linear-gradient(#373a3d, #313437);
+			box-shadow: 0 0 1em rgba(0,0,0,.3);
+			font-family: 'PS Sans Narrow', sans-serif;
+			padding: 1em;
+		}
+		#drop , #plano{
+			background-color: #2E3134;
+			border: .3em dashed gray;
+			border-radius: .3em;
+			color: #7f858a;
+			font-size: 1em;
+			font-weight: bold;
+			padding: .5em;
+			text-align: center;
+			text-transform: uppercase;
+		}
+		#drop a{
+			background-color: #007a96;
+			border-radius: .5em;
+			color : #FFF;
+			cursor: pointer;
+			display: inline-block;
+			line-height: 1;
+			padding: .8em;
+		}
+		#drop a:hover{
+			background-color: #0986a3;
+		}
+		#drop input{
+			display: none;
+		}
+		#fullpdf{
+			display: none;
+			margin-top: 5em;
+			position: absolute;
+			/*top: 1em;*/
+		}
+		#fullscreen-icr button{
+			position: absolute;
+			top: 3em;
+		}
+	</style>
 </head>
 <body>
 	<?php include ("includes/menu-ventas.inc"); ?>
 	<header></header>
+	<div id="misub">
+		<ul class="breadcrumb well">
+			<li>
+				<a href="index.php">Home</a>
+				<span class="divider">/</span>
+			</li>
+			<li>
+				<a href="proyecto.php">Proyecto</a>
+				<span class="divider">/</span>
+			</li>
+			<li>
+				<a href="admin-project.php?id=<?php echo $_GET['proid']; ?>">Proyecto Admin</a>
+				<span class="divider">/</span>
+			</li>
+			<li class="active">Sectores</li>
+		</ul>
+	</div>
 	<section>
 		<div class="container well">
-			<h4>Sector de Proyecto</h4>
-			<hr class="hs">
+			<h2>Sector de Proyecto</h2>
+			<div class="row show-grid">
+				<div class="span5">
+				<div class="row show-grid">
+				<dl class="dl-horizontal" >
+				<dt>Proyecto </dt>
+				<?php
+				$cn = new PostgreSQL();
+				$query = $cn->consulta("SELECT p.descripcion FROM ventas.proyectos p 
+										WHERE p.proyectoid LIKE '".$_GET['proid']."' ");
+				if ($cn->num_rows($query) > 0) {
+					while ($result = $cn->ExecuteNomQuery($query)) {
+						echo "<dd>".$result[0]."</dd>";
+					}
+				}else{
+					echo "<dd> &nbsp;</dd>";
+				}
+				$cn->close($query);
+				?>
+				<dt>Subproyecto </dt>
+				<?php
+				$cn = new PostgreSQL();
+				$query = $cn->consulta("SELECT subproyecto FROM ventas.subproyectos
+										WHERE proyectoid LIKE '".$_GET['proid']."' AND TRIM(subproyectoid) LIKE '".$_GET['sub']."' ");
+				if ($cn->num_rows($query) > 0) {
+					while ($result = $cn->ExecuteNomQuery($query)) {
+						echo "<dd>".$result[0]."</dd>";
+					}
+				}else{
+					echo "<dd> &nbsp;</dd>";
+				}
+				$cn->close($query);
+				?>
+				<dt>Sector </dt>
+				<?php
+				$cn = new PostgreSQL();
+				$query = $cn->consulta("SELECT sector FROM ventas.sectores
+										WHERE proyectoid LIKE '".$_GET['proid']."' AND TRIM(subproyectoid) LIKE '".$_GET['sub']."' AND TRIM(nroplano) LIKE TRIM('".$_GET['nropla']."') ");
+				if ($cn->num_rows($query) > 0) {
+					while ($result = $cn->ExecuteNomQuery($query)) {
+						echo "<dd>".$result[0]."</dd>";
+					}
+				}else{
+					echo "<dd> &nbsp;</dd>";
+				}
+				$cn->close($query);
+				?>
+				</dl>
+				</div>
+				</div>
+				<?php
+				$dir = "";
+				$file = -1;
+				if ($_GET['sub'] != '') {
+					if (file_exists($_SERVER['DOCUMENT_ROOT']."/web/project/".$_GET['proid']."/".$_GET['sub']."/".$_GET['nropla'].".pdf")) {
+						$dir = "/web/project/".$_GET['proid']."/".$_GET['sub']."/".$_GET['nropla'].".pdf";	
+						$file = 1;
+					}
+				}else{
+					if (file_exists($_SERVER['DOCUMENT_ROOT']."/web/project/".$_GET['proid']."/".$_GET['nropla'].".pdf")) {
+						$dir = "/web/project/".$_GET['proid']."/".$_GET['nropla'].".pdf";
+						$file = 1;
+					}
+				}
+				#echo $file;
+				if ($file != 1) {
+				?>
+				<div class="span6">
+					<div >
+						<h4>Subir Plano</h4>
+						<form id="upload" method="post" action="upload.php" enctype="multipart/form-data">
+							<div id="drop">
+								Click Aqui
+								<a id="bro" href="javascript:open();">Browse</a>
+								<input type="file" name="upl" id="upl" onChange="uploadAjax();" accept="application/pdf" runat="server" />
+							</div>
+						</form>
+					</div>
+				</div>
+				<?php } ?>
+			</div>
+			<?php if ($file == 1){ ?>
 			<div class="row show-grid">
 				<div class="span12">
-					<h5 id="plane"><?php echo $_REQUEST['nropla']; ?></h5>
-					<h5 id="proid"><?php echo $_REQUEST['proid']; ?></h5>
+					<div id="plano">
+						<div class="btn-group pull-left">
+							<button class="btn" onClick="openfull();"><i class="icon-eye-open"></i></button>
+							<button class="btn" onClick="resizesmall();"><i class="icon-resize-small"></i></button>
+							<button class="btn" onClick="resizefull();"><i class="icon-resize-full"></i></button>
+						</div>
+						<!--<a class="media" href="">PDF File</a>-->
+						<iframe id="vpdf" src="<?php echo $dir; ?>" width="100%" height="400" frameborder="1"></iframe>
+					</div>
+				</div>
+			</div>
+			<?php } ?>
+			<div class="row show-grid">
+				<div class="span12">
 					<ul id="tab" class="nav nav-tabs">
 			            <li class="active"><a href="#mat" data-toggle="tab">Materiales</a></li>
 			            <li class=""><a href="#eyh" data-toggle="tab">Equipos y Herramientas</a></li>
@@ -46,15 +202,76 @@ include ("../datos/postgresHelper.php");
 			        </ul>
 			        <div id="myTabContent" class="tab-content">
 			            <div class="tab-pane fade active in" id="mat">
-			              <div class="row">
+			              <div class="row show-grid">
 			              	
 			              	<div class="span11 well">
-			              		<div class="controls">
-			              		<div class="button-group">
-			              			 <button class="btn" onClick="openaddm();"><i class="icon-plus"></i> Agregar material</button>
-			              			 <button class="btn" onClick="openfile();"><i class="icon-plus"></i> Agregar Archivo</button>
+			              		<div class="control-group">
+			              		<div class="btn-group">
+			              			 <button class="btn btn-success t-d" onClick="showaddmat();"><i class="icon-plus"></i> Agregar material</button>
+			              			 <button class="btn btn-success t-d" onClick="openfile();"><i class="icon-plus"></i> Agregar Archivo</button>
 			              		</div>
-			              	</div>
+
+			              		</div>
+			              		<div id="maddmat" class="row show-grid span10 well c-yellow-light hide">
+			              			<a href="javascript:closeaddmat();" class="close">&times;</a>
+									<div class="span5">
+										<div class="control-group info">
+											<label for="controls" class="t-info">Nombre o Descripción</label>
+											<div class="controls">
+												<div class="ui-widget">
+												<select name="cbomat" id="combobox" class="span5 hide">
+													<?php
+													$cn = new PostgreSQL();
+													$query = $cn->consulta("SELECT DISTINCT matnom FROM admin.materiales ORDER BY matnom ASC;");
+													if ($cn->num_rows($query) > 0) {
+														while ($result = $cn->ExecuteNomQuery($query)) {
+															echo "<option value='".$result['matnom']."'>".$result['matnom']."</option>";
+														}
+													}
+													$cn->close($query);
+													?>
+												</select>
+
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="span6">
+											<div class="control-group info">
+												<label for="controls" class="t-info">Medida</label>
+												<div id="matmed" class="controls">
+													
+												</div>
+											</div>
+										</div>
+										<div class="span4">
+											<div class="control-group info">
+												<label for="controls" class="t-info">Resumen</label>
+												<div class="controls well c-red t-white">
+													<div class="row">
+														<div class="row">
+															<div class="row">
+																<div id="data"></div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="span4">
+											<div class="control-group info">
+												<label for="controls" class="t-info">Cantidad</label>
+												<div class="controls">
+													<input type="number" class="span2" id="cant">
+												</div>
+											</div>
+										</div>
+									<div class="span4">
+										<div class="controls">
+											<button class="btn btn-info t-d" onClick="savemat();"><i class="icon-plus"></i> Agregar</button>
+										</div>
+									</div>
+								</div>
 			              		<table class="table table-hover table-bordered">
 			              			<thead>
 			              				<tr>
@@ -66,7 +283,7 @@ include ("../datos/postgresHelper.php");
 			              					<th>Cantidad</th>
 			              				</tr>
 			              			</thead>
-			              			<tbody>
+			              			<tbody id="tbld">
 			              				<?php
 			              					$proid = $_REQUEST['proid'];
 			              					$plane = $_REQUEST['nropla'];
@@ -121,7 +338,6 @@ include ("../datos/postgresHelper.php");
 				</div>
 			</div>
 		</div>
-
 		<div id="adda" class="modal fade in hide">
 			<form method="POST" enctype="multipart/form-data" action="includes/incfile.php">
 			<div class="modal-header">
@@ -147,8 +363,15 @@ include ("../datos/postgresHelper.php");
 			</div>
 			</form>
 		</div>
-
+		<input type="hidden" id="pro" value="<?php echo $_GET['proid']; ?>" />
+		<input type="hidden" id="sub" value="<?php echo $_GET['sub']; ?>" />
+		<input type="hidden" id="sec" value="<?php echo $_GET['nropla']; ?>">
 	</section>
+	<div id="fullscreen-icr" class="pull-center">
+		<button class="btn btn-danger" onClick="closefull();"><i class="icon-remove"></i></button>
+		<iframe id="fullpdf" src="<?php echo $dir; ?>" width="100%" height="90%" frameborder="0">
+		</iframe>
+	</div>
 	<div id="space"></div>
 	<footer></footer>
 </body>

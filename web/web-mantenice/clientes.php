@@ -10,7 +10,7 @@ include ("../datos/postgresHelper.php");
 <html lang="es">
 <head>
 	<meta charset="UTF-8">
-	<title>Empleados</title>
+	<title>Clientes</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	<link rel="shortcut icon" href="../ico/icrperu.ico" type="image/x-icon">
@@ -21,7 +21,7 @@ include ("../datos/postgresHelper.php");
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
 	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.js"></script>
 	<script src="../bootstrap/js/bootstrap.js"></script>
-	<script src="js/employee.js"></script>
+	<script src="js/customers.js"></script>
 </head>
 <body>
 	<?php include("../web-manager/includes/menu-manager.inc"); ?>
@@ -42,7 +42,7 @@ include ("../datos/postgresHelper.php");
 			<div class="tab-content">
 				<div class="tab-pane active" data-toggle="tab" id="home">
 					
-					<form action="" method="POST" name="frmemployee" id="frmemployee">
+					<form action="" method="POST" name="frmcustomer" id="frmcustomer">
 						<input type="hidden" name="new" id="new" value="<?php echo $_POST['new']; ?>" />
 						<div class="well c-green-light">
 							<div class="row show-grid">
@@ -57,7 +57,7 @@ include ("../datos/postgresHelper.php");
 									</div>
 									<div class="alert alert-block alert-success hide span4" id="asu">
 										<a href="#" data-dismiss="alert" class="close">&times;</a>
-										<strong>¡Bien hecho!</strong> Se ha guardado tud datos correctamente.
+										<strong>¡Bien hecho!</strong> Se ha guardado tus datos correctamente.
 									</div>
 								</div>
 							</div>
@@ -65,36 +65,36 @@ include ("../datos/postgresHelper.php");
 							
 								<div class="span2">
 									<div class="control-group info">
-										<label for="controls" class="t-info">DNI</label>
+										<label for="controls" class="t-info">RUC</label>
 										<div class="controls">
-											<input type="text" class="span2 t-d" name="dni" id="dni" value="<?php echo $_POST['dni']; ?>" placeholder="Ingrese DNI" onKeypress="return alonenum(event);" maxlength="8" title="Ingrese DNI" REQUIRED />
+											<input type="text" class="span2 t-d" name="ruc" id="ruc" value="<?php echo $_POST['ruc']; ?>" placeholder="Ingrese RUC" onKeypress="return alonenum(event);" maxlength="11" title="Ingrese RUC" REQUIRED />
 										</div>
 									</div>
 								</div>
 								<div class="span4">
 									<div class="control-group info">
-										<label for="controls" class="t-info" onKeypress="return alonechar(event);">Nombre</label>
+										<label for="controls" class="t-info" onKeypress="return alonechar(event);">Razón Social</label>
 										<div class="controls">
-											<input type="text" name="nom" id="nom" class="span4" value="<?php echo $_POST['nom']; ?>" REQUIRED />
-										</div>
-									</div>
-								</div>
-								<div class="span4">
-									<div class="control-group info">
-										<label for="controls" class="t-info" onKeypress="return alonechar(event);">Apellidos</label>
-										<div class="controls">
-											<input type="text" name="ape" id="ape" class="span4" value="<?php echo $_POST['ape']; ?>">
+											<input type="text" placeholder="Ingrese Razon Social" name="rz" id="rz" class="span4" value="<?php echo $_POST['rz']; ?>" REQUIRED />
 										</div>
 									</div>
 								</div>
 								<div class="span2">
+									<div class="control-group info">
+										<label for="controls" class="t-info" onKeypress="return alonechar(event);">Abrebiatura</label>
+										<div class="controls">
+											<input type="text" name="abr" id="abr" class="span2" value="<?php echo $_POST['abr']; ?>">
+										</div>
+									</div>
+								</div>
+								<!--<div class="span2">
 									<div class="control-group info">
 										<label for="controls" class="t-info">Fecha Nacimiento</label>
 										<div class="controls">
 											<input type="text" name="fecnac" id="fecnac" class="span2" placeholder="aaaa-mm-dd" value="<?php echo $_POST['fecnac']; ?>">
 										</div>
 									</div>
-								</div>
+								</div>-->
 								<div class="span2">
 									<div class="control-group info">
 										<label for="controls" class="t-info">Pais</label>
@@ -203,29 +203,15 @@ include ("../datos/postgresHelper.php");
 										</div>
 									</div>
 								</div>
-								<div class="span2">
+								<div class="span4">
 									<div class="control-group info">
-										<label for="controls" class="t-info">Cargo</label>
+										<label for="controls" class="t-info">Contacto</label>
 										<div class="controls">
-											<select  id="car" name="car" class="span2">
-												<?php
-													$cn = new PostgreSQL();
-													$query = $cn->consulta("SELECT cargoid,carnom FROM admin.cargo");
-													if ($cn->num_rows($query) > 0) {
-														while ($result = $cn->ExecuteNomQuery($query)) {
-															if ($_POST['car'] == $result['cargoid']) {
-																echo "<option value='".$result['cargoid']."' SELECTED>".$result['carnom']."</option>";
-															}else{
-																echo "<option value='".$result['cargoid']."'>".$result['carnom']."</option>";
-															}
-														}
-													}
-												?>
-											</select>
+											<input type="text" id="cont" name="cont" value="<?php echo $_POST['cont']; ?>" class="span4">
 										</div>
 									</div>
 								</div>
-								<div class="span2">
+								<div class="span4">
 									<div class="control-group info">
 										<label for="controls" class="t-info">Estado</label>
 										<div class="controls input-warning">
@@ -256,11 +242,11 @@ include ("../datos/postgresHelper.php");
 						<table class="table table-bordered table-condensed table-hover">
 							<thead>
 								<th>Item</th>
-								<th>DNI</th>
-								<th>Nombres y Apellidos</th>
-								<th>Fecha Nacimiento</th>
+								<th>RUC</th>
+								<th>Razon Social</th>
+								<th>Direccion</th>
 								<th>Telefono</th>
-								<th>Cargo</th>
+								<th>Contacto</th>
 								<th>Estado</th>
 							</thead>
 							<tbody id="list">

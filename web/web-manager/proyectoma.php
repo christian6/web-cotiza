@@ -55,6 +55,15 @@ include ("../datos/postgresHelper.php");
 <body>
 	<?php include ("includes/menu-manager.inc"); ?>
 	<header></header>
+	<div id="misub">
+		<ul class="breadcrumb well">
+			<li>
+				<a href="index.php">Home</a>
+				<span class="divider">/</span>
+			</li>
+			<li class="active">Proyectos</li>
+		</ul>
+	</div>
 	<section>
 		<div class="container well">
 			<h4>Proyectos</h4>
@@ -62,7 +71,6 @@ include ("../datos/postgresHelper.php");
 			<div class="row show-grid">
 						
 						<div class="span11">
-							
 								<div class="span4">
 									<div class="control-group">
 										<div class="control-label">
@@ -98,7 +106,28 @@ include ("../datos/postgresHelper.php");
 					</div>
 			</div>
 			<div id="cont">
-				
+				<?php
+				$cn = new PostgreSQL();
+				$qsql = "SELECT p.proyectoid,p.descripcion,p.fecent,e.esnom FROM ventas.proyectos p
+						INNER JOIN admin.estadoes e
+						ON p.esid = e.esid
+						WHERE p.esid LIKE '59' ORDER BY p.fecha DESC";
+				$query = $cn->consulta($qsql);
+				if ($cn->num_rows($query) > 0) {
+					while ($result = $cn->ExecuteNomQuery($query)) {
+				?>
+					<article>
+						<a id="txts" href="sectores.php?proid=<?php echo $result['proyectoid']; ?>">
+							<i class="icon-map-marker icon-white"></i>
+							<label for="label"><?php echo $result['proyectoid']; ?></label>
+							<p><?php echo $result['descripcion']; ?></p>	
+						</a>
+					</article>
+				<?php
+					}
+				}
+				$cn->close($query);
+				?>
 			</div>
 		</div>
 	</section>

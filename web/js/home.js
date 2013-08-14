@@ -54,6 +54,7 @@ function execute_en() {
                       tra.trim();
                       tra = tra.toLowerCase();
                       if (tra != "false") {
+                        //alert(tra);
                         switch(tra){
                           case "administrator":
                           case "gerencia":
@@ -64,6 +65,12 @@ function execute_en() {
                           break;
                           case "almacen":
                                 window.location='web-almacen/home.php';
+                          break;
+                          case "operaciones":
+                                window.location='web-operaciones/index.php';
+                          break;
+                          case "ventas":
+                                window.location='web-ventas/index.php';
                           break;
                         }
 

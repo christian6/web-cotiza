@@ -1,11 +1,70 @@
 @import url('http://fonts.googleapis.com/css?family=Archivo+Narrow');
+@import url('http://fonts.googleapis.com/css?family=Acme');
 
 body
 {
 	background-image: url('../resource/textura/deep.jpg');
 	height: 100%;
+	font-size: 100%;
 	margin: 0 auto;
 	width: 100%;
+}
+body #cir{
+	background-color: rgba(200,200,200,.2);
+	/*border-top-right-radius: 180%;
+	border-bottom-right-radius: 180%;*/
+	border-radius: 100%;
+	height: 25%;
+	float: top;
+	margin-top: -6%;
+	position: fixed;
+	top: 0;
+	width: 100%;
+	transition: all 2s;
+}
+body #cir:hover{
+	height: 35%;
+	margin-top: -10%;
+	transition: all 2s;
+}
+#cab{
+
+	width: 100%;
+	text-align: center;
+	margin-top: 8%;
+}
+#cab h1{
+	
+	background: -webkit-gradient(linear,left top, left bottom, from(#C20303), to(#F3D422));
+	-webkit-background-clip: text;
+  	-webkit-text-fill-color: transparent;
+  	background: -moz-gradient(linear, left top, left bottom, from(#C20303), to(#F3D422));
+  	-moz-background-clip: text;
+  	-moz-text-fill-color: transparent;
+  	border-style: hidden;
+  	border-radius: 100%;
+	font-family: 'Acme';
+	font-size: 4em;
+	margin-left: -1em;
+	overflow: hidden;
+	text-shadow: 0 0 1em rgba(100,100,100,.6);
+	
+}
+@media screen and (max-width: 800px){
+	body #cir{
+		height: 20%;
+		margin-top: -15%;
+		transition: all 2s;
+	}
+	body #cir:hover{
+		height: 30%;
+		margin-top: -10%;
+		transition: all 2s;
+	}
+	#cab h1{
+		font-size: 2.2em;
+		margin-left: -.2em;
+	}
 }
 #login-box
 {
@@ -21,7 +80,7 @@ body
 	background-color: rgba(255,255,240,.4);
 	border-radius: 1em;
 	left: 50%;
-	margin-left: -10em;
+	margin-left: -12.5em;
 	position: relative;
 	text-align: center;
 	width: 20em;

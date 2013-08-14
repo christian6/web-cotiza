@@ -15,6 +15,12 @@ if(isset($_SESSION['car-icr'])){
 		case 'almacen':
 			header('Location: http://190.41.246.91/web/web-almacen/home.php');
 			break;
+		case 'operaciones':
+			header('Location: http://190.41.246.91/web/web-operaciones/index.php');
+			break;
+		case 'operaciones':
+			header('Location: http://190.41.246.91/web/web-ventas/index.php');
+			break;
 		default:
 			header('Location: ');
 			break;

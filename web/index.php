@@ -15,7 +15,11 @@ include ("includes/valsession.php");
 <body>
     <?php include("includes/analitycs.inc"); ?>
 <header>
+    <div id="cab">
+        <h1>Bienvenidos a ICR Instalaciones</h1>
+    </div>
 </header>
+<div id="cir"></div>
 <section>
 	<div id="login-box" class="login-popup">
           <form id="frm" name="frm" method="post" class="signin" action="?login=true" >

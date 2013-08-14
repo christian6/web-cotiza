@@ -53,19 +53,19 @@ include ("../datos/postgresHelper.php");
             <i class="icon-inbox"></i> mensajeria
             <?php
               $cn = new PostgreSQL();
-              $query = $cn->consulta("SELECT COUNT(*) FROM admin.mensaje WHERE empdni LIKE '".$_SESSION['dni-icr']."' AND esid NOT LIKE '57'");
+              $query = $cn->consulta("SELECT COUNT(*) FROM admin.mensaje WHERE fordni LIKE '".$_SESSION['dni-icr']."' AND esid NOT LIKE '57'");
               $r = $cn->ExecuteNomQuery($query);
               $cn->close($query);
               echo "&nbsp;&nbsp;&nbsp; TOTAL <span class='badge badge-info'>".$r[0]."</span>";
 
               $cn = new PostgreSQL();
-              $query = $cn->consulta("SELECT COUNT(*) FROM admin.mensaje WHERE empdni LIKE '".$_SESSION['dni-icr']."' AND esid LIKE '56'");
+              $query = $cn->consulta("SELECT COUNT(*) FROM admin.mensaje WHERE fordni LIKE '".$_SESSION['dni-icr']."' AND esid LIKE '56'");
               $r = $cn->ExecuteNomQuery($query);
               $cn->close($query);
               echo "&nbsp;&nbsp;&nbsp;NO LEIDOS <span class='badge badge-info'>".$r[0]."</span>";
 
               $cn = new PostgreSQL();
-              $query = $cn->consulta("SELECT COUNT(*) FROM admin.mensaje WHERE empdni LIKE '".$_SESSION['dni-icr']."' AND esid LIKE '55'");
+              $query = $cn->consulta("SELECT COUNT(*) FROM admin.mensaje WHERE fordni LIKE '".$_SESSION['dni-icr']."' AND esid LIKE '55'");
               $r = $cn->ExecuteNomQuery($query);
               $cn->close($query);
               echo "&nbsp;&nbsp;&nbsp; LEIDOS <span class='badge badge-info'>".$r[0]."</span>";

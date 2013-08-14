@@ -41,7 +41,7 @@ include ("../datos/postgresHelper.php");
 			padding: 10px;
 			
 		}
-		#cont article{
+		#cont article, #ad{
 			background-color: #CCC;
 			border: 1px solid white;
 			border-radius: 5px;
@@ -77,17 +77,10 @@ include ("../datos/postgresHelper.php");
 					<div class="span5">
 						<h4>Administración de Proyectos</h4>
 						<input type="hidden" id="txtproid" name="txtproid" value="<?php echo $_REQUEST['proid']; ?>">
-						<hr class="hs">
 					</div>
-				
-					<div class="span4">
-						<dl class="dl-horizontal">
-							<dt>Responsable</dt>
-							<dd>
-								<?php echo $responsable; ?>
-							</dd>
-						</dl>
-					</div>
+				</div>
+				<div class="well c-yellow-light t-warning">
+					<strong>Responsable  </strong><?php echo $responsable; ?>.
 				</div>
 				<div class="row show-grid">
 					<div class="span8">
@@ -140,6 +133,23 @@ include ("../datos/postgresHelper.php");
 							?>
 						</div>
 					</div>
+				</div>
+			</div>
+			<div class="span8 well">
+				<h5>Adicionales del Proyecto</h5>
+				<div id="cont">
+					<?php
+					$cn = new PostgreSQL();
+					$query = $cn->consulta("SELECT * FROM ventas.adicionales WHERE esid LIKE '56' AND proyectoid LIKE '".$_GET['proid']."' 
+											AND TRIM(subproyectoid) LIKE TRIM('".$_GET['sub']."'); ");
+					//echo "SELECT * FROM ventas.adicionales WHERE esid LIKE '56' AND proyectoid LIKE '".$_GET['id']."' AND TRIM(subproyectoid) LIKE TRIM('".$_GET['sub']."'); ";
+					if ($cn->num_rows($query) > 0) {
+						while ($result = $cn->ExecuteNomQuery($query)) {
+							echo "<div id='ad'>".$result['descrip']."</div>";
+						}
+					}
+					$cn->close($query);
+					?>
 				</div>
 			</div>
 		</div>

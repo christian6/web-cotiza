@@ -38,3 +38,22 @@ function viewcompare () {
 	var caracteristicas = "toolbar=0, location=0, directories=0, resizable=0, scrollbars=yes, height=600, width=1200, top="+myTop+", left="+myLeft;
 	var wino = window.open("comparelist.php?"+"&pro="+pro+"&sub="+sub+"&sec="+sec,"Comparar Listas",caracteristicas);
 }
+function resizesmall () {
+	$( "#plano" ).animate({
+		height: "2em"
+	},1000);
+	$("#vpdf").css('display','none');
+}
+function resizefull () {
+	$( "#plano" ).animate({
+		height: "31em"
+	},1000);
+	$( "#vpdf").css('display','block');
+}
+function openfull () {
+	$( "#fullscreen-icr" ).show("clip",{},1600);
+	$("#fullpdf").css('display','block');
+}
+function closefull () {
+	$( "#fullscreen-icr" ).hide("clip",{},2000);
+}

@@ -41,7 +41,7 @@ include ("../datos/postgresHelper.php");
 			padding: 10px;
 			
 		}
-		#cont article{
+		#cont article, #ad{
 			background-color: #CCC;
 			border: 1px solid white;
 			border-radius: 5px;
@@ -69,26 +69,27 @@ include ("../datos/postgresHelper.php");
 		$cn->close($query);
 	?>
 	<header></header>
+	<div id="misub">
+		<ul class="breadcrumb well">
+			<li>
+				<a href="index.php">Home</a>
+				<span class="divider">/</span>
+			</li>
+			<li>
+				<a href="proyectoma.php">Proyectos</a>
+				<span class="divider">/</span>
+			</li>
+			<li class="active">Proyecto Admin</li>
+		</ul>
+	</div>
 	<section>
 		<div class="container well">
+			<div class="span5">
+				<h3>Administración de Proyectos</h3>
+				<input type="hidden" id="txtproid" name="txtproid" value="<?php echo $_REQUEST['proid']; ?>">
+			</div>
 		<div class="row show-grid">
 			<div class="span8 well">
-				<div class="row show-grid">
-					<div class="span5">
-						<h4>Administración de Proyectos</h4>
-						<input type="hidden" id="txtproid" name="txtproid" value="<?php echo $_REQUEST['proid']; ?>">
-						<hr class="hs">
-					</div>
-				
-					<div class="span4">
-						<dl class="dl-horizontal">
-							<dt>Responsable</dt>
-							<dd>
-								<?php echo $responsable; ?>
-							</dd>
-						</dl>
-					</div>
-				</div>
 				<div class="btn-group">
 				<?php
 					$sql = "SELECT COUNT(*) FROM operaciones.metproyecto WHERE ";
@@ -108,12 +109,17 @@ include ("../datos/postgresHelper.php");
 					}else{
 				?>
 				
-				<button class="btn" onClick="javascript:location.href='comparealllist.php?pro=<?php echo $_GET['proid']; ?>&sub=<?php echo $_GET['sub']; ?>'">
-					<i class="icon-ok"></i> Aprobar Lista</button>
+				<button class="btn btn-info t-d" onClick="javascript:location.href='comparealllist.php?pro=<?php echo $_GET['proid']; ?>&sub=<?php echo $_GET['sub']; ?>'">
+					<i class="icon-list"></i> Lista de Proyecto</button>
 					<?php } ?>
-				<button class="btn btn-danger" onClick="viewdel();">Eliminar Lista</button>
+				<!--<button class="btn btn-danger" onClick="viewdel();">Eliminar Lista</button>-->
+				<?php if($res != 1){ ?>
+				<button class="btn btn-danger t-d" onClick="showuser();"><i class="icon-user"></i> Asignar Responsable</button>
+				<?php } ?>
 				</div>
-				<hr class="hs">
+				<div class="alert alert-warning">
+					<strong>Responsable </strong> <?php echo $responsable; ?>.
+				</div>
 				<div class="row show-grid">
 					<div class="span8">
 						<h5>Sectores</h5>
@@ -151,7 +157,6 @@ include ("../datos/postgresHelper.php");
 				<div class="row show-grid">
 					<div class="span3">
 						<h5>Sub Proyectos</h5>
-						<hr class="hs">
 						<div id="cont">
 							<?php
 							$cn = new PostgreSQL();							
@@ -165,6 +170,23 @@ include ("../datos/postgresHelper.php");
 							?>
 						</div>
 					</div>
+				</div>
+			</div>
+			<div class="span8 well">
+				<h5>Adicionales del Proyecto</h5>
+				<div id="cont">
+					<?php
+					$cn = new PostgreSQL();
+					$query = $cn->consulta("SELECT * FROM ventas.adicionales WHERE esid LIKE '56' AND proyectoid LIKE '".$_GET['proid']."' 
+											AND TRIM(subproyectoid) LIKE TRIM('".$_GET['sub']."'); ");
+					//echo "SELECT * FROM ventas.adicionales WHERE esid LIKE '56' AND proyectoid LIKE '".$_GET['id']."' AND TRIM(subproyectoid) LIKE TRIM('".$_GET['sub']."'); ";
+					if ($cn->num_rows($query) > 0) {
+						while ($result = $cn->ExecuteNomQuery($query)) {
+							echo "<div id='ad'>".$result['descrip']."</div>";
+						}
+					}
+					$cn->close($query);
+					?>
 				</div>
 			</div>
 		</div>
@@ -192,6 +214,45 @@ include ("../datos/postgresHelper.php");
 			<div class="modal-footer">
 				<button class="btn pull-left" data-dismiss="modal">Cancelar</button>
 				<button class="btn btn-danger" onClick="delsectores();">Aceptar</button>
+			</div>
+		</div>
+		<div id="per" class="modal fade in hide c-yellow-light">
+			<div class="modal-header">
+				<a class="close" data-dismiss="modal">×</a>
+				<h4 class="t-warning">Asignar Responsable de Obra</h4>
+				<input type="hidden" id="pro" value="<?php echo $_GET['proid']; ?>">
+			</div>
+			<div class="modal-body">
+				<div class="well c-yellow-light">
+					<div class="control-group info">
+						<label for="controls" class="control-label"><b>Responsable del Proyecto</b></label>
+						<div class="controls">
+							<div class="input-prepend">
+								<span class="add-on">
+									<i class="icon-user"></i>
+								</span>
+								<select name="cboper" id="cboper">
+								<?php
+									$cn = new PostgreSQL();
+									$query = $cn->consulta("SELECT empdni,empnom,empape FROM admin.empleados WHERE cargoid = 7 ");
+									if ($cn->num_rows($query) > 0) {
+										while ($result = $cn->ExecuteNomQuery($query)) {
+											echo "<option value='".$result['empdni']."'>".$result['empnom'].", ".$result['empape']."</option>";
+										}
+									}else{
+										echo "<option>--No se Encontraron--</option>";
+									}
+									$cn->close($query);
+								?>
+							</select>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button class="btn" data-dismiss="modal">Cancelar</button>
+				<button class="btn btn-primary" onClick="saveper();">Guardar Cambios</button>
 			</div>
 		</div>
 	</section>

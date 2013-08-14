@@ -22,13 +22,36 @@ include ("../datos/postgresHelper.php");
     <script type="text/javascript" src="../web-almacen/js/autocomplete.js"></script>
 	<script src="../bootstrap/js/bootstrap.js"></script>
 	<script src="js/sectores.js"></script>
+	<style>
+		#plano{
+			background-color: #2E3134;
+			border: .3em dashed gray;
+			border-radius: .3em;
+			color: #7f858a;
+			font-size: 1em;
+			font-weight: bold;
+			padding: .5em;
+			text-align: center;
+			text-transform: uppercase;
+		}
+		#fullpdf{
+			display: none;
+			margin-top: 5em;
+			position: absolute;
+			/*top: 1em;*/
+		}
+		#fullscreen-icr button{
+			position: absolute;
+			top: 3em;
+		}
+	</style>
 </head>
 <body>
 	<?php include ("includes/menu-operaciones.inc"); ?>
 	<?php
-		$proid = $_REQUEST['proid'];
-		$plane = $_REQUEST['nropla'];
-		$subpro = $_REQUEST['subpro'];
+		$proid = $_GET['proid'];
+		$plane = $_GET['nropla'];
+		$subpro = $_GET['subpro'];
 		
 		$sql = "SELECT COUNT(*) FROM operaciones.matmetrado ";
 
@@ -48,19 +71,91 @@ include ("../datos/postgresHelper.php");
 	<header></header>
 	<section>
 		<div class="container well">
-			<h4>Sector de Proyecto</h4>
-			<hr class="hs">
+			<h2>Sector de Proyecto</h2>
+			<div class="row">
+						<dl class="dl-horizontal" >
+						<dt>Proyecto </dt>
+						<?php
+						$cn = new PostgreSQL();
+						$query = $cn->consulta("SELECT p.descripcion FROM ventas.proyectos p 
+												WHERE p.proyectoid LIKE '".$_GET['proid']."' ");
+						if ($cn->num_rows($query) > 0) {
+							while ($result = $cn->ExecuteNomQuery($query)) {
+								echo "<dd>".$result[0]."</dd>";
+							}
+						}else{
+							echo "<dd> &nbsp;</dd>";
+						}
+						$cn->close($query);
+						?>
+						<dt>Subproyecto </dt>
+						<?php
+						$cn = new PostgreSQL();
+						$query = $cn->consulta("SELECT subproyecto FROM ventas.subproyectos
+												WHERE proyectoid LIKE '".$_GET['proid']."' AND TRIM(subproyectoid) LIKE '".$_GET['subpro']."' ");
+						if ($cn->num_rows($query) > 0) {
+							while ($result = $cn->ExecuteNomQuery($query)) {
+								echo "<dd>".$result[0]."</dd>";
+							}
+						}else{
+							echo "<dd> &nbsp;</dd>";
+						}
+						$cn->close($query);
+						?>
+						<dt>Sector </dt>
+						<?php
+						$cn = new PostgreSQL();
+						$query = $cn->consulta("SELECT sector FROM ventas.sectores
+												WHERE proyectoid LIKE '".$_GET['proid']."' AND TRIM(subproyectoid) LIKE '".$_GET['subpro']."' AND TRIM(nroplano) LIKE TRIM('".$_GET['nropla']."') ");
+						if ($cn->num_rows($query) > 0) {
+							while ($result = $cn->ExecuteNomQuery($query)) {
+								echo "<dd>".$result[0]."</dd>";
+							}
+						}else{
+							echo "<dd> &nbsp;</dd>";
+						}
+						$cn->close($query);
+						?>
+					</dl>
+					</div>
+			<?php
+				$dir = "";
+				$file = -1;
+				if ($_GET['subpro'] != '') {
+					if (file_exists($_SERVER['DOCUMENT_ROOT']."/web/project/".$_GET['proid']."/".$_GET['subpro']."/".$_GET['nropla'].".pdf")) {
+						$dir = "/web/project/".$_GET['proid']."/".$_GET['subpro']."/".$_GET['nropla'].".pdf";	
+						$file = 1;
+					}
+				}else{
+					if (file_exists($_SERVER['DOCUMENT_ROOT']."/web/project/".$_GET['proid']."/".$_GET['nropla'].".pdf")) {
+						$dir = "/web/project/".$_GET['proid']."/".$_GET['nropla'].".pdf";
+						$file = 1;
+					}
+				}
+			?>
+			<?php if ($file == 1){ ?>
 			<div class="row show-grid">
 				<div class="span12">
-					<h5 id="plane"><?php echo $_REQUEST['nropla']; ?></h5>
-					<h5 id="proid"><?php echo $_REQUEST['proid']; ?></h5>
+					<div id="plano">
+						<div class="btn-group pull-left">
+							<button class="btn" onClick="openfull();"><i class="icon-eye-open"></i></button>
+							<button class="btn" onClick="resizesmall();"><i class="icon-resize-small"></i></button>
+							<button class="btn" onClick="resizefull();"><i class="icon-resize-full"></i></button>
+						</div>
+						<iframe id="vpdf" src="<?php echo $dir; ?>" width="100%" height="400" frameborder="1"></iframe>
+					</div>
+				</div>
+			</div>
+			<?php } ?>
+			<div class="row show-grid">
+				<div class="span12">
 					<ul id="tab" class="nav nav-tabs">
-			            <li class="active"><a href="#mat" data-toggle="tab">Materiales</a></li>
-			            <li class=""><a href="#eyh" data-toggle="tab">Equipos y Herramientas</a></li>
-			            <li class="">
-			              <a href="#mo" data-toggle="tab">Mano de Obra</a>
-			            </li>
-			        </ul>
+						<li class="active"><a href="#mat" data-toggle="tab">Materiales</a></li>
+						<li class=""><a href="#eyh" data-toggle="tab">Equipos y Herramientas</a></li>
+						<li class="">
+							<a href="#mo" data-toggle="tab">Mano de Obra</a>
+						</li>
+					</ul>
 			        <div id="myTabContent" class="tab-content">
 			            <div class="tab-pane fade active in" id="mat">
 			              <div class="row">
@@ -74,10 +169,19 @@ include ("../datos/postgresHelper.php");
 			              				<button class="btn" onClick="openaddm();"><i class="icon-plus"></i> Agregar material</button>
 										<button class="btn" onClick="openfile();"><i class="icon-plus"></i> Agregar Archivo</button>
 									<?php
-			              			}else{
-			              			?>
-										<button class="btn" onClick="viewlist();"><i class="icon-ok"></i> Ver Lista de Venta</button>
-										<!--<button class="btn" onClick="openfile();"><i class="icon-remove"></i> Rechazar</button>-->
+									}else{
+									?>
+										<!--<button class="btn btn-info t-d" onClick="viewlist();"><i class="icon-list"></i> Ver Lista de Venta</button>
+										<button class="btn" onClick="openfile();"><i class="icon-remove"></i> Rechazar</button>-->
+										<div class="alert alert-success">
+											<p>
+												<i class="icon-info-sign"></i> <strong>Lista de Ventas.</strong>
+											</p>
+											<button class="btn btn-success t-d" onClick="aproved();"><i class="icon-ok"></i> Aprobar</button>
+											<button class="btn"></button>
+											<button class="btn btn-success t-d" onClick="addmat();"><i class="icon-list"></i> Hacer mi lista</button>
+										</div>
+										
 				              		<?php } ?>
 			              		</div>
 			              	</div>
@@ -110,8 +214,18 @@ include ("../datos/postgresHelper.php");
 							  					}elseif ($subpro != "") {
 				              						$qsql .= "WHERE d.proyectoid LIKE '".$proid."' GROUP BY d.materialesid,m.matnom,m.matmed,m.matund";
 				              					}
-											
-											
+				              				}else{
+				              					$qsql = "SELECT DISTINCT d.materialesid,m.matnom,m.matmed,m.matund,SUM(d.cant) as cant
+														FROM ventas.matmetrado d INNER JOIN admin.materiales m
+														ON d.materialesid LIKE m.materialesid
+														INNER JOIN ventas.proyectos p
+														ON d.proyectoid LIKE p.proyectoid ";
+														if ($subpro == "") {
+															$qsql .= "WHERE d.proyectoid LIKE '".$proid."' AND TRIM(d.sector) LIKE TRIM('".$plane."') GROUP BY d.materialesid,m.matnom,m.matmed,m.matund";
+														}elseif ($subpro != "") {
+															$qsql .= "WHERE d.proyectoid LIKE '".$proid."' AND TRIM(d.subproyectoid) LIKE TRIM('$subpro') AND TRIM(d.sector) LIKE TRIM('".$plane."') GROUP BY d.materialesid,m.matnom,m.matmed,m.matund";
+														}
+											}
 			              					$query = $cn->consulta($qsql);
 			              					if ($cn->num_rows($query) > 0) {
 			              						$i = 1;
@@ -128,7 +242,7 @@ include ("../datos/postgresHelper.php");
 			              							echo "</tr>";
 			              						}
 			              					}
-			              					}
+			              					
 			              					$cn->close();
 			              				?>
 			              			</tbody>
@@ -205,6 +319,7 @@ include ("../datos/postgresHelper.php");
 							}elseif ($subpro != "") {
 								$qsql .= "WHERE d.proyectoid LIKE '".$proid."' AND TRIM(d.subproyectoid) LIKE TRIM('$subpro') AND TRIM(d.sector) LIKE TRIM('".$plane."') GROUP BY d.materialesid,m.matnom,m.matmed,m.matund";
 							}
+					//echo $qsql;
 					$query = $cn->consulta($qsql);
 					if ($cn->num_rows($query) > 0) {
 						?>

@@ -13,11 +13,11 @@
         var selected = this.element.children( ":selected" ),
           value = selected.val() ? selected.text() : "";
  
-        this.input = $( "<input id='txtse' onkeyup='searchmeter(event);'>" )
+        this.input = $( "<input id='nommat' onkeyup='searchmeter(event);'>" )
           .appendTo( this.wrapper )
           .val( value )
           .attr( "title", "" )
-          .addClass( "span5 ui-state-default ui-combobox-input ui-widget ui-widget-content ui-corner-left" )
+          .addClass( "span7 ui-state-default ui-combobox-input ui-widget ui-widget-content ui-corner-left" )
           .autocomplete({
             delay: 0,
             minLength: 0,

@@ -66,3 +66,28 @@ function delsectores (){
 	}
 	
 }
+function showuser () {
+	$( "#per" ).modal('show');
+}
+function saveper () {
+	var prm = {
+		'tra' : 'sper',
+		'proid' : $("#pro").val(),
+		'dni' : $("#cboper").val()
+	}
+	$.ajax({
+		data : prm,
+		url : 'includes/incmeter.php',
+		type : 'POST',
+		dataType : 'html',
+		success : function (response) {
+			//alert(response);
+			if (response == "hecho") {
+				location.href = ''
+			}
+		},
+		error : function (obj,quepaso,otrobj) {
+			alert("Si estas viendo esto es por que fallé");	
+		}
+	});
+}

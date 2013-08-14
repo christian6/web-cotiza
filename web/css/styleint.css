@@ -2,6 +2,10 @@
   height: 60px;
   width : auto;
 }
+#misub{
+      margin-top: -1.6%;
+      position: fixed;
+    }
 body
 {
   background: -webkit-linear-gradient(top, #fefcea 0%, #f1da36 100%);
@@ -14,6 +18,14 @@ body
   background-repeat: no-repeat;
   background-attachment: fixed;
   font-family: 'Lucida-Sans',Helvetica,Arial;
+
+  scrollbar-arrow-color:#0000FF; 
+  scrollbar-track-color:#GGGGGG; 
+  scrollbar-shadow-color:#000000; 
+  scrollbar-face-color:#000000; 
+  scrollbar-highlight-color:#666666; 
+  scrollbar-darkshadow-color:#000000; 
+  scrollbar-3dlight-color:#0000FF; 
 }
 header{
   padding-top: 5%;

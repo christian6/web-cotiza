@@ -1,7 +1,6 @@
 $(function (){
-	$("#fecnac").datepicker({ minDate: "" , maxDate: "0" , changeMonth: true, changeYear: true, showAnim: "slide", dateFormat: "yy/mm/dd"});
 	if( $("#new").val() != 'TRUE' ){
-		$("#frmemployee").find(':input').each(function () {
+		$("#frmcustomer").find(':input').each(function () {
 			var item = this;
 			item.disabled = true;
 		});
@@ -16,28 +15,28 @@ function alonechar (event){
 	return (code < 48 || code > 57);
 }
 function nuevo () {
-	$("#frmemployee").find(':input').each(function () {
+	$("#frmcustomer").find(':input').each(function () {
 		var item = this;
 		item.disabled = false;
 	});
 	$("#new").val('TRUE');
 }
 function reset () {
-	$( "#frmemployee" ).find(':input').each(function () {
+	$( "#frmcustomer" ).find(':input').each(function () {
 		var item = this;
 		item.value('');
 	});
-	$( "#frmemployee" ).find(':select').each(function () {
+	$( "#frmcustomer" ).find(':select').each(function () {
 		var item = this;
 		item.selectedIndex = 0;
 	});
 }
 function validdata () {
 	var bool = false;
-	$( "#frmemployee" ).find(':input').each(function () {
+	$( "#frmcustomer" ).find(':input').each(function () {
 		var item = this;
 		if (item.value == '') {
-			alert(item.id);
+			//alert(item.id);
 			$( "#malert" ).css('display','block');
 			item.focus();
 			bool = false;
@@ -55,22 +54,21 @@ function savedata () {
 		//alert('dentro de if');
 		var prm = {
 			'tra' : 'save',
-			'dni' : $("#dni").val(),
-			'nom' : $("#nom").val(),
-			'ape' : $("#ape").val(),
-			'fec' : $("#fecnac").val(),
+			'ruc' : $("#ruc").val(),
+			'rz' : $("#rz").val(),
+			'abr' : $("#abr").val(),
 			'pai' : $("#pais").val(),
 			'dep' : $("#dep").val(),
 			'pro' : $("#pro").val(),
 			'dis' : $("#dis").val(),
 			'dir' : $("#dir").val(),
 			'tel' : $("#tel").val(),
-			'car' : $("#car").val()
+			'con' : $("#cont").val(),
 		}
 		//alert('pasamos');
 		$.ajax({
 			data : prm,
-			url : 'includes/incemployee.php',
+			url : 'includes/inccustomer.php',
 			type : 'POST',
 			dataType : 'html',
 			beforeSend : function (obj) {
@@ -104,7 +102,7 @@ function listemployee () {
 	}
 	$.ajax({
 		data : prm,
-		url : 'includes/incemployee.php',
+		url : 'includes/inccustomer.php',
 		type : 'POST',
 		dataType : 'html',
 		success : function (response) {

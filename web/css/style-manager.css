@@ -22,6 +22,7 @@ section{
 	padding: 2em;
 	position: absolute;
 	/*max-width: 90%;*/
+    text-align: center;
 	width: 90%;
 }
 /* Global CSS that are applied for all screen sizes */

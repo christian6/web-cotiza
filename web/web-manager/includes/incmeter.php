@@ -1,4 +1,5 @@
 <?php
+session_start();
 
 include ("../../datos/postgresHelper.php");
 
@@ -75,6 +76,35 @@ if ($_REQUEST['tra'] == 'med') {
 	$query = $cn->consulta("INSERT INTO ventas.proyectopersonal VALUES('$pro','$dni')");
 	$cn->affected_rows($query);
 	$cn->close($query);
+
+	$npro = '';
+	$rz = '';
+	$c = new PostgreSQL();
+	$q = $c->consulta("SELECT p.descripcion,c.nombre from ventas.proyectos p INNER JOIN admin.clientes c
+						ON p.ruccliente LIKE c.ruccliente
+						WHERE p.proyectoid LIKE '".$_POST['proid']."';");
+	if ($c->num_rows($q) > 0) {
+		$res = $c->ExecuteNomQuery($q);
+		$npro = $res['descripcion'];
+		$rz = $res['nombre'];
+	}
+	$c->close($q);
+
+	$cn = new PostgreSQL();
+	$query = $cn->consulta("INSERT INTO admin.mensaje(empdni,fordni,question,body,esid) 
+							VALUES('".$_SESSION['dni-icr']."','$dni','Asignación de Proyecto $npro',
+								'<b>".$_SESSION['nom-icr']."</b>
+								<p>
+								Por medio de la presente, le hago de su conocimiento la asignación oficial del proyecto
+								denominado <b>".$npro."</b> con codigo <b>".$pro."</b>, presentado por la empresa <b>".$rz."</b>.
+								Tambien queda habilitado el proyecto en esta plataforma para su evaluación y desarrollo.
+								</p>','56');");
+	$cn->affected_rows($query);
+	$cn->close($query);
+
+	$audi = new PostgreSQL();
+	$audi->auditoria('ventas_proyectopersonal','INSERT',$_SESSION['dni-icr'],"Asigna $pro -> $dni",'Se asigno el proyecto ID : $pro $npro al usuario DNI '.$_SESSION['dni-icr'].' '.$_SESSION['nom-icr']);
+
 	echo "hecho";
 }
 
@@ -132,5 +162,4 @@ if ($_POST['tra'] == 'conedit') {
 
 	echo "hecho";
 }
-
 ?>
