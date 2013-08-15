@@ -23,6 +23,18 @@ include ("../datos/postgresHelper.php");
     <script type="text/javascript" src="../web-almacen/js/autocomplete.js"></script>
 	<script src="../bootstrap/js/bootstrap.js"></script>
 	<script src="js/med.js"></script>
+	<style>
+		#fullpdf{
+			display: none;
+			margin-top: 5em;
+			position: absolute;
+			/*top: 1em;*/
+		}
+		#fullscreen-icr button{
+			position: absolute;
+			top: 3em;
+		}
+	</style>
 </head>
 <body>
 	<?php include ("includes/menu-operaciones.inc"); ?>
@@ -32,6 +44,21 @@ include ("../datos/postgresHelper.php");
 		<input type="hidden" id="sec" value="<?php echo $_GET['sec']; ?>">
 	</header>
 	<section>
+		<?php
+				$dir = "";
+				$file = -1;
+				if ($_GET['sub'] != '') {
+					if (file_exists($_SERVER['DOCUMENT_ROOT']."/web/project/".$_GET['pro']."/".$_GET['sub']."/".$_GET['sec'].".pdf")) {
+						$dir = "/web/project/".$_GET['pro']."/".$_GET['sub']."/".$_GET['sec'].".pdf";	
+						$file = 1;
+					}
+				}else{
+					if (file_exists($_SERVER['DOCUMENT_ROOT']."/web/project/".$_GET['pro']."/".$_GET['sec'].".pdf")) {
+						$dir = "/web/project/".$_GET['pro']."/".$_GET['sec'].".pdf";
+						$file = 1;
+					}
+				}
+			?>
 		<div class="container well">
 			<div class="row show-grid">
 				<div class="span12">
@@ -39,8 +66,9 @@ include ("../datos/postgresHelper.php");
 					<h5>Proyecto: <?php echo $_GET['pro']; ?> Sub Proyecto: <?php echo $_GET['sub']; ?>  Sector: <?php echo $_GET['sec']; ?></h5>
 					<div class="btn-group">
 						<a href="detsectores.php?proid=<?php echo $_GET['pro']; ?>&subpro=<?php echo $_GET['sub']; ?>&nropla=<?php echo $_GET['sec']; ?>" class="btn btn-success t-d"><i class="icon-arrow-left"></i> volver</a>
-					<button class="btn btn-info t-d" onClick="searchbtn();"><i class="icon-search"></i> Buscar Medidas</button>
-					<button class="btn btn-info t-d" onClick="list();"><i class="icon-refresh"></i> Actualizar</button>
+						<button class="btn btn-info t-d" onClick="searchbtn();"><i class="icon-search"></i> Buscar Medidas</button>
+						<button class="btn btn-info t-d" onClick="list();"><i class="icon-refresh"></i> Actualizar</button>
+						<button class="btn" onClick="openfull();"><i class="icon-eye-open"></i> Ver plano</button>
 					</div>
 					<div class="row show-grid">
 						<div class="span12">
@@ -165,6 +193,11 @@ include ("../datos/postgresHelper.php");
 			</div>
 		</div>
 	</section>
+	<div id="fullscreen-icr" class="pull-center">
+		<button class="btn btn-danger" onClick="closefull();"><i class="icon-remove"></i></button>
+		<iframe id="fullpdf" src="<?php echo $dir; ?>" width="100%" height="90%" frameborder="0">
+		</iframe>
+	</div>
 	<div id="space"></div>
 	<footer></footer>
 </body>

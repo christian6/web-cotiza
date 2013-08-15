@@ -1,5 +1,7 @@
 <?php
 
+session_start();
+
 include ("../../datos/postgresHelper.php");
 
 if ($_REQUEST['tra'] == 'med') {
@@ -174,6 +176,24 @@ if ($_POST['tra'] == 'conedit') {
 	</tbody>
 </table>
 <?php
+}
+if ($_POST['tra'] == 'saveobs') {
+	$cn = new PostgreSQL();
+	$query = $cn->consulta("INSERT INTO ventas.alertaspro VALUES('".$_POST['pro']."','".$_POST['sub']."','".$_POST['sec']."','".$_SESSION['dni-icr']."',
+							'".$_POST['top']."','".$_POST['obs']."','1')");
+	$cn->affected_rows($query);
+	$cn->close($query);
+
+	$cn = new PostgreSQL();
+	$query = $cn->consulta("INSERT INTO admin.mensaje(empdni, fordni, question, body, esid)
+						VALUES('".$_SESSION['dni-icr']."','".$_POST['top']."','OBSERVACION ".$_POST['pro']." ".$_POST['sub']." ".$_POST['sec']."','".$_POST['obs']."','56');");
+	$cn->affected_rows($query);
+	$cn->close($query);
+
+	$cn = new PostgreSQL();
+	$cn->auditoria('VENTAS_ALERTASPRO','INSERT',$_SESSION['dni-icr'],'SECTOR DESAPROBADO > VENTAS PROYECTO '.$_POST['pro'].' SECTOR'.$_POST['sec'],$_POST['pro'].' '.$_POST['sub'].' '.$_POST['sec'].$_POST['obs']);
+
+	echo "success";
 }
 
 ?>

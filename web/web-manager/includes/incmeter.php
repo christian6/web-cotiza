@@ -95,7 +95,7 @@ if ($_REQUEST['tra'] == 'med') {
 							VALUES('".$_SESSION['dni-icr']."','$dni','Asignación de Proyecto $npro',
 								'<b>".$_SESSION['nom-icr']."</b>
 								<p>
-								Por medio de la presente, le hago de su conocimiento la asignación oficial del proyecto
+								Por medio de la presente, hago de su conocimiento la asignación oficial del proyecto
 								denominado <b>".$npro."</b> con codigo <b>".$pro."</b>, presentado por la empresa <b>".$rz."</b>.
 								Tambien queda habilitado el proyecto en esta plataforma para su evaluación y desarrollo.
 								</p>','56');");

@@ -31,32 +31,44 @@ function testClosedProperty() {
 }
 */
 function aproved () {
-	if (confirm("Seguro que desea aprobar esta \r\nlista de materiales para este sector?")) {
-		var pro = document.getElementById("txtproid").value;
-		var sub = document.getElementById("txtsubpro").value;
-		var sec = document.getElementById("txtplane").value;
-		var prm = {
-			'tra' : 'apro',
-			'pro' : pro,
-			'sub' : sub,
-			'sec' : sec,
-		}
-		$.ajax({
-			data : prm,
-			url : 'includes/incopmetrado.php',
-			type : 'POST',
-			success : function(response){
-				if (response == "hecho") {
-					location.href = '';
-				}else{
-					return;
+	$.msgBox({
+		title : "Mensaje",
+		content : "Seguro que desea aprobar esta \r\nlista de materiales para este sector?",
+		type : "confirm",
+		opacity: 0.8,
+		buttons : [{value: "Si"}, {value: "Cancelar"}],
+		success : function (result) {
+			if (result == 'Si') {
+				var pro = document.getElementById("txtproid").value;
+				var sub = document.getElementById("txtsubpro").value;
+				var sec = document.getElementById("txtplane").value;
+				var prm = {
+					'tra' : 'apro',
+					'pro' : pro,
+					'sub' : sub,
+					'sec' : sec,
 				}
-			},
-			error: function(objeto, quepaso, otroobj){
-				alert("Estas viendo esto por que fallé\r\n"+"Pasó lo siguiente: "+quepaso + objeto.id + otroobj);
+				$.ajax({
+					data : prm,
+					url : 'includes/incopmetrado.php',
+					type : 'POST',
+					success : function(response){
+						if (response == "hecho") {
+							location.href = '';
+						}else{
+							return;
+						}
+					},
+					error: function(objeto, quepaso, otroobj){
+						alert("Estas viendo esto por que fallé\r\n"+"Pasó lo siguiente: "+quepaso + objeto.id + otroobj);
+					}
+				});
 			}
-		});
-	}
+		}
+	});
+	/*if (confirm("Seguro que desea aprobar esta \r\nlista de materiales para este sector?")) {
+		
+	}*/
 }
 
 function viewlist () {
@@ -154,6 +166,57 @@ function delmat (matid) {
 	}
 }
 function addmat () {
-	location.href = 'addmatope.php?'+'pro='+$("#txtproid").val()+'&sub='+$("#txtsubpro").val()+'&sec='+$("#txtplane").val();
-	//$.post('addmatope.php',prm);
+	$("#mnot").modal("show");
+}
+function resizesmall () {
+	$( "#plano" ).animate({
+		height: "2em"
+	},1000);
+	$("#vpdf").css('display','none');
+}
+function resizefull () {
+	$( "#plano" ).animate({
+		height: "31em"
+	},1000);
+	$( "#vpdf").css('display','block');
+}
+function openfull () {
+	$( "#fullscreen-icr" ).show("clip",{},1600);
+	$("#fullpdf").css('display','block');
+}
+function closefull () {
+	$( "#fullscreen-icr" ).hide("clip",{},2000);
+}
+function saveobs () {
+	var prm = {
+		'tra' : 'saveobs',
+		'pro' : $("#pro").val(),
+		'sub' : $("#sub").val(),
+		'sec' : $("#sec").val(),
+		'top' : $("#cbovent").val(),
+		'obs' : $("#obs").val()
+	}
+	$.ajax({
+		data : prm,
+		url : 'includes/incmeter.php',
+		type : 'POST',
+		success : function (response) {
+			alert(response);
+			if (response == 'success') {
+				location.href = 'addmatope.php?'+'pro='+$("#pro").val()+'&sub='+$("#sub").val()+'&sec='+$("#sec").val();
+			}
+		},
+		error : function (obj,quepaso,otroobj) {
+			$("#mnot").modal("hide");
+			$.msgBox({
+				title : 'ERROR',
+				content : 'Si estas viendo esto es por fallé',
+				type : 'error',
+				autoClose : false
+			});
+		}
+	});
+}
+function refaddmat () {
+	location.href = 'addmatope.php?'+'pro='+$("#pro").val()+'&sub='+$("#sub").val()+'&sec='+$("#sec").val();
 }

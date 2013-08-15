@@ -213,3 +213,10 @@ function eliminar () {
 		});
 	}
 }
+function openfull () {
+	$( "#fullscreen-icr" ).show("clip",{},1600);
+	$("#fullpdf").css('display','block');
+}
+function closefull () {
+	$( "#fullscreen-icr" ).hide("clip",{},2000);
+}

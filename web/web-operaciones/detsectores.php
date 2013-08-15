@@ -21,6 +21,8 @@ include ("../datos/postgresHelper.php");
 	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.js"></script>
     <script type="text/javascript" src="../web-almacen/js/autocomplete.js"></script>
 	<script src="../bootstrap/js/bootstrap.js"></script>
+	<script src="../modules/msgBox.js"></script>
+	<link rel="stylesheet" href="../css/msgBoxLight.css">
 	<script src="js/sectores.js"></script>
 	<style>
 		#plano{
@@ -162,12 +164,19 @@ include ("../datos/postgresHelper.php");
 			              	
 			              	<div class="span11 well">
 			              		<div class="controls">
-			              		<div class="button-group">
 			              			<?php
 			              			if ($r[0] >= 1) {
 			              				?>
-			              				<button class="btn" onClick="openaddm();"><i class="icon-plus"></i> Agregar material</button>
-										<button class="btn" onClick="openfile();"><i class="icon-plus"></i> Agregar Archivo</button>
+			              				<div class="alert alert-warning">
+			              					<p>
+			              						<i class="icon-info-sign"></i> <strong>Lista de Operaciones.</strong><br>
+
+			              					</p>
+			              					<div class="btn-group">
+			              						<button class="btn btn-warning t-d" onClick="refaddmat();"><i class="icon-plus"></i> Agregar material</button>
+												<button class="btn btn-success t-d" onClick="openfile();"><i class="icon-upload"></i> Agregar Archivo</button>	
+			              					</div>
+			              				</div>
 									<?php
 									}else{
 									?>
@@ -175,17 +184,17 @@ include ("../datos/postgresHelper.php");
 										<button class="btn" onClick="openfile();"><i class="icon-remove"></i> Rechazar</button>-->
 										<div class="alert alert-success">
 											<p>
-												<i class="icon-info-sign"></i> <strong>Lista de Ventas.</strong>
+												<i class="icon-info-sign"></i> <strong>Lista de Ventas.</strong><br>
+												Esta deacuerdo con el metrado de ventas.<br>
+												Se recomienda que se verifique en campo para continuar de lo contrario no podra modificar su elección.
 											</p>
-											<button class="btn btn-success t-d" onClick="aproved();"><i class="icon-ok"></i> Aprobar</button>
-											<button class="btn"></button>
-											<button class="btn btn-success t-d" onClick="addmat();"><i class="icon-list"></i> Hacer mi lista</button>
+											<button class="btn btn-success t-d" onClick="aproved();"><i class="icon-ok"></i> Si, Aprobar</button>
+											<button class="btn btn-success t-d" onClick="addmat();"><i class="icon-list"></i> No, Hacer mi lista</button>
 										</div>
 										
 				              		<?php } ?>
-			              		</div>
 			              	</div>
-			              		<table class="table table-hover table-bordered">
+			              		<table class="table table-hover table-bordered table-condensed">
 			              			<thead>
 			              				<tr>
 			              					<th>Item</th>
@@ -399,7 +408,82 @@ include ("../datos/postgresHelper.php");
 				<button class="btn btn-primary" onClick="editope();">Guardar Cambios</button>
 			</div>
 		</div>
+		<div id="mnot" class="modal fade in c-yellow-light hide" data-backdrop="static">
+			<div class="modal-header">
+				<a href="#" class="close" data-dismiss="modal">&times;</a>
+				<h4 class="t-warning">Por que no es Correcto la lista de venta.</h4>
+			</div>
+			<div class="modal-body">
+				<div class="row show-grid">
+					<div class="span2">
+						<div class="control-group info">
+							<label for="div" class="t-info">Poyecto ID</label>
+							<div class="controls">
+								<input type="text" id="pro" class="span2" value="<?php echo $_GET['proid']; ?>" DISABLED />
+							</div>
+						</div>
+					</div>
+					<div class="span2">
+						<div class="control-group info">
+							<label for="div" class="t-info">Subpoyecto ID</label>
+							<div class="controls">
+								<input type="text" id="sub" class="span2" value="<?php echo $_GET['subpro']; ?>" DISABLED />
+							</div>
+						</div>
+					</div>
+					<div class="span2">
+						<div class="control-group info">
+							<label for="div" class="t-info">Sector ID</label>
+							<div class="controls">
+								<input type="text" id="sec" class="span2" value="<?php echo $_GET['nropla']; ?>" DISABLED />
+							</div>
+						</div>
+					</div>
+					<div class="span4">
+						<div class="control-group info">
+							<label for="div" class="t-info">Ventas</label>
+							<div class="controls">
+								<div class="input-prepend">
+									<span class="add-on">
+										<i class="icon-user"></i>
+									</span>
+									<select name="" id="cbovent" class="span4">
+										<?php
+											$cn = new PostgreSQL();
+											$query = $cn->consulta("SELECT empdni,empnom ||', '|| empape as nom FROM admin.empleados WHERE cargoid = 3");
+											if ($cn->num_rows($query) > 0) {
+												while ($result = $cn->ExecuteNomQuery($query)) {
+													echo "<option value='".$result['empdni']."'>".$result['nom']."</option>";
+												}
+											}
+											$cn->close($query);
+										?>
+									</select>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="span4">
+						<div class="control-group info">
+							<label for="div" class="t-info">Observación</label>
+							<div class="controls">
+								<textarea name="obs" id="obs" rows="4" class="span5"></textarea>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="controls">
+					<button class="btn" data-dismiss="modal"><i class="icon-remove"></i> Cancelar</button>
+					<button class="btn btn-warning t-d pull-right" onClick="saveobs();"><i class="icon-ok"></i> Continuar</button>
+				</div>
+			</div>
+		</div>
 	</section>
+	<div id="fullscreen-icr" class="pull-center">
+		<button class="btn btn-danger" onClick="closefull();"><i class="icon-remove"></i></button>
+		<iframe id="fullpdf" src="<?php echo $dir; ?>" width="100%" height="90%" frameborder="0">
+		</iframe>
+	</div>
 	<div id="space"></div>
 	<footer></footer>
 </body>
