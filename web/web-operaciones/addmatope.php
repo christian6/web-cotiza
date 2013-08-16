@@ -28,7 +28,6 @@ include ("../datos/postgresHelper.php");
 			display: none;
 			margin-top: 5em;
 			position: absolute;
-			/*top: 1em;*/
 		}
 		#fullscreen-icr button{
 			position: absolute;

@@ -71,6 +71,23 @@ include ("../datos/postgresHelper.php");
 		$c->close($q);
 	?>
 	<header></header>
+	<div id="misub">
+		<ul class="breadcrumb well">
+			<li>
+				<a href="index.php">Home</a>
+				<span class="divider">/</span>
+			</li>
+			<li>
+				<a href="proyecto.php">Proyecto</a>
+				<span class="divider">/</span>
+			</li>
+			<li>
+				<a href="sectores.php?proid=<?php echo $_GET['proid']; ?>">Proyecto Admin</a>
+				<span class="divider">/</span>
+			</li>
+			<li class="active"><?php echo $_GET['nropla']; ?></li>
+		</ul>
+	</div>
 	<section>
 		<div class="container well">
 			<h2>Sector de Proyecto</h2>
@@ -170,11 +187,11 @@ include ("../datos/postgresHelper.php");
 			              				<div class="alert alert-warning">
 			              					<p>
 			              						<i class="icon-info-sign"></i> <strong>Lista de Operaciones.</strong><br>
-
 			              					</p>
 			              					<div class="btn-group">
-			              						<button class="btn btn-warning t-d" onClick="refaddmat();"><i class="icon-plus"></i> Agregar material</button>
-												<button class="btn btn-success t-d" onClick="openfile();"><i class="icon-upload"></i> Agregar Archivo</button>	
+			              						<button class="btn btn-warning t-d" onClick="refaddmat();" <?php if($_GET['es'] == '60'){ echo "DISABLED";} ?> /><i class="icon-plus"></i> Agregar material</button>
+												<button class="btn btn-info t-d" onClick="openfile();" <?php if($_GET['es'] == '60'){ echo "DISABLED";} ?> /><i class="icon-upload"></i> Agregar Archivo</button>	
+												<button id="pop" class="btn btn-success t-d" onClick="addsector();" <?php if($_GET['es'] == '60'){ echo "DISABLED";} ?> /><i class="icon-ok"></i> Listo</button>
 			              					</div>
 			              				</div>
 									<?php
@@ -246,8 +263,10 @@ include ("../datos/postgresHelper.php");
 			              							echo "<td>".$result['matmed']."</td>";
 			              							echo "<td id='tc'>".$result['matund']."</td>";
 			              							echo "<td id='tc'>".$result['cant']."</td>";
+			              							if($_GET['es'] == '60'){ echo "<td></td><td></td>";}else{
 			              							echo "<td id='tc'><a href='javascript:conedit(".$result['materialesid'].");'><i class='icon-pencil'></i></a></td>";
 			              							echo "<td id='tc'><a href='javascript:delmat(".$result['materialesid'].");'><i class='icon-remove'></i></a></td>";
+			              							}
 			              							echo "</tr>";
 			              						}
 			              					}

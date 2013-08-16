@@ -55,6 +55,15 @@ include ("../datos/postgresHelper.php");
 <body>
 	<?php include ("includes/menu-operaciones.inc"); ?>
 	<header></header>
+	<div id="misub">
+		<ul class="breadcrumb well">
+			<li>
+				<a href="index.php">Home</a>
+				<span class="divider">/</span>
+			</li>
+			<li class="active">Proyectos</li>
+		</ul>
+	</div>
 	<section>
 		<div class="container well">
 			<h4>Proyectos</h4>

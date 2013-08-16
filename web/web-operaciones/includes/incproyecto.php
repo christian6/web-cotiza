@@ -45,6 +45,27 @@ if ($_POST['tra'] == 'pro') {
 		}
 	}
 	$cn->close($query);
+}elseif($_POST['tra'] == 'apropro'){
+	$ces = 0;
+	$cto = 0;
+	$cn = new PostgreSQL();
+	$query = $cn->consulta("SELECT (SELECT COUNT(*) FROM ventas.sectores WHERE proyectoid LIKE '".$_POST['pro']."' AND esid LIKE '60') as ces, (SELECT COUNT(*) FROM ventas.sectores WHERE proyectoid LIKE '".$_POST['pro']."') as cto");
+	if ($cn->num_rows($query) > 0) {
+		$result = $cn->ExecuteNomQuery($query);
+		$ces = $result[0];
+		$cto = $result[1];
+	}
+	$cn->close($query);
+	if ($ces == $cto && $ces > 0 && $cto > 0) {
+		$cn = new PostgreSQL();
+		$query = $cn->consulta("UPDATE ventas.proyectos SET esid = '55' WHERE proyectoid LIKE '".$_POST['pro']."'");
+		$cn->affected_rows($query);
+		$cn->close($query);
+		echo "success";
+	}else{
+		echo "sectores-falta";
+	}
+	
 }
 
 ?>

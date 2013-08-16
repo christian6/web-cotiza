@@ -20,7 +20,9 @@ include ("../datos/postgresHelper.php");
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
 	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.js"></script>
 	<script src="../bootstrap/js/bootstrap.js"></script>
-	<script src="js/project.js"></script>
+	<script src="js/proyectos.js"></script>
+	<script src="../modules/msgBox.js"></script>
+	<link rel="stylesheet" href="../css/msgBoxLight.css">
 	<style>
 		#txts{
 			color: #000;
@@ -42,7 +44,7 @@ include ("../datos/postgresHelper.php");
 			
 		}
 		#cont article, #ad{
-			background-color: #CCC;
+			/*background-color: #CCC;*/
 			border: 1px solid white;
 			border-radius: 5px;
 			display: inline-block;
@@ -69,6 +71,19 @@ include ("../datos/postgresHelper.php");
 		$cn->close($query);
 	?>
 	<header></header>
+	<div id="misub">
+		<ul class="breadcrumb well">
+			<li>
+				<a href="index.php">Home</a>
+				<span class="divider">/</span>
+			</li>
+			<li>
+				<a href="proyecto.php">Proyectos</a>
+				<span class="divider">/</span>
+			</li>
+			<li class="active">Sectores</li>
+		</ul>
+	</div>
 	<section>
 		<div class="container well">
 		<div class="row show-grid">
@@ -81,6 +96,13 @@ include ("../datos/postgresHelper.php");
 				</div>
 				<div class="well c-yellow-light t-warning">
 					<strong>Responsable  </strong><?php echo $responsable; ?>.
+					<p>
+						Solo si has terminado de revisar todos los planos y estas deacuerdo
+						con el metrado planteado, aprueba el proyecto para poder realizar
+						los pedidos al almacén.
+						<input type="hidden" id="pro" value="<?php echo $_GET['proid']; ?>" />
+					</p>
+					<button class="btn btn-warning t-d" onClick="aproproop();"><i class="icon-ok"></i> Aprobar</button>
 				</div>
 				<div class="row show-grid">
 					<div class="span8">
@@ -89,7 +111,7 @@ include ("../datos/postgresHelper.php");
 						<div id="cont">
 						<?php
 						$cn = new PostgreSQL();
-						$sql = "SELECT nroplano,sector,descripcion FROM ventas.sectores WHERE ";
+						$sql = "SELECT nroplano,sector,descripcion,esid FROM ventas.sectores WHERE ";
 						if ($_GET['sub'] != "") {
 							$sql .= "proyectoid LIKE '".$_REQUEST['proid']."' AND TRIM(subproyectoid) LIKE '".$_GET['sub']."' ";
 						}else{
@@ -98,10 +120,14 @@ include ("../datos/postgresHelper.php");
 						$query = $cn->consulta($sql);
 						if ($cn->num_rows($query) > 0) {
 							while ($result = $cn->ExecuteNomQuery($query)) {
+								if ($result['esid'] == '60') {
+									echo "<article class='c-green'>";
+								}else{
 							?>
-								<article>
-									<a id="txts" href="detsectores.php?nropla=<?php echo $result['nroplano']; ?>&proid=<?php echo $_REQUEST['proid']; ?>">
-										<i class="icon-flag"></i>
+								<article class="c-yellow-light">
+							<?php } ?>
+									<a id="txts" href="detsectores.php?nropla=<?php echo $result['nroplano']; ?>&proid=<?php echo $_REQUEST['proid']; ?>&es=<?php echo $result['esid']; ?>">
+										<?php if ($result['esid'] == '60') { ?><i class="icon-ok"></i><?php }else{ echo "<i class='icon-flag'></i>"; } ?>
 										<label for="label"><?php echo $result['nroplano']; ?></label>
 										<label for="label"><?php echo $result['sector']; ?></label>	
 									</a>
@@ -145,7 +171,7 @@ include ("../datos/postgresHelper.php");
 					//echo "SELECT * FROM ventas.adicionales WHERE esid LIKE '56' AND proyectoid LIKE '".$_GET['id']."' AND TRIM(subproyectoid) LIKE TRIM('".$_GET['sub']."'); ";
 					if ($cn->num_rows($query) > 0) {
 						while ($result = $cn->ExecuteNomQuery($query)) {
-							echo "<div id='ad'>".$result['descrip']."</div>";
+							echo "<div id='ad' class='c-yellow-light'>".$result['descrip']."</div>";
 						}
 					}
 					$cn->close($query);

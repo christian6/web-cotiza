@@ -22,7 +22,7 @@ if ($_REQUEST['tra'] == 'med') {
 	$cn->close($query);
 }else if($_REQUEST['tra'] == 'data'){
 	$cn = new PostgreSQL();
-	$query = $cn->consulta("SELECT m.materialesid,m.matnom,m.matmed FROM
+	$query = $cn->consulta("SELECT m.materialesid,m.matnom,m.matmed,m.matund FROM
 							admin.materiales m INNER JOIN almacen.inventario i 
 							ON m.materialesid = i.materialesid
 							WHERE  m.matnom LIKE '".$_REQUEST['nom']."' AND m.matmed LIKE '".$_REQUEST['med']."' AND i.anio LIKE '".date("Y")."'
@@ -30,11 +30,13 @@ if ($_REQUEST['tra'] == 'med') {
 	$cod = "";
 	$nom = "";
 	$med = "";
+	$und = "";
 	if ($cn->num_rows($query) > 0) {
 		while ($result = $cn->ExecuteNomQuery($query)) {
 			$cod = $result['materialesid'];
 			$nom = $result['matnom'];
 			$med = $result['matmed'];
+			$und = $result['matund'];
 		}
 	}
 	$cn->close($query);
@@ -46,6 +48,8 @@ if ($_REQUEST['tra'] == 'med') {
 		<dd><?php echo $nom; ?></dd>
 		<dt>Medida</dt>
 		<dd><?php echo $med; ?></dd>
+		<dt>Unidad</dt>
+		<dd><?php echo $und; ?></dd>
 	</dl>
 <?php
 }else if($_REQUEST['tra'] == 'save'){
@@ -162,8 +166,8 @@ if ($_POST['tra'] == 'conedit') {
 				echo "<tr>";
 				echo "<td id='tc'>".$i++."</td>";
 				echo "<td id='tc'>".$result['materialesid']."</td>";
-				echo "<td id='tc'>".$result['matnom']."</td>";
-				echo "<td id='tc'>".$result['matmed']."</td>";
+				echo "<td>".$result['matnom']."</td>";
+				echo "<td>".$result['matmed']."</td>";
 				echo "<td id='tc'>".$result['matund']."</td>";
 				echo "<td id='tc'>".$result['cant']."</td>";
 				echo "<td id='tc'><Button class='btn btn-info' onClick='showedit(".$result['materialesid'].");'><i class='icon-edit'></i></td>";

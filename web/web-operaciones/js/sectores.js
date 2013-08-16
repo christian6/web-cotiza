@@ -1,3 +1,11 @@
+$(function  () {
+	$('#pop').popover({
+		title : "<strong class='t-info'><i class='icon-info-sign'></i> Aprobar Seccion</strong>",
+		content : "<p class='span2 t-info'>Si ya has terminado el ingreso de materiales para este sector, presiona aqui.</p>",
+		html : true,
+		trigger : 'hover'
+	});
+})
 function openfile () {
 	$(" #adda ").modal("show");
 }
@@ -54,13 +62,19 @@ function aproved () {
 					type : 'POST',
 					success : function(response){
 						if (response == "hecho") {
-							location.href = '';
+							addsectormetproyecto();
 						}else{
 							return;
 						}
 					},
 					error: function(objeto, quepaso, otroobj){
-						alert("Estas viendo esto por que fallé\r\n"+"Pasó lo siguiente: "+quepaso + objeto.id + otroobj);
+						$.msgBox({
+							title : 'ERROR',
+							content : 'Oh no!, si estas viendo esto es por que fallé',
+							type : 'error',
+							autoClose : true,
+							opacity : 0.8
+						});
 					}
 				});
 			}
@@ -101,7 +115,13 @@ function conedit (matid) {
 				}
 			},
 			error: function(objeto, quepaso, otroobj){
-				alert("Estas viendo esto por que fallé\r\n"+"Pasó lo siguiente: "+quepaso);
+				$.msgBox({
+					title : 'ERROR',
+					content : 'Oh no!, si estas viendo esto es por que fallé',
+					type : 'error',
+					autoClose : true,
+					opacity : 0.8
+				});
 			}
 		});
 	}
@@ -131,7 +151,13 @@ function editope () {
 				}
 			},
 			error: function(objeto, quepaso, otroobj){
-				alert("Estas viendo esto por que fallé\r\n"+"Pasó lo siguiente: "+quepaso);
+				$.msgBox({
+					title : 'ERROR',
+					content : 'Oh no!, si estas viendo esto es por que fallé',
+					type : 'error',
+					autoClose : true,
+					opacity : 0.8
+				});
 			}
 		});
 	}
@@ -159,7 +185,13 @@ function delmat (matid) {
 					}
 				},
 				error: function(objeto, quepaso, otroobj){
-					alert("Estas viendo esto por que fallé\r\n"+"Pasó lo siguiente: "+quepaso);
+					$.msgBox({
+						title : 'ERROR',
+						content : 'Oh no!, si estas viendo esto es por que fallé',
+						type : 'error',
+						autoClose : true,
+						opacity : 0.8
+					});
 				}
 			});
 		}
@@ -219,4 +251,45 @@ function saveobs () {
 }
 function refaddmat () {
 	location.href = 'addmatope.php?'+'pro='+$("#pro").val()+'&sub='+$("#sub").val()+'&sec='+$("#sec").val();
+}
+function addsector () {
+	$.msgBox({
+		title : 'Sector Listo',
+		content : 'Seguro que esta desea aprobar este sector para producción.',
+		type : 'confirm',
+		buttons : [{value : 'Si'},{value: 'No'}],
+		success : function (result) {
+			if (result == 'Si') {
+				addsectormetproyecto();
+			}
+		},
+		opacity : 0.6
+	})
+}
+function addsectormetproyecto () {
+	var prm = {
+		'tra' : 'sectorok',
+		'pro' : $("#pro").val(),
+		'sub' : $("#sub").val(),
+		'sec' : $("#sec").val()
+	}
+	$.ajax({
+		data : prm,
+		url : 'includes/incopmetrado.php',
+		type : 'POST',
+		success : function (response) {
+			if (response == 'success') {
+				location.href='sectores.php?proid='+$("#pro").val();
+			}
+		},
+		error : function (obj,quepaso,otroobj) {
+			$.msgBox({
+				title : 'ERROR',
+				content : 'Oh no!, si estas viendo esto es por que fallé',
+				type : 'error',
+				autoClose : true,
+				opacity : 0.8
+			});
+		}
+	});
 }

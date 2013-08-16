@@ -419,9 +419,9 @@ include ("../datos/postgresHelper.php");
 			<div class="modal-body c-blue-light">
 				<div class="control-group">
 					<p class="t-info">
-						Al parecer has teminado de llenar al detalle todo el proyecto.</p>
+						Al parecer has teminado de llenar al detalle todos los sectores del proyecto.</p>
 					<p class="t-info">Estas seguro(a) que deseas aprobar y confirmar el proyecto, una ves aprobado
-						necesitaras de confirmación para modificar el proyecto.</p>
+						necesitaras de autorización para modificar el proyecto.</p>
 					<p class="pull-center">
 						<button class="btn btn-danger t-d" data-dismiss="modal"><i class="icon-remove-circle"></i> NO</button>
 						<button class="btn btn-success t-d" onClick="validaproved();"><i class="icon-ok-circle"></i> SI</button>
