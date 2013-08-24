@@ -1,5 +1,7 @@
 <?php
 
+session_start();
+
 include ("../../datos/postgresHelper.php");
 
 if ($_POST['tra'] == 'sp') {
@@ -55,5 +57,34 @@ if ($_POST['tra'] == 'sp') {
 	}
 	$cn->close($query);
 	echo "hecho";
+}
+if ($_POST['tra'] == 'tmpnip') {
+	$cn = new PostgreSQL();
+	$query = $cn->consulta("INSERT INTO operaciones.tmpniples(dni,materialid,metrado,tipo) VALUES('".$_SESSION['dni-icr']."',
+							'".$_POST['matid']."',".$_POST['met'].",'".$_POST['tip']."');");
+	$cn->affected_rows($query);
+	$cn->close($query);
+	echo "success";
+}
+if ($_POST['tra'] == 'listnip') {
+	$cn = new PostgreSQL();
+	$query = $cn->consulta("SELECT dni,materialid,metrado,tipo,
+		(select sum(metrado)as tot from operaciones.tmpniples WHERE materialid LIKE materialid ) as tot FROM operaciones.tmpniples 
+		WHERE dni LIKE '".$_SESSION['dni-icr']."' AND materialid LIKE '".$_POST['mat']."'
+		GROUP BY dni,materialid,metrado,tipo;");
+	if ($cn->num_rows($query) > 0 ) {
+		$tot = 0;
+		echo "<table class='table t-info'>";
+		while ($result = $cn->ExecuteNomQuery($query)) {
+			echo "<tr>";
+			echo "<td>".$result['materialid']."</td><td>".$_POST['med']."''</td><td>&times;</td><td>".$result['metrado']."</td><td>".$result['tipo']."</td>";
+			echo "<td><button class='btn btn-mini'><i class='icon-remove'></i></button></td>";
+			echo "</tr>";
+			$tot = $result['tot'];
+		}
+		echo "</table>";
+	}
+	$cn->close($query);
+	echo "|success|".$tot;
 }
 ?>

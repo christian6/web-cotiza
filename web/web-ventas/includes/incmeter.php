@@ -9,7 +9,7 @@ if ($_REQUEST['tra'] == 'med') {
 	$query=$cn->consulta("SELECT DISTINCT m.matmed FROM admin.materiales m 
 						INNER JOIN almacen.inventario i 
 						ON m.materialesid=i.materialesid 
-						WHERE m.matnom LIKE '".$nom."' AND i.anio LIKE '".date("Y")."'");
+						WHERE TRIM(lower(m.matnom)) LIKE TRIM(lower('".$nom."')) AND i.anio LIKE '".date("Y")."' ORDER BY m.matmed ASC;");
 	if ($cn->num_rows($query)>0) {
 		echo "<select class='span6' name='cbomed' id='cbomed' onClick='showdet();' onChange='showdet();'>";
 		while ($result = $cn->ExecuteNomQuery($query)) {
@@ -24,7 +24,8 @@ if ($_REQUEST['tra'] == 'med') {
 	$query = $cn->consulta("SELECT m.materialesid,m.matnom,m.matmed,m.matund FROM
 							admin.materiales m INNER JOIN almacen.inventario i 
 							ON m.materialesid = i.materialesid
-							WHERE  m.matnom LIKE '".$_REQUEST['nom']."' AND m.matmed LIKE '".$_REQUEST['med']."' AND i.anio LIKE '".date("Y")."'
+							WHERE  TRIM(LOWER(m.matnom)) LIKE TRIM(LOWER('".$_REQUEST['nom']."')) AND 
+							TRIM(LOWER(m.matmed)) LIKE TRIM(LOWER('".$_REQUEST['med']."')) AND i.anio LIKE '".date("Y")."'
 							LIMIT 1 OFFSET 0");
 	$cod = "";
 	$nom = "";
@@ -147,12 +148,23 @@ if($_POST['tra'] == 'savedata'){
 	$pla = $_POST['sec'];
 	$sub = $_POST['sub'];
 	$cant = $_POST['cant'];
-
-	$cn = new PostgreSQL();
-	$query = $cn->consulta("INSERT INTO ventas.matmetrado VALUES('$pro','$sub','$pla','$cod',$cant,'1')");
-	$cn->affected_rows($query);
-	$cn->close($query);
-	echo "success";
+	$c = new PostgreSQL();
+	$q = $c->consulta("SELECT COUNT(*) FROM ventas.matmetrado WHERE proyectoid LIKE '".$_POST['pro']."' AND 
+						TRIM(subproyectoid) LIKE TRIM('".$_POST['sub']."') AND TRIM(sector) LIKE TRIM('".$_POST['sec']."') AND 
+						materialesid LIKE '".$_POST['id']."'");
+	if ($c->num_rows($q) > 0) {
+		$r = $c->ExecuteNomQuery($q);
+		if ($r[0] >= 1) {
+			echo "exists";
+		}else{
+			$cn = new PostgreSQL();
+			$query = $cn->consulta("INSERT INTO ventas.matmetrado VALUES('$pro','$sub','$pla','$cod',$cant,'1');");
+			$cn->affected_rows($query);
+			$cn->close($query);
+			echo "success";
+		}
+	}
+	$c->close($q);	
 }
 if ($_POST['tra'] == 'listtbl') {
 	$cn = new PostgreSQL();
@@ -173,6 +185,10 @@ if ($_POST['tra'] == 'listtbl') {
 			echo "<td>".$result['matmed']."</td>";
 			echo "<td id='tc'>".$result['matund']."</td>";
 			echo "<td id='tc'>".$result['cant']."</td>";
+			?>
+			<td id="tc"><a href="javascript:showedit('<?php echo $result['materialesid']; ?>','<?php echo $result['matnom']; ?>','<?php echo str_replace('"', '', $result['matmed']); ?>',<?php echo $result['cant']; ?>);"><i class="icon-edit"></i></a></td>
+			<td id="tc"><a href="javascript:delmat('<?php echo $result['materialesid']; ?>','<?php echo $result['matnom']; ?>','<?php echo str_replace('"', '', $result['matmed']); ?>');"><i class="icon-trash"></i></a></td>
+			<?php
 			echo "</tr>";
 		}
 	}
@@ -199,5 +215,44 @@ if ($_POST['tra'] == 'prostatus') {
 	$cn->affected_rows($query);
 	$cn->close($query);
 	echo "success";
+}
+if ($_POST['tra'] == 'delmat') {
+	$cn = new PostgreSQL();
+	$query = $cn->consulta("DELETE FROM ventas.matmetrado WHERE proyectoid LIKE '".$_POST['pro']."' AND 
+							TRIM(subproyectoid) LIKE TRIM('".$_POST['sub']."') AND TRIM(sector) LIKE TRIM('".$_POST['sec']."') AND materialesid LIKE '".$_POST['id']."';");
+	$cn->affected_rows($query);
+	$cn->close($query);
+	echo "success";
+}
+if ($_POST['tra'] == 'editmat') {
+	$cn = new PostgreSQL();
+	$query = $cn->consulta("UPDATE ventas.matmetrado SET cant = ".$_POST['cant']." WHERE proyectoid LIKE '".$_POST['pro']."' AND 
+							TRIM(subproyectoid) LIKE TRIM('".$_POST['sub']."') AND TRIM(sector) LIKE TRIM('".$_POST['sec']."') AND materialesid LIKE '".$_POST['id']."';");
+	$cn->affected_rows($query);
+	$cn->close($query);
+	echo "success";
+}
+if ($_POST['tra'] == 'newmat') {
+	$cn = new PostgreSQL();
+	$query = $cn->consulta("SELECT COUNT(*) FROM admin.materiales WHERE materialesid LIKE '".$result['matid']."'");
+	if ($cn->num_rows($query) > 0) {
+		$res = $cn->ExecuteNomQuery($query);
+	}
+	$cn->close($query);
+	if ($res[0] >= 1) {
+		echo "exists";
+	}else{
+		$cn = new PostgreSQL();
+		$query = $cn->consulta("INSERT INTO admin.materiales VALUES('".$_POST['matid']."','".$_POST['nom']."','".$_POST['med']."',
+							'".$_POST['und']."',0,'".$_POST['mar']."','".$_POST['mod']."','".$_POST['aca']."',0)");
+		$cn->affected_rows($query);
+		$cn->close($query);
+		$cn =  new PostgreSQL();
+		$query = $cn->consulta("INSERT INTO almacen.inventario VALUES('".$_POST['matid']."','0001',0,0,0,0,0,
+							extract(year FROM now())::CHAR(4),now()::date,'0000000000','10704928501','23')");
+		$cn->affected_rows($query);
+		$cn->close($query);
+		echo "success";
+	}	
 }
 ?>

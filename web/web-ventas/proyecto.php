@@ -24,9 +24,12 @@ include ("../datos/postgresHelper.php");
     <script src="js/project.js"></script>
     <style>
     	#cont{
-    		display: inline-block;
-    		border-radius: 0 50% 0 50%;
-    		width: 6.5em;
+    		display: inline-table;
+    		/*border: solid .1em #222;*/
+    		border-radius: 5em;
+    		box-shadow: 0 0 1em #222;
+    		height: 7em;
+    		width: 8em;
     		padding: 1.5em;
     		margin: 1em;
     	}
@@ -48,7 +51,7 @@ include ("../datos/postgresHelper.php");
 			</div>
 				<div class="row show-grid">
 					<div class="span1 well">
-						<button class="btn btn-inverse" onClick="addnew();">
+						<button class="btn btn-primary" onClick="addnew();">
 							<i class="icon-plus icon-white"></i>
 							<h6>Nuevo</h6>
 							<!--<img src="../resource/add48.png" alt="">-->
@@ -62,16 +65,16 @@ include ("../datos/postgresHelper.php");
 							  	$query = $cn->consulta("SELECT p.proyectoid,p.descripcion,e.esnom FROM ventas.proyectos p
 														INNER JOIN admin.estadoes e
 														ON p.esid = e.esid
-														WHERE p.esid LIKE '17'
+														WHERE p.esid LIKE '17' OR p.esid LIKE '59'
 														order by p.fecha desc
 														");
 								if ($cn->num_rows($query) > 0) {
 									while ($result = $cn->ExecuteNomQuery($query)) {
 									?>
-									<div id="cont" class="c-yellow-light pull-center">
-										<a href="" class="close pull-left">&times;</a>
+									<div id="cont" class="c-yellow-light t-d pull-center">
+										<a href="" class="close">&times;</a>
 										<a href="admin-project.php?id=<?php echo $result['proyectoid']; ?>">
-											<i class='icon-eye-open'></i>
+											<!--<i class='icon-'></i>-->
 											<label><?php echo $result['descripcion']; ?></label>
 											<label><?php echo $result['esnom']; ?></label>
 										</a>
@@ -92,36 +95,49 @@ include ("../datos/postgresHelper.php");
 				</div>
 			
 		</div>
-	<div id="mpro" class="span11 modal fade in hide" style="margin-left: -39%;">
+	<div id="mpro" class="modal fade in hide span11 mitad11 c-blue-light t-info">
 		<div class="modal-header">
 			<a href="#" class="close" data-dismiss="modal">&times;</a>
-			<h5>Agregar Proyecto</h5>
-			<div id="awa" class="alert fade in hide span4">
-				<a class="close" data-dismiss="alert">&times;</a>
-				<strong>¡Oh dios mio!</strong> Mejor que lo compruebes tú mismo, existen campos vacios.
-			</div>
-			<div id="aer" class="alert alert-danger hide span4">
-				<a href="#" class="close" data-dismiss="alert">&times;</a>
-				<strong>¡Oh no!</strong> Parece que tienes un error, por que no llama a soporte.
-			</div>
-			<div class="alert alert-success hide span4" id="asu">
-				<a href="#" data-dismiss="alert" class="close">&times;</a>
-				<strong>¡Bien hecho!</strong> Se ha guardado tus datos correctamente.
-				<p><strong>Proyecto Nro: <span id="nro"></span></strong></p>
-			</div>
+			<h3>Agregar Proyecto</h3>
 		</div>
 		<div class="modal-body">
+			<div class="row show-grid">
+				<div class="">
+					<div id="awa" class="alert alert-block fade in hide span4">
+						<a class="close" data-dismiss="alert">&times;</a>
+						<strong>¡Oh dios mio!</strong> Mejor que lo compruebes tú mismo, existen campos vacios.
+					</div>
+					<div id="aer" class="alert alert-block alert-danger hide span4">
+						<a href="#" class="close" data-dismiss="alert">&times;</a>
+						<strong>¡Oh no!</strong> Parece que tienes un error, por que no llama a soporte.
+					</div>
+					<div class="alert alert-block alert-success hide span4" id="asu">
+						<a href="#" data-dismiss="alert" class="close">&times;</a>
+						<strong>¡Bien hecho!</strong> Se ha guardado tus datos correctamente.
+						<p><strong>Proyecto Nro: <span id="nro"></span></strong></p>
+					</div>
+				</div>
+			</div>
 			<form action="" method="POST" name="frmproject" id="frmproject">
 				<input type="hidden" id="new" name="new" value="<?php echo $_POST['new']; ?>" />
 				<div class="row show-grid">
 					<div class="span4">
 						<div class="control-group info">
-							<label for="controls" class="t-info">Descripcion de Proyecto</label>
+							<label for="controls" class="t-info">Nombre de Proyecto</label>
 							<div class="controls">
 								<input type="text" name="des" id="des" class="span4" value="<?php echo $_POST['des']; ?>" placeholder="Ingrese Descripcion de Proyecto">
 							</div>
 						</div>	
 					</div>
+					<!--
+					<div class="span4">
+						<div class="control-group info">
+							<label for="controls" class="control-label">Nombre Corto</label>
+							<div class="controls">
+								<input type="text" id="nomcor" name="nomcor" class="span4" value="<?php echo $_POST['nomcor']; ?>">
+							</div>
+						</div>
+					</div>-->
 					<div class="span2">
 						<div class="control-group info">
 							<label for="controls" class="t-info">Fecha de Entrega</label>
@@ -160,7 +176,7 @@ include ("../datos/postgresHelper.php");
 								<select name="pais" id="pais" class="span2" onChange="javascript:submit();">
 									<?php
 									$cn = new PostgreSQL();
-									$query = $cn->consulta("SELECT paisid,paisnom FROM admin.pais");
+									$query = $cn->consulta("SELECT paisid,paisnom FROM admin.pais ORDER BY paisnom ASC;");
 									if ($cn->num_rows($query) > 0) {
 										while ($result = $cn->ExecuteNomQuery($query)) {
 											if ($_POST['pais'] == $result['paisid']) {
@@ -270,7 +286,8 @@ include ("../datos/postgresHelper.php");
 						</div>
 					</div>
 				</div>
-			</form>
+			</form>	
+			
 		</div>
 		<div class="modal-footer">
 			<button class="btn btn-warning t-d pull-left" data-dismiss="modal"><i class="icon-remove"></i> Cancelar</button>

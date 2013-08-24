@@ -4,7 +4,8 @@ div.msgBox
     position: fixed;
     z-index: 1000;
     font-family:Verdana;
-    width: 430px;
+    max-width: 24.5em;
+    min-width: 22em;
     min-height:160px;
     color: #00335e;
     -moz-border-radius: 6px;
@@ -20,7 +21,7 @@ div.msgBoxBackGround
 {
     top:0;
     left:0;
-    position:absolute;
+    position:fixed;
     padding:0;
     margin:0;
     width:100%;
@@ -44,13 +45,13 @@ div.msgBoxImage
     margin:20px 5px 0 5px;
     display:inline-block;
     float:left;
-    height:75px;
-    width:75px;
+    height:2.5em;
+    width:3.5em;
 }
 div.msgBoxImage img
 {
-    height:75px;
-    width:75px;
+    height:3.5em;
+    width:2.5;
 }
 div.msgBoxContent
 {
@@ -59,7 +60,7 @@ div.msgBoxContent
     display:inline-block;
     float:left;
     height:90px;
-    width:319px;
+    width:18em;
 }
 div.msgBoxContent p
 {

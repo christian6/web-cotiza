@@ -12,7 +12,8 @@ if($tipo == "nom"){
 	<select id="matmed" class="span3" name="matmed" onclick="dat();">
 <?php
 	$cn=new PostgreSQL();
-	$query=$cn->consulta("SELECT m.matmed FROM admin.materiales m INNER JOIN almacen.inventario i ON m.materialesid=i.materialesid WHERE m.matnom like '".$nom."' AND i.anio LIKE '".date("Y")."'");
+	$query=$cn->consulta("SELECT m.matmed FROM admin.materiales m INNER JOIN almacen.inventario i ON m.materialesid=i.materialesid 
+		WHERE TRIM(lower(m.matnom)) LIKE TRIM(lower('".$nom."')) AND i.anio LIKE '".date("Y")."'");
 	if ($cn->num_rows($query)>0) {
 		while ($result = $cn->ExecuteNomQuery($query)) {
 			echo "<option value='".$result['matmed']."'>".$result['matmed']."</option>";

@@ -11,7 +11,7 @@ if ($_REQUEST['tra'] == 'med') {
 	$query=$cn->consulta("SELECT DISTINCT m.matmed FROM admin.materiales m 
 						INNER JOIN almacen.inventario i 
 						ON m.materialesid=i.materialesid 
-						WHERE m.matnom LIKE '".$nom."' AND i.anio LIKE '".date("Y")."' ORDER BY m.matmed ASC");
+						WHERE TRIM(LOWER(m.matnom)) LIKE TRIM(LOWER('".$nom."')) AND i.anio LIKE '".date("Y")."' ORDER BY m.matmed ASC");
 	if ($cn->num_rows($query)>0) {
 		echo "<select class='span4' name='cbomed' id='cbomed' onClick='showdet();' onChange='showdet();'>";
 		while ($result = $cn->ExecuteNomQuery($query)) {
@@ -25,7 +25,8 @@ if ($_REQUEST['tra'] == 'med') {
 	$query = $cn->consulta("SELECT m.materialesid,m.matnom,m.matmed,m.matund FROM
 							admin.materiales m INNER JOIN almacen.inventario i 
 							ON m.materialesid = i.materialesid
-							WHERE  m.matnom LIKE '".$_REQUEST['nom']."' AND m.matmed LIKE '".$_REQUEST['med']."' AND i.anio LIKE '".date("Y")."'
+							WHERE  TRIM(LOWER(m.matnom)) LIKE TRIM(LOWER('".$_REQUEST['nom']."')) AND 
+							TRIM(LOWER(m.matmed)) LIKE TRIM(LOWER('".$_REQUEST['med']."')) AND i.anio LIKE '".date("Y")."'
 							LIMIT 1 OFFSET 0");
 	$cod = "";
 	$nom = "";

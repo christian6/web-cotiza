@@ -36,7 +36,8 @@ include ("../datos/postgresHelper.php");
 			/*background-color: #084B8A;*/
 			border: 1px solid white;
 			border-radius: 3em;
-			display: inline-block;
+			height: 6em;
+			display: inline-table;
 			margin: 5px;
 			padding: 10px;
 			width: 150px;
@@ -49,6 +50,15 @@ include ("../datos/postgresHelper.php");
 <body>
 	<?php include ("includes/menu-operaciones.inc"); ?>
 	<header></header>
+	<div id="misub">
+		<ul class="breadcrumb well">
+			<li>
+				<a href="index.php">Home</a>
+				<span class="divider">/</span>
+			</li>
+			<li class="active">Proyectos Aprobados</li>
+		</ul>
+	</div>
 	<section>
 		<div class="container well">
 			<div class="row show-grid">

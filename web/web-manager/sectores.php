@@ -179,7 +179,6 @@ include ("../datos/postgresHelper.php");
 					$cn = new PostgreSQL();
 					$query = $cn->consulta("SELECT * FROM ventas.adicionales WHERE esid LIKE '56' AND proyectoid LIKE '".$_GET['proid']."' 
 											AND TRIM(subproyectoid) LIKE TRIM('".$_GET['sub']."'); ");
-					//echo "SELECT * FROM ventas.adicionales WHERE esid LIKE '56' AND proyectoid LIKE '".$_GET['id']."' AND TRIM(subproyectoid) LIKE TRIM('".$_GET['sub']."'); ";
 					if ($cn->num_rows($query) > 0) {
 						while ($result = $cn->ExecuteNomQuery($query)) {
 							echo "<div id='ad'>".$result['descrip']."</div>";

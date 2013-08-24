@@ -25,6 +25,10 @@ section{
     text-align: center;
 	width: 90%;
 }
+#menu{
+    margin-left: auto;
+    margin-right: auto;
+}
 /* Global CSS that are applied for all screen sizes */
 .nav ul {
     max-width: 1240px;

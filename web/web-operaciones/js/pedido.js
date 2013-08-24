@@ -1,4 +1,15 @@
-$(function  () {
+$(function () {
+	var bPreguntar = true;
+
+	window.onbeforeunload = preguntarAntesDeSalir;
+
+	function preguntarAntesDeSalir()
+	{
+		if (bPreguntar){
+			
+			return "¿Seguro que quieres salir?";
+		}
+	}
 	$( "#txtfec" ).datepicker({ minDate: "0", maxDate: "+3M +10D" , changeMonth: true, changeYear: true, showAnim: "slide", dateFormat: "yy-mm-dd"});
 });
 function showpedido () {
@@ -76,4 +87,103 @@ function savepedido () {
 		$( "#mpe" ).modal('hide');
 		return;
 	}
+}
+function addniple (med,mat) {
+	$.msgBox({
+		title : "Agregar Niple "+med+'"',
+		/*inputs : [{ header: med+'"', type : 'text', name : 'med'+med }],*/
+		content : "<table style='margin-top: -5em;'><tr><td>Medida</td>"+
+					"<td><input type='number' class='span2' id='nipmed'min='0' max='100' step='0.01'></td></tr>"+
+					"<tr><td>Tipo</td><td><select id='cbot' class='span2'>"+
+					"<option value='A'>Rosca -> A</option>"+
+					"<option value='B'>Ranura -> B</option>"+
+					"<option value='C'>Rosca-Ranura -> C</option>"+
+					"</select></td></tr></table>",
+		buttons : [{value: 'Add'}, {value: 'Cancel'}],
+		success : function (result) {
+			if(result == 'Add'){
+				if ($("#nipmed").val() != '') {
+					var prm = {
+						'tra' : 'tmpnip',
+						'matid' : mat,
+						'met' : $("#nipmed").val(),
+						'tip' : $('#cbot').val(),
+						'pro' : $("#pro").val(),
+						'sub' : $("#sub").val(),
+						'sec' : $("#sec").val()
+					}
+					$.ajax({
+						data : prm,
+						url : 'includes/incpedido.php',
+						type : 'POST',
+						success : function (response) {
+							if (response == 'success') {
+								tmplist(mat,med);
+							}else{
+								$.msgBox({
+								title : 'Error',
+								content : 'Se ha encontrado errores ',
+								type : 'error',
+								opacity : 0.8,
+								autoClose : true
+							});
+							}
+						},
+						error : function (obj,quepaso,otrobj) {
+							$.msgBox({
+								title : 'Error',
+								content : 'Si estas viendo esto es por que falle',
+								type : 'error',
+								opacity : 0.8,
+								autoClose : true
+							});
+						}
+					});
+				}else{
+					$.msgBox({
+						title : 'Error',
+						content : 'Medida esta vacia.',
+						type : 'error',
+						autoClose : true,
+						opacity : 0.6
+					});
+				}
+			}
+		},
+		type : 'info',
+		opacity : 0.8
+	});
+}
+function tmplist (mat,med) {
+	var prm = {
+		'tra' : 'listnip',
+		'mat' : mat,
+		'med' : med
+	}
+	$.ajax({
+		data : prm,
+		url : 'includes/incpedido.php',
+		type : 'POST',
+		success : function (response) {
+			var cad = response.split('|');
+			if (cad[1] == 'success') {
+				document.getElementById("nip"+med+"").innerHTML = cad[0];
+				document.getElementById("qd"+med).innerHTML = cad[2];
+				//alert(parseFloat(document.getElementById("ct"+med).innerHTML) - parseFloat(cad[2]));
+				document.getElementById("tf"+med).innerHTML =  parseFloat(document.getElementById("ct"+med).innerHTML) - parseFloat(cad[2]);
+			}
+		},
+		error : function (obj,quepaso,otrobj) {
+			$.msgBox({
+				title : 'Error',
+				content : 'Si estas viendo esto es por que falle',
+				type : 'error',
+				opacity : 0.8,
+				autoClose : true
+			});
+		}
+	});
+}
+function closep () {
+	alert('hello');
 }

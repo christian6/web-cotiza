@@ -47,6 +47,19 @@ include ("../datos/postgresHelper.php");
 <body>
 	<?php include ("includes/menu-operaciones.inc"); ?>
 	<header></header>
+	<div id="misub">
+		<ul class="breadcrumb well">
+			<li>
+				<a href="index.php">Home</a>
+				<span class="divider">/</span>
+			</li>
+			<li>
+				<a href="aprobados.php">Proyecto Aprobados</a>
+				<span class="divider">/</span>
+			</li>
+			<li class="active">admin-project</li>
+		</ul>
+	</div>
 	<section>
 		<div class="container well">
 			<h4>Sectores y Subproyectos</h4>
@@ -76,7 +89,7 @@ include ("../datos/postgresHelper.php");
 											<label for="label"><?php echo $result['sector']; ?></label>	
 										</a>
 									</article>
-									<div class="progress progress-success progress-striped active c-yellow">
+									<div class="progress progress-success progress-striped active c-yellow" style="height: .5em;">
 										<?php
 											$c =  new PostgreSQL();
 											$s = "SELECT COUNT(DISTINCT materialesid),(select count(flag) from  operaciones.metproyecto where flag like '0' AND 
@@ -91,7 +104,7 @@ include ("../datos/postgresHelper.php");
 											}
 											$c->close($q);
 										?>
-										<div class="bar" style="width: <?php echo $por; ?>%;"></div>
+										<div class="bar" style="width: <?php echo $por;?>%;"></div>
 									</div>
 								</div>
 								<?php

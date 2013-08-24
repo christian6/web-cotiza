@@ -201,6 +201,7 @@ function valid () {
 			item.focus();
 			bool = false;
 			$('#awa').css('display','block');
+			setTimeout(function() {$('#awa').css('display','none');}, 3000);
 			return false;
 		}else{
 			bool = true;
@@ -239,6 +240,7 @@ function saveproject () {
 					}, 3000);
 				}else{
 					$("#aer").css('display','block');
+					setTimeout(function() {$("#aer").css('display','none');}, 3000);
 				}
 			},
 			error : function (obj,quepaso,otroobj) {

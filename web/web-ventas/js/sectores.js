@@ -30,6 +30,9 @@ function testClosedProperty() {
   }
 }
 */
+function showaddnm () {
+	$("#mmat").modal('show');
+}
 function open() {
 	$("#upl").click();
     //$('#drop a').click(function(){
@@ -157,13 +160,13 @@ function showdet () {
 			type : 'POST',
 			success : function(response){
 				//alert(response);
-            if (response != "") {
-                //setTimeout(function() {
-                $( "#data" ).html(response);
-                //}, 600);    
-            }else{
-                alert("Se produjo un Error.");
-            }
+	            if (response != "") {
+	                //setTimeout(function() {
+	                $( "#data" ).html(response);
+	                //}, 600);    
+	            }else{
+	                alert("Se produjo un Error.");
+	            }
 	        },
 			error: function(objeto, quepaso, otroobj){
 				alert("Estas viendo esto por que fallé\r\n"+"Pasó lo siguiente: "+quepaso);
@@ -196,8 +199,13 @@ function savemat () {
 					$("#matmed").html('');
 					$("#data").html('');
 					$("#cant").val('');
-				}else{
-
+				}else if(response == 'exists'){
+					$.msgBox({
+						title : 'ALERTA',
+						content : 'Oh no!, parace que el material ya esta en tu lista, mejor verificalo tu mismo.',
+						type : 'warning',
+						opacity : 0.5
+					});
 				}
 			},
 			error : function (obj,quepaso,otroobj) {
@@ -227,6 +235,168 @@ function listtbl() {
 		},
 		error : function (obj,quepaso,otroobj) {
 			alert("Si estas viendo esto es por que fallé");
+		}
+	});
+}
+/**/
+
+function delmat (id,nom,med) {
+	$.msgBox({
+		type : 'confirm',
+		title : 'Eliminar Material',
+		content : 'Realmente Desea Eliminar?<br>'+nom+'<br>'+med,
+		buttons : [{value:'Si'},{value: 'No'}],
+		success : function (result) {
+			if (result == 'Si') {
+				var prm = {
+					'tra' : 'delmat',
+					'id' : id,
+					'pro' : $('#pro').val(),
+					'sub' : $('#sub').val(),
+					'sec' : $('#sec').val()
+				}
+				$.ajax({
+					data : prm,
+					url : 'includes/incmeter.php',
+					type : 'POST',
+					success : function (response) {
+						if (response == 'success') {
+							listtbl();
+							$.msgBox({
+								type : 'info',
+								title : 'SUCCESS',
+								content : 'Se ha realizado la transacción correctamente.',
+								opacity : 0.6,
+								autoClose : true
+							});
+						}else{
+							$.msgBox({
+								type : 'error',
+								title : 'ERROR',
+								content : 'Si estas viendo esto es por que me perdi.',
+								opacity : 0.6
+							});
+						}
+					},
+					error : function (obj,que,otr) {
+						$.msgBox({
+							type : 'error',
+							title : 'ERROR',
+							content : 'Si estas viendo esto es por que fallé',
+							opacity : 0.6,
+							autoClose : true
+						});
+					}
+				});
+			}
+		},
+		opacity : 0.8
+	});
+}
+function showedit (id,nom,med,cant) {
+	$("#mid").val(id);
+	$("#mnom").val(nom);
+	$("#mmed").val(med);
+	$("#mcant").val(cant);
+	$("#modmat").modal('show');
+}
+function editmat () {
+	var prm = {
+			'tra' : 'editmat',
+			'id' : $("#mid").val(),
+			'pro' : $('#pro').val(),
+			'sub' : $('#sub').val(),
+			'sec' : $('#sec').val(),
+			'cant' : $("#mcant").val()
+		}
+	$.ajax({
+		data : prm,
+		url : 'includes/incmeter.php',
+		type : 'POST',
+		success : function (response) {
+			//alert(response);
+			if (response == 'success') {
+				listtbl();
+				$("#modmat").modal('hide');
+				$.msgBox({
+					type : 'info',
+					title : 'SUCCESS',
+					content : 'Se ha realizado la transacción correctamente.',
+					opacity : 0.6,
+					autoClose : true
+				});
+			}else{
+				$("#modmat").modal('hide');
+				$.msgBox({
+					type : 'error',
+					title : 'ERROR',
+					content : 'Si estas viendo esto es por que me perdi.',
+					opacity : 0.6
+				});
+			}
+		},
+		error : function (obj,que,otr) {
+			$("#modmat").modal('hide');
+			$.msgBox({
+				type : 'error',
+				title : 'ERROR',
+				content : 'Si estas viendo esto es por que fallé',
+				opacity : 0.6,
+				autoClose : true
+			});
+			$("#modmat").modal('show');
+		}
+	});
+}
+function showsol () {
+	$("#mmat").modal('show');
+}
+function savenmat () {
+	var prm = {
+		'tra' : 'newmat',
+		'matid' : $("#matid").val(),
+		'nom' : $("#nom").val(),
+		'med' : $("#med").val(),
+		'und' : $("#und").val(),
+		'mar' : $("#mar").val(),
+		'mod' : $("#mod").val(),
+		'aca' : $("#aca").val()
+	}
+	$.ajax({
+		data : prm,
+		url : 'includes/incmeter.php',
+		type : 'POST',
+		success : function (response) {
+			//alert(response);
+			if (response == 'success') {
+				$("#modmat").modal('hide');
+				$.msgBox({
+					type : 'info',
+					title : 'SUCCESS',
+					content : 'Se ha realizado la transacción correctamente.',
+					opacity : 0.6,
+					autoClose : true
+				});
+				location.href='';
+			}else{
+				$("#mmat").modal('hide');
+				$.msgBox({
+					type : 'error',
+					title : 'ERROR',
+					content : 'Si estas viendo esto es por que me perdi.',
+					opacity : 0.6
+				});
+			}
+		},
+		error : function (obj,que,otr) {
+			$("#mmat").modal('hide');
+			$.msgBox({
+				type : 'error',
+				title : 'ERROR',
+				content : 'Si estas viendo esto es por que fallé',
+				opacity : 0.6,
+				autoClose : true
+			});
 		}
 	});
 }

@@ -46,6 +46,7 @@ include ("../datos/postgresHelper.php");
 			background-color: #CCC;
 			border: 1px solid white;
 			border-radius: 5px;
+			box-shadow: 0 0 .8em #FFF;
 			display: inline-block;
 			margin: 5px;
 			padding: 10px;
@@ -106,7 +107,7 @@ include ("../datos/postgresHelper.php");
 								<i class="icon-th"></i> 
 								<span class="visible-desktop"><h6>Nuevo Sector</h6></span>
 							</button>
-							<button class="btn btn-danger" onClick="showadicional();" <?php if( $status == 55 || $status == 59) { echo "DISABLED"; }?> />
+							<button class="btn btn-danger" onClick="showadicional();" <?php if( $status == 55 || $status == 59) { echo "DISABLED"; }?> DISABLED/>
 								<i class="icon-th-list"></i>
 								<span class="visible-desktop"><h6>Nuevo Adicional</h6></span>
 							</button>
@@ -132,10 +133,13 @@ include ("../datos/postgresHelper.php");
 						<strong>Aprobado</strong>
 						<p>Este proyecto ha sido aprobado.</p>
 					</div>
-					<?php } ?>
+					<?php } 
+					if ($res != 0) {
+					?>
 					<div class="well c-yellow-light t-warning">
 						<strong>Responsable  </strong> <?php echo $responsable; ?>.
 					</div>
+					<?php } ?>
 				</section>
 				<div class="row show-grid">
 					<div class="span8">
@@ -155,7 +159,8 @@ include ("../datos/postgresHelper.php");
 							while ($result = $cn->ExecuteNomQuery($query)) {
 							?>
 								<article>
-									<a id="txts" href="sectores.php?nropla=<?php echo $result['nroplano']; ?>&proid=<?php echo $_GET['id']; ?>&sub=<?php echo $_GET['sub']; ?>">
+									<a href="" class="close">&times;</a>
+									<a id="txts" href="sectores.php?nropla=<?php echo $result['nroplano']; ?>&proid=<?php echo $_GET['id']; ?>&sub=<?php echo $_GET['sub']; ?>&status=<?php echo $status; ?>">
 										<i class="icon-flag"></i>
 										<label for="label"><?php echo $result['nroplano']; ?></label>
 										<label for="label"><?php echo $result['sector']; ?></label>	

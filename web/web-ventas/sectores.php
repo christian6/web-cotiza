@@ -23,6 +23,8 @@ include ("../datos/postgresHelper.php");
     <script type="text/javascript" src="js/autocomplete.js"></script>
 	<script src="../bootstrap/js/bootstrap.js"></script>
 	<script src="js/sectores.js"></script>
+	<link rel="stylesheet" href="../css/msgBoxLight.css">
+	<script src="../modules/msgBox.js"></script>
 	<style>
 		#upload{
 			background-color: #313437;
@@ -70,6 +72,11 @@ include ("../datos/postgresHelper.php");
 		#fullscreen-icr button{
 			position: absolute;
 			top: 3em;
+		}
+		.ui-autocomplete{
+			max-height: 16em;
+			overflow-y: auto;
+			overflow-x: hidden;
 		}
 	</style>
 </head>
@@ -207,22 +214,22 @@ include ("../datos/postgresHelper.php");
 			              	<div class="span11 well">
 			              		<div class="control-group">
 			              		<div class="btn-group">
-			              			 <button class="btn btn-success t-d" onClick="showaddmat();"><i class="icon-plus"></i> Agregar material</button>
-			              			 <button class="btn btn-success t-d" onClick="openfile();"><i class="icon-plus"></i> Agregar Archivo</button>
+			              			 <button class="btn btn-success t-d" onClick="showaddmat();" <?php if($_GET['status'] == '55' || $_GET['status'] == '59'){ echo "DISABLED";} ?>><i class="icon-plus"></i> Agregar material</button>
+			              			 <button class="btn btn-success t-d" onClick="openfile();" <?php if($_GET['status'] == '55' || $_GET['status'] == '59'){ echo "DISABLED";} ?>><i class="icon-file"></i> Agregar Archivo</button>
 			              		</div>
 
 			              		</div>
 			              		<div id="maddmat" class="row show-grid span10 well c-yellow-light hide">
 			              			<a href="javascript:closeaddmat();" class="close">&times;</a>
-									<div class="span5">
+									<div class="span6">
 										<div class="control-group info">
 											<label for="controls" class="t-info">Nombre o Descripción</label>
 											<div class="controls">
 												<div class="ui-widget">
-												<select name="cbomat" id="combobox" class="span5 hide">
+												<select name="cbomat" id="combobox" class="span4 hide">
 													<?php
 													$cn = new PostgreSQL();
-													$query = $cn->consulta("SELECT DISTINCT matnom FROM admin.materiales ORDER BY matnom ASC;");
+													$query = $cn->consulta("SELECT DISTINCT TRIM(matnom) as matnom FROM admin.materiales ORDER BY matnom ASC;");
 													if ($cn->num_rows($query) > 0) {
 														while ($result = $cn->ExecuteNomQuery($query)) {
 															echo "<option value='".$result['matnom']."'>".$result['matnom']."</option>";
@@ -231,8 +238,15 @@ include ("../datos/postgresHelper.php");
 													$cn->close($query);
 													?>
 												</select>
-
 												</div>
+											</div>
+										</div>
+									</div>
+									<div class="span3">
+										<div class="control-group">
+											<div class="controls">
+												<label class="t-info">Solicitar nuevo material</label>
+												<button class="btn btn-success" onClick="showsol();"><i class="icon-plus"></i></button>
 											</div>
 										</div>
 									</div>
@@ -262,7 +276,7 @@ include ("../datos/postgresHelper.php");
 											<div class="control-group info">
 												<label for="controls" class="t-info">Cantidad</label>
 												<div class="controls">
-													<input type="number" class="span2" id="cant">
+													<input type="number" class="span2" min="0" id="cant">
 												</div>
 											</div>
 										</div>
@@ -272,7 +286,7 @@ include ("../datos/postgresHelper.php");
 										</div>
 									</div>
 								</div>
-			              		<table class="table table-hover table-bordered">
+			              		<table class="table table-hover table-bordered table-condensed">
 			              			<thead>
 			              				<tr>
 			              					<th>Item</th>
@@ -281,6 +295,8 @@ include ("../datos/postgresHelper.php");
 			              					<th>Medida</th>
 			              					<th>Undidad</th>
 			              					<th>Cantidad</th>
+			              					<th>Modificar</th>
+			              					<th>Eliminar</th>
 			              				</tr>
 			              			</thead>
 			              			<tbody id="tbld">
@@ -299,13 +315,17 @@ include ("../datos/postgresHelper.php");
 			              					if ($cn->num_rows($query) > 0) {
 			              						$i = 1;
 			              						while ($result = $cn->ExecuteNomQuery($query)) {
-			              							echo "<tr>";
+			              							echo "<tr class='c-yellow-light'>";
 			              							echo "<td id='tc'>".$i++."</td>";
 			              							echo "<td>".$result['materialesid']."</td>";
 			              							echo "<td>".$result['matnom']."</td>";
 			              							echo "<td>".$result['matmed']."</td>";
 			              							echo "<td id='tc'>".$result['matund']."</td>";
 			              							echo "<td id='tc'>".$result['cant']."</td>";
+			              							?>
+													<td id="tc"><a href="javascript:showedit('<?php echo $result['materialesid']; ?>','<?php echo $result['matnom']; ?>','<?php echo str_replace('"', '', $result['matmed']); ?>',<?php echo $result['cant']; ?>);"><i class="icon-edit"></i></a></td>
+													<td id="tc"><a href="javascript:delmat('<?php echo $result['materialesid']; ?>','<?php echo $result['matnom']; ?>','<?php echo str_replace('"', '', $result['matmed']); ?>');"><i class="icon-trash"></i></a></td>
+			              							<?php
 			              							echo "</tr>";
 			              						}
 			              					}
@@ -362,6 +382,135 @@ include ("../datos/postgresHelper.php");
 				<button type="Submit" id="btns" name="btns" class="btn btn-primary">Leer Archivo</button>
 			</div>
 			</form>
+		</div>
+		<div id="mmat" class="modal fade in c-blue-light t-info hide">
+			<div class="modal-header">
+				<a href="" class="close" data-dismiss="modal">&times;</a>
+				<h4>Agregar Nuevo Material</h4>
+			</div>
+			<div class="modal-body">
+				<div class="row show-grid">
+					<div class="span2">
+						<div class="control-group">
+							<label class="control-label">Material ID</label>
+							<div class="controls">
+								<input type="text" id="matid" class="span2" maxlength="15">
+							</div>
+						</div>
+					</div>
+					<div class="span5">
+						<div class="control-group">
+							<label class="control-label">Descripcion</label>
+							<div class="controls">
+								<input type="text" id="nom" class="span5">
+							</div>
+						</div>
+					</div>
+					<div class="span5">
+						<div class="control-group">
+							<label class="control-label">Medida</label>
+							<div class="controls">
+								<input type="text" id="med" class="span5">
+							</div>
+						</div>
+					</div>
+					<div class="span2">
+						<div class="control-group">
+							<label class="control-label">Unidad</label>
+							<div class="controls">
+								<select name="und" id="und" class="span2 t-info">
+									<?php
+									$cn = new PostgreSQL();
+									$query =  $cn->consulta("SELECT DISTINCT uninom FROM admin.unidad");
+									if ($cn->num_rows($query) > 0) {
+										while ($result = $cn->ExecuteNomQuery($query)) {
+											echo "<option value='".$result['uninom']."'>".$result['uninom']."</option>";
+										}
+									}
+									$cn->close($query);
+									?>
+								</select>
+							</div>
+						</div>
+					</div>
+					<div class="span2">
+						<div class="control-group">
+							<label class="control-label">Marca</label>
+							<div class="controls">
+								<input type="text" class="span2" id="mar">
+							</div>
+						</div>
+					</div>
+					<div class="span2">
+						<div class="control-group">
+							<label class="control-label">Modelo</label>
+							<div class="controls">
+								<input type="text" class="span2" id="mod">
+							</div>
+						</div>
+					</div>
+					<div class="span2">
+						<div class="control-group">
+							<label class="control-label">Acabado</label>
+							<div class="controls">
+								<input type="text" class="span2" id="aca">
+							</div>
+						</div>
+					</div>
+					<div class="span5">
+						<button class="btn btn-warning t-d" data-dismiss="modal"><i class="icon-remove"></i> Cancelar</button>
+						<button class="btn btn-info t-d pull-right" onClick="savenmat();"><i class="icon-ok"></i> Guardar</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="modmat" class="modal fade in c-blue-light t-info hide">
+			<div class="modal-header">
+				<a href="" class="close" data-dismiss="modal">&times;</a>
+				<h3>Modificar Material</h3>
+			</div>
+			<div class="modal-body">
+				<div class="row show-grid">
+					<div class="span2">
+						<div class="control-group info">
+						<label for="controls" class="control-label">Materiales ID</label>
+						<div class="controls">
+							<input type="text" class="span2" id="mid" DISABLED />
+						</div>
+						</div>
+					</div>
+					<div class="span5">
+						<div class="control-group info">
+						<label for="controls" class="control-label">Nombre Material</label>
+						<div class="controls">
+							<input type="text" class="span5 t-info" id="mnom" DISABLED />
+						</div>
+						</div>
+					</div>
+					<div class="span5">
+						<div class="control-group info">
+						<label for="controls" class="control-label">Medida Material</label>
+						<div class="controls">
+							<input type="text" class="span5" id="mmed" DISABLED />
+						</div>
+						</div>
+					</div>
+					<div class="span2">
+						<div class="control-group info">
+						<label for="controls" class="control-label">Cantidad</label>
+						<div class="controls">
+							<input type="number" class="span2" id="mcant" min="0" />
+						</div>
+						</div>
+					</div>
+					<div class="span5">
+						<div class="controls">
+							<button class="btn btn-warning" data-dismiss="modal"><i class="icon-remove"></i> Cancelar</button>
+							<button class="btn btn-info pull-right" onClick="editmat();"><i class="icon-ok"></i> Guardar</button>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 		<input type="hidden" id="pro" value="<?php echo $_GET['proid']; ?>" />
 		<input type="hidden" id="sub" value="<?php echo $_GET['sub']; ?>" />
