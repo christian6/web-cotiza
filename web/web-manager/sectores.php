@@ -92,14 +92,8 @@ include ("../datos/postgresHelper.php");
 			<div class="span8 well">
 				<div class="btn-group">
 				<?php
-					$sql = "SELECT COUNT(*) FROM operaciones.metproyecto WHERE ";
-					if ($_GET['sub'] == "") {
-						$sql .= "proyectoid LIKE '".$_GET['proid']."'";
-					}else{
-						$sql .= "proyectoid LIKE '".$_GET['proid']."' AND TRIM(subproyectoid) LIKE '".$_GET['sub']."'";
-					}
 					$cn = new PostgreSQL();
-					$query = $cn->consulta($sql);
+					$query = $cn->consulta("SELECT COUNT(*) FROM ventas.proyectos WHERE esid LIKE '60'");
 					if ($cn->num_rows($query) > 0) {
 						$result = $cn->ExecuteNomQuery($query);
 					}
@@ -108,7 +102,6 @@ include ("../datos/postgresHelper.php");
 						echo "<button class='btn' DISABLED><i class='icon-ok'></i> Aprobar</button>";
 					}else{
 				?>
-				
 				<button class="btn btn-info t-d" onClick="javascript:location.href='comparealllist.php?pro=<?php echo $_GET['proid']; ?>&sub=<?php echo $_GET['sub']; ?>'">
 					<i class="icon-list"></i> Lista de Proyecto</button>
 					<?php } ?>

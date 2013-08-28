@@ -134,8 +134,24 @@ if ($_POST['tra'] == "edit") {
 		$query = $cn->consulta("UPDATE ventas.proyectos SET esid = '55' WHERE proyectoid LIKE '".$_POST['pro']."'");
 		$cn->affected_rows($query);
 		$cn->close($query);
-		//
+		
+		//Mandando un mensaje a operaciones confirmando la aprobacion del proyecto
+		$pero = '';
+		$cn = new PostgreSQL();
+		$query = $cn->consulta("SELECT empdni FROM ventas.proyectopersonal WHERE proyectoid LIKE '".$_POST['pro']."'");
+		if ($cn->num_rows($query) > 0) {
+			while ($res = $cn->ExecuteNomQuery($query)) {
+				$pero = $res['empdni'];
+			}
+		}
 		$cn->close($query);
+		$cn = new PostgreSQL();
+		$query = $cn->consulta("INSERT INTO admin.mensaje(empdni, fordni, question, body, esid)
+    							VALUES ('".$_SESSION['dni-icr']."','".$pero."', 'Aprobación de Proyecto ".$_POST['pro']."', 'Para hacer de su conocimiento<br>Aprobacion del proyecto codigo ".$_POST['pro'].".', '56');");
+		$cn->affected_rows($query);
+		$cn->close($query);
+		//
+		//
 		$cn = new PostgreSQL();
 		$au = $cn->auditoria('admin_metproyecto','INSERT',$_SESSION['dni-icr'],'Aprobar Lista proyecto ID_PRO: '.$_POST['pro'],"Fue aprobado con el usuario: ".$_POST['usu']." Autenticado Satisfactoriamente.");
 		echo "success";

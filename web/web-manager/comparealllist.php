@@ -30,11 +30,14 @@ include ("../datos/postgresHelper.php");
 		<div class="container well">
 			<h4>Comparar Lista Ventas y Operaciones</h4>
 			<div class="btn-group">
-				<button class="btn btn-success"  onClick="viewapro();"><i class="icon-ok"></i> Aprobar</button>
+				<button class="btn btn-success t-d"  onClick="viewapro();"><i class="icon-ok"></i> Aprobar</button>
+				<button class="btn btn-info t-d" onClick="editpre();"><i class="icon-edit"></i> Editar Precio</button>
+				<button class="btn btn-info t-d" onClick="refreshpre();"><i class="icon-refresh"></i> Ver Precio</button>
+				<button class="btn btn-success t-d" onClick="javascript:location.href='sectores.php?proid=<?php echo $_GET['pro']; ?>'"><i class="icon-arrow-left"></i> Volver</button>
 				<!--<button class="btn btn-success" onClick="javascript:window.close();"><i class="icon-resize-small"></i> Salir</button>-->
 			</div>
 			<hr class="hs">
-			<table class="table table-bordered table-hover">
+			<table class="table table-bordered table-condensed table-hover">
 				<thead>
 					<th></th>
 					<!--<th>Item</th>-->
@@ -42,6 +45,7 @@ include ("../datos/postgresHelper.php");
 					<th>Descripcion</th>
 					<th>Medida</th>
 					<th>Unidad</th>
+					<th>Precio</th>
 					<th>Ventas</th>
 					<th>Operaciones</th>
 					<!--<th>Editar</th>
@@ -50,9 +54,11 @@ include ("../datos/postgresHelper.php");
 				<tbody>
 					<?php
 					$cn = new PostgreSQL();
-					$sql = "SELECT DISTINCT v.materialesid,m.matnom,m.matmed,m.matund 
+					$sql = "SELECT DISTINCT v.materialesid,m.matnom,m.matmed,m.matund,i.precio
 							FROM admin.vw_metradobo v INNER JOIN admin.materiales m
 							ON v.materialesid LIKE m.materialesid
+							INNER JOIN almacen.inventario i
+							ON v.materialesid LIKE i.materialesid AND almacenid like '0001' AND i.anio like extract(year from now())::char(4)
 							WHERE ";
 					if ($_GET['sub'] == "") {
 						$sql .= "v.proyectoid LIKE '".$_GET['pro']."'";
@@ -64,15 +70,18 @@ include ("../datos/postgresHelper.php");
 						$i = 1;
 						$cv=0;
 						$co=0;
+						$vpr = 0;
+						$opr = 0;
 						$com = array('"',"'");
 						while ($result = $cn->ExecuteNomQuery($query)) {
-							echo "<tr>";
+							echo "<tr class='c-blue-light'>";
 							//echo "<td id='tc'><input type='checkbox' name='matids' id='".$result['materialesid']."'></td>";
 							echo "<td id='tc'>".$i++."</td>";
 							echo "<td>".$result['materialesid']."</td>";
 							echo "<td>".$result['matnom']."</td>";
 							echo "<td>".$result['matmed']."</td>";
 							echo "<td id='tc'>".$result['matund']."</td>";
+							echo "<td id='tc'><input type='text' class='input-mini' style='height:.8em;' name='snpre' value='".$result['precio']."' DISABLED></td>";
 							$c = new PostgreSQL();
 							$qv = "SELECT SUM(cant) as cant FROM ventas.matmetrado WHERE ";
 							if ($_GET['sub'] == "") {
@@ -84,7 +93,8 @@ include ("../datos/postgresHelper.php");
 							if ($c->num_rows($qs) > 0) {
 								$r = $c->ExecuteNomQuery($qs);
 								$cv = $r[0];
-								echo "<td id='tc'>".$cv."</td>";
+								echo "<td id='tc'>".$cv."<input type='hidden' name='cvent' value='".$cv."'></td>";
+								$vpr += ( $result['precio'] * $cv );
 							}else{
 								echo "<td> - </td>";
 							}
@@ -101,17 +111,15 @@ include ("../datos/postgresHelper.php");
 							if ($c->num_rows($qs) > 0) {
 								$r = $c->ExecuteNomQuery($qs);
 								$co = $r[0];
-								echo "<td id='tc'>".$co."</td>";
+								echo "<td id='tc'>".$co."<input type='hidden' name='coper' value='".$co."'> </td>";
+								$opr += ( $result['precio'] * $co );
 							}else{
 								echo "<td> - </td>";
 							}
 							$c->close($qs);
 
 							$c->close($q);
-							?>
-							<!--<td id='tc'><button class="btn btn-info" onClick="viewedit('<?php echo $result['materialesid']; ?>','<?php echo $result['matnom']; ?>','<?php echo str_replace($com,'',$result['matmed']) ?>');"><i class="icon-edit"></i></button></td>
-							<td id='tc'><button class="btn btn-danger" onClick="viewdelete('<?php echo $result['materialesid']; ?>');"><i class="icon-remove"></i></button></td>-->
-							<?php
+							
 							echo "</tr>";
 						}
 					}
@@ -119,6 +127,50 @@ include ("../datos/postgresHelper.php");
 					?>
 				</tbody>
 			</table>
+			<div class="row show-grid">
+				<div class="span6">
+					<div class="well c-green-light t-info">
+						<h4>Info ventas</h4>
+						<dl class="dl-horizontal">
+							<dt>Total Precio</dt>
+							<dd>
+								<div class="input-prepend">
+									<span class="add-on"><i class="icon-tag"></i></span>
+									<input type="text" class="span2" id="opv" value="<?php echo $vpr; ?>" DISABLED>
+								</div>
+							</dd>
+							<dt>Precio Modificado</dt>
+							<dd>
+								<div class="input-prepend">
+									<span class="add-on"><i class="icon-tags"></i></span>
+									<input type="text" class="span2" id="vmpre" DISABLED>
+								</div>
+							</dd>
+						</dl>
+					</div>
+				</div>
+				<div class="span6">
+					<div class="well c-green-light t-info">
+						<h4>Info Operaciones</h4>
+						<dl class="dl-horizontal">
+							<dt>Total Precio</dt>
+							<dd>
+								<div class="input-prepend">
+									<span class="add-on"><i class="icon-tag"></i></span>
+									<input type="text" class="span2" id="opp" value="<?php echo $opr; ?>" DISABLED/>
+								</div>
+							</dd>
+							<dt>Precio Modificado</dt>
+							<dd>
+								<div class="input-prepend">
+									<span class="add-on"><i class="icon-tags"></i></span>
+									<input type="text" class="span2" id="ompre" DISABLED>
+								</div>
+							</dd>
+						</dl>
+					</div>
+				</div>
+			</div>
 		</div>
 		
 	<div id="alist" class="modal fade in hide">

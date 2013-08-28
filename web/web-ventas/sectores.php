@@ -322,10 +322,11 @@ include ("../datos/postgresHelper.php");
 			              							echo "<td>".$result['matmed']."</td>";
 			              							echo "<td id='tc'>".$result['matund']."</td>";
 			              							echo "<td id='tc'>".$result['cant']."</td>";
-			              							?>
-													<td id="tc"><a href="javascript:showedit('<?php echo $result['materialesid']; ?>','<?php echo $result['matnom']; ?>','<?php echo str_replace('"', '', $result['matmed']); ?>',<?php echo $result['cant']; ?>);"><i class="icon-edit"></i></a></td>
-													<td id="tc"><a href="javascript:delmat('<?php echo $result['materialesid']; ?>','<?php echo $result['matnom']; ?>','<?php echo str_replace('"', '', $result['matmed']); ?>');"><i class="icon-trash"></i></a></td>
+			              							if ($_GET['status'] == '59' || $_GET['status'] == '55'){}else{?>
+			              								<td id="tc"><a href="javascript:showedit('<?php echo $result['materialesid']; ?>','<?php echo $result['matnom']; ?>','<?php echo str_replace('"', '', $result['matmed']); ?>',<?php echo $result['cant']; ?>);"><i class="icon-edit"></i></a></td>
+														<td id="tc"><a href="javascript:delmat('<?php echo $result['materialesid']; ?>','<?php echo $result['matnom']; ?>','<?php echo str_replace('"', '', $result['matmed']); ?>');"><i class="icon-trash"></i></a></td>	
 			              							<?php
+			              								}
 			              							echo "</tr>";
 			              						}
 			              					}
@@ -334,6 +335,28 @@ include ("../datos/postgresHelper.php");
 			              			</tbody>
 			              		</table>
 			              	</div>
+			              	<div class="span12">
+					<div class="well c-yellow-light">
+						<h4 class="t-warning">Observaciones de Operaciones</h4>
+						<?php
+							$cn = new PostgreSQL();
+							$query = $cn->consulta("SELECT sector,obser FROM ventas.alertaspro WHERE proyectoid LIKE '".$_GET['proid']."' AND TRIM(subproyectoid) LIKE '".$_GET['sub']."' AND TRIM(sector) LIKE '".$_GET['nropla']."'");
+							if ($cn->num_rows($query) > 0) {
+								echo "<div class='alert alet-block alert-info'>";
+								echo "<ul>";
+								while($result = $cn->ExecuteNomQuery($query)){
+									echo "<li>";
+									echo "<strong>".$result['sector']."</strong>";
+									echo "<p>".$result['obser']."</p>";
+									echo "</li>";
+								}
+								echo "</ul>";
+								echo "</div>";
+							}
+							$cn->close($query);
+						?>
+					</div>
+				</div>
 			              </div>
 			            </div>
 			            <div class="tab-pane fade" id="eyh">

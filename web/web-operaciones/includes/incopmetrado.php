@@ -32,7 +32,7 @@ if ($_POST['tra'] == 'apro') {
 	echo "hecho";
 }
 if ($_POST['tra'] == 'sectorok') {
-	$sql = "SELECT proyectoid,TRIM(subproyectoid) as subproyectoid,TRIM(sector) as sector,
+	/*$sql = "SELECT proyectoid,TRIM(subproyectoid) as subproyectoid,TRIM(sector) as sector,
 			TRIM(materialesid) as materialesid, SUM(cant) as cant FROM operaciones.matmetrado 
 			WHERE proyectoid LIKE '".$_POST['pro']."' AND 
 			TRIM(subproyectoid) LIKE '".$_POST['sub']."' 
@@ -53,7 +53,7 @@ if ($_POST['tra'] == 'sectorok') {
 			$c->close($q);
 		}
 	}
-	$cn->close($query);
+	$cn->close($query);*/
 
 	$cn = new PostgreSQL();
 	$query = $cn->consulta("UPDATE ventas.sectores SET esid = '60' WHERE proyectoid LIKE '".$_POST['pro']."' AND 

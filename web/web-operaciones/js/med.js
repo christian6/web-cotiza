@@ -1,3 +1,6 @@
+$(function () {
+	list();
+});
 function searchmeter (e) {
 	var txtse = document.getElementById("txtse");
 	var evt = e ? e : event;

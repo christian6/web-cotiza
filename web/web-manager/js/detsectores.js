@@ -35,7 +35,7 @@ function viewcompare () {
 	var myLeft = (screen.width-1200)/2;
 	var myTop  = (screen.height-700)/2;
 	
-	var caracteristicas = "toolbar=0, location=0, directories=0, resizable=0, scrollbars=yes, height=600, width=1200, top="+myTop+", left="+myLeft;
+	var caracteristicas = "toolbar=0, location=0, directories=0, resizable=0, scrollbars=yes, top="+myTop+", left="+myLeft;
 	var wino = window.open("comparelist.php?"+"&pro="+pro+"&sub="+sub+"&sec="+sec,"Comparar Listas",caracteristicas);
 }
 function resizesmall () {

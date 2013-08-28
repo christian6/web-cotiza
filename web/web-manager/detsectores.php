@@ -176,8 +176,7 @@ include ("../datos/postgresHelper.php");
 			        </ul>
 			        <div id="myTabContent" class="tab-content">
 			            <div class="tab-pane fade active in" id="mat">
-			              <div class="row show-grid">	
-			              	<div class="span11 well">
+			            	<div class="well">
 			              	<?php
 								if ($r[0] >= 1) {
 							?>
@@ -262,8 +261,31 @@ include ("../datos/postgresHelper.php");
 			              				?>
 			              			</tbody>
 			              		</table>
-			              	</div>
 			              </div>
+							<div class="row show-grid">
+								<div class="span8">
+									<div class="well c-yellow-light">
+										<h4 class="t-warning">Observaciones de Operaciones</h4>
+										<?php
+											$cn = new PostgreSQL();
+											$query = $cn->consulta("SELECT sector,obser FROM ventas.alertaspro WHERE proyectoid LIKE '".$_GET['proid']."' AND TRIM(subproyectoid) LIKE '".$_GET['sub']."' AND TRIM(sector) LIKE '".$_GET['nropla']."'");
+											if ($cn->num_rows($query) > 0) {
+												echo "<div class='alert alet-block alert-info'>";
+												echo "<ul>";
+												while($result = $cn->ExecuteNomQuery($query)){
+													echo "<li>";
+													echo "<strong>".$result['sector']."</strong>";
+													echo "<p>".$result['obser']."</p>";
+													echo "</li>";
+												}
+												echo "</ul>";
+												echo "</div>";
+											}
+											$cn->close($query);
+										?>
+									</div>
+								</div>
+							</div>
 			            </div>
 			            <div class="tab-pane fade" id="eyh">
 			              <div class="row">

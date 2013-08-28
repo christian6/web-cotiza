@@ -305,7 +305,7 @@ include ("../datos/postgresHelper.php");
 			<form method="POST" enctype="multipart/form-data" action="includes/incfile.php">
 			<div class="modal-header">
 				<a class="close" data-dismiss="modal">×</a>
-				<h4>Agragar Archivo</h4>
+				<h4>Agregar Archivo</h4>
 			</div>
 			<div class="modal-body">
 				<div class="well">

@@ -193,7 +193,7 @@ function aprobarall () {
 				if (response == 'success') {
 					$( "#lblaut" ).css('display','none');
 					$( "#lblsu" ).css('display','inline');
-					setTimeout(function() { location.href = "sectores.php?proid="+pro; }, 2000);
+					setTimeout(function() { location.href = "proyectoma.php"; }, 1200);
 				}else if (response == 'fallida') {
 					$( "#lblaut" ).css('display','inline');
 					$( "#lblsu" ).css('display','none');
@@ -235,5 +235,28 @@ function delsector () {
 				alert("Estas viendo esto por que falle");
 			}
 		});
+	}
+}
+function editpre () {
+	var epre = document.getElementsByName("snpre");
+	for (var i = 0; i < epre.length; i++) {
+		epre[i].disabled = false;
+	}
+}
+function refreshpre () {
+	var pre = document.getElementsByName("snpre");
+	var vent = document.getElementsByName("cvent");
+	var oper = document.getElementsByName("coper");
+	var tv = 0, to = 0;
+	try{
+		for (var i = 0; i < pre.length; i++) {
+			//alert(pre[i].value +' ' +vent[i].value);
+			tv += (pre[i].value * vent[i].value);
+			to += (pre[i].value * oper[i].value);
+		}
+		$("#vmpre").val(tv);
+		$("#ompre").val(to);
+	}catch(e){
+		alert(e);
 	}
 }

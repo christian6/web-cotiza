@@ -300,3 +300,26 @@ function projectstatus () {
 		}
 	})
 }
+function showesec (sec,des,obs) {
+	$("#esec").modal('show');
+	$("#nsec").html(sec);
+	$("#msdes").val(des);
+	$("#msobs").val(obs);
+}
+function esec () {
+	// body...
+}
+function delsec (sec) {
+	$.msgBox({
+		title : 'Eliminar Sector '+sec,
+		content : 'Realmente desea eliminar el sector '+sec,
+		type : 'confirm',
+		opacity : 0.6,
+		buttons : [{value:'Si'},{value:'No'}],
+		success : function (resp) {
+			if (resp == 'Si') {
+
+			}
+		}
+	});
+}

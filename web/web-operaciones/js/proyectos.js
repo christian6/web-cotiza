@@ -41,7 +41,14 @@ function aproproop () {
 					success : function (response) {
 						//alert(response);
 						if (response == 'success') {
-							location.href='sectorsub.php?pro='+$("#pro").val();
+							$.msgBox({
+								title : 'Mensaje',
+								content : 'Ahora se procedera a la aprobacion por parte de la administración.',
+								type : 'info',
+								opacity : 0.4
+							});
+							setTimeout(function() {location.href='index.php';}, 3200);
+							
 						}else if(response == 'sectores-falta'){
 							$.msgBox({
 								title : 'Alerta',

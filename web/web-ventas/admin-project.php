@@ -22,6 +22,8 @@ include ("../datos/postgresHelper.php");
 	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.js"></script>
 	<script src="../bootstrap/js/bootstrap.js"></script>
 	<script src="js/project.js"></script>
+	<link rel="stylesheet" href="../css/msgBoxLight.css">
+	<script src="../modules/msgBox.js"></script>
 	<style>
 		#txts{
 			color: #000;
@@ -159,7 +161,8 @@ include ("../datos/postgresHelper.php");
 							while ($result = $cn->ExecuteNomQuery($query)) {
 							?>
 								<article>
-									<a href="" class="close">&times;</a>
+									<a href="javascript:showesec('<?php echo $result['nroplano']; ?>','<?php echo $result['sector']; ?>','<?php echo $result['descripcion']; ?>');" class="close pull-left"><i class="icon-edit"></i></a>
+									<a href="javascript:delsec('<?php echo $result['nroplano']; ?>');" class="close">&times;</a>
 									<a id="txts" href="sectores.php?nropla=<?php echo $result['nroplano']; ?>&proid=<?php echo $_GET['id']; ?>&sub=<?php echo $_GET['sub']; ?>&status=<?php echo $status; ?>">
 										<i class="icon-flag"></i>
 										<label for="label"><?php echo $result['nroplano']; ?></label>
@@ -286,6 +289,38 @@ include ("../datos/postgresHelper.php");
 				<button class="btn btn-primary" onClick="savesec();"><i class="icon-ok icon-white"></i> Guardar Sector</button>
 			</div>
 		</div>
+		<!--
+		Modificar y elimnar Sectores
+		-->
+		<div id="esec" class="modal fade in hide c-yellow-light t-warning">
+			<div class="modal-header">
+				<a data-dismiss="modal" class="close">&times;</a>
+				<h3>Modificar Sector <span id="nsec"></span></h3>
+			</div>
+			<div class="modal-body">
+				<div class="control-group warning">
+					<label for="controls" class="control-label">Descripción</label>
+					<div class="controls">
+						<input type="text" id="msdes" class="span5">
+					</div>
+				</div>
+				<div class="control-group warning">
+					<label for="controls" class="control-label">Observación</label>
+					<div class="controls">
+						<textarea id="msobs" rows="4" class="span5"></textarea>
+					</div>
+				</div>
+				<div class="control-group">
+					<div class="controls">
+						<button class="btn" data-dismiss="modal"><i class="icon-remove"></i> Cancelar</button>
+						<button class="btn btn-warning t-d pull-right"><i class="icon-ok"></i> Guardar Cambios</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--
+		Fin
+		-->
 		<div id="msub" class="modal fade in hide">
 			<div class="modal-header">
 				<a href="" data=dismiss="modal" class="close">&times;</a>

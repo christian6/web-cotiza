@@ -171,8 +171,8 @@ if ($_POST['tra'] == 'conedit') {
 				echo "<td>".$result['matmed']."</td>";
 				echo "<td id='tc'>".$result['matund']."</td>";
 				echo "<td id='tc'>".$result['cant']."</td>";
-				echo "<td id='tc'><Button class='btn btn-info' onClick='showedit(".$result['materialesid'].");'><i class='icon-edit'></i></td>";
-				echo "<td id='tc'><Button class='btn btn-danger' onClick='showdel(".$result['materialesid'].");'><i class='icon-minus'></i></td>";
+				echo "<td id='tc'><Button class='btn btn-mini btn-info' onClick='showedit(".$result['materialesid'].");'><i class='icon-edit'></i></td>";
+				echo "<td id='tc'><Button class='btn btn-mini btn-danger' onClick='showdel(".$result['materialesid'].");'><i class='icon-minus'></i></td>";
 				echo "</tr>";
 			}
 		}
@@ -197,6 +197,35 @@ if ($_POST['tra'] == 'saveobs') {
 
 	$cn = new PostgreSQL();
 	$cn->auditoria('VENTAS_ALERTASPRO','INSERT',$_SESSION['dni-icr'],'SECTOR DESAPROBADO > VENTAS PROYECTO '.$_POST['pro'].' SECTOR'.$_POST['sec'],$_POST['pro'].' '.$_POST['sub'].' '.$_POST['sec'].$_POST['obs']);
+
+	$sql = "SELECT proyectoid,TRIM(subproyectoid) as subproyectoid,TRIM(sector) as sector,
+		TRIM(materialesid) as materialesid, SUM(cant) as cant FROM ventas.matmetrado 
+		WHERE proyectoid LIKE '".$_POST['pro']."' AND 
+		TRIM(subproyectoid) LIKE '".$_POST['sub']."' 
+		AND TRIM(sector) LIKE '".$_POST['sec']."' 
+		GROUP BY proyectoid,subproyectoid,sector,materialesid";
+
+	//echo $sql;
+
+	$cn = new PostgreSQL();
+	$query = $cn->consulta($sql);
+	if ($cn->num_rows($query) > 0) {
+		while ($result = $cn->ExecuteNomQuery($query)) {
+			$c = new PostgreSQL();
+			$q = $c->consulta("INSERT INTO operaciones.matmetrado
+							VALUES('".$result['proyectoid']."','".$result['subproyectoid']."','".$result['sector']."',
+							'".$result['materialesid']."',".$result['cant'].",'1');");
+			$c->affected_rows($q);
+			$c->close($q);
+		}
+	}
+	$cn->close($query);
+
+	$cn = new PostgreSQL();
+	$query = $cn->consulta("UPDATE ventas.sectores SET esid = '61' WHERE proyectoid LIKE '".$_POST['pro']."' AND 
+							TRIM(subproyectoid) LIKE '".$_POST['sub']."' AND TRIM(nroplano) LIKE '".$_POST['sec']."';");
+	$cn->affected_rows($query);
+	$cn->close($query);
 
 	echo "success";
 }

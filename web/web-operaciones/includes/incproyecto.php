@@ -57,10 +57,6 @@ if ($_POST['tra'] == 'pro') {
 	}
 	$cn->close($query);
 	if ($ces == $cto && $ces > 0 && $cto > 0) {
-		$cn = new PostgreSQL();
-		$query = $cn->consulta("UPDATE ventas.proyectos SET esid = '55' WHERE proyectoid LIKE '".$_POST['pro']."'");
-		$cn->affected_rows($query);
-		$cn->close($query);
 		echo "success";
 	}else{
 		echo "sectores-falta";
