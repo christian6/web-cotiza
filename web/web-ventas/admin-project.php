@@ -121,12 +121,49 @@ include ("../datos/postgresHelper.php");
 								<i class="icon-user"></i>
 								<span class="visible-desktop"><h6>Responsable</h6></span>
 							</button>-->
+							<button class="btn btn-danger" onClick="showfiles();">
+								<i class="icon-file"></i>
+								<span class="visible-desktop"><h6>Archivos</h6></span>
+							</button>
 							<button class="btn btn-success" onClick="showconf();" <?php if( $status == 55 || $status == 59) { echo "DISABLED"; }?> />
 								<i class="icon-ok"></i>
 								<span class="visible-desktop"><h6>Confirmar</h6></span>
 							</button>
 						</div>
 						<hr class="hs">
+					</div>
+				</div>
+				<div class="modal fade in hide c-yellow-light t-info" id="mfiles">
+					<div class="modal-header">
+						<a data-dismiss="modal" class="close">&times;</a>
+						<h3>Subir Archivos</h3>
+						<small>Documentos del proyecto <?php echo $_GET['id']; ?></small>
+					</div>
+					<div class="modal-body">
+						<div class="row show-grid">
+							<div class="span5">
+								<div class="control-group">
+									<label class="control-label">Documento Complementarios</label>
+									<div class="controls well pull-center" style="background-color: #2D2D2D; border: .3em dashed #088ccc;">
+										<a href="javascript:openfc();"><h5>Click Aqui</h5></a>
+										<input type="file" class="hide" id="fc" accept="application/x-rar">
+									</div>
+								</div>
+							</div>
+							<div class="span5">
+								<div class="control-group">
+									<label class="control-label">Documento Administrativos</label>
+									<div class="controls well pull-center" style="background-color: #2D2D2D; border: .3em dashed #088ccc;">
+										<a href="javascript:openfa();"><h5>Click Aqui</h5></a>
+										<input type="file" class="hide" id="fa" accept="application/x-rar">
+									</div>
+								</div>
+							</div>
+							<div class="span5">
+								<button class="btn" data-dismiss="modal"><i class="icon-remove"></i> Cancelar</button>
+								<button class="btn btn-info t-d pull-right"><i class="icon-upload"></i> Subir Archivos</button>
+							</div>
+						</div>
 					</div>
 				</div>
 				<section>
@@ -152,9 +189,9 @@ include ("../datos/postgresHelper.php");
 						$cn = new PostgreSQL();
 						$sql = "SELECT nroplano,sector,descripcion FROM ventas.sectores WHERE ";
 						if ($_GET['sub'] != "") {
-							$sql .= "proyectoid LIKE '".$_GET['id']."' AND TRIM(subproyectoid) LIKE '".$_GET['sub']."' ";
+							$sql .= "proyectoid LIKE '".$_GET['id']."' AND TRIM(subproyectoid) LIKE '".$_GET['sub']."' ORDER BY nroplano asc";
 						}else{
-							$sql .= "proyectoid LIKE '".$_GET['id']."' AND TRIM(subproyectoid) LIKE '' ";
+							$sql .= "proyectoid LIKE '".$_GET['id']."' AND TRIM(subproyectoid) LIKE '' ORDER BY nroplano asc";
 						}
 						$query = $cn->consulta($sql);
 						if ($cn->num_rows($query) > 0) {
@@ -186,10 +223,16 @@ include ("../datos/postgresHelper.php");
 						<div id="cont">
 							<?php
 							$cn = new PostgreSQL();
-							$query = $cn->consulta("SELECT subproyectoid,subproyecto FROM ventas.subproyectos WHERE proyectoid LIKE '".$_REQUEST['id']."'");
+							$query = $cn->consulta("SELECT proyectoid,subproyectoid,subproyecto,fecent,obser FROM ventas.subproyectos WHERE proyectoid LIKE '".$_REQUEST['id']."'");
 							if ($cn->num_rows($query) > 0) {
 								while ($result = $cn->ExecuteNomQuery($query)) {
-									echo "<span><a href='?id=".$_GET['id']."&sub=".$result['subproyectoid']."'>".$result['subproyecto']."</a></span>";
+									echo "<span>";
+									echo "<a href=javascript:delsub('".$result['proyectoid']."','".$result['subproyectoid']."'); class='close'>&times;</a>";
+									?>
+									<a href="javascript:showsubedit('<?php echo $result['proyectoid']; ?>','<?php echo $result['subproyectoid'];?>','<?php echo $result['subproyecto']; ?>','<?php echo $result['fecent'];?>','<?php echo $result['obser'];?>');" class="close pull-left"><i class="icon-edit"></i></a>
+									<?php
+									echo "<a href='?id=".$_GET['id']."&sub=".$result['subproyectoid']."'>".$result['subproyecto']."</a>";
+									echo "</span>";
 								}
 							}
 							$cn->close($query);
@@ -213,6 +256,20 @@ include ("../datos/postgresHelper.php");
 					}
 					$cn->close($query);
 					?>
+				</div>
+			</div>
+			<div class="span6">
+				<div class="well c-green-light t-success">
+					<h4>Archivos Complementarios</h4>
+					<?php
+					$ad = shell_exec('ls');
+					echo "<pre>".$ad."</pre>";
+					?>
+				</div>
+			</div>
+			<div class="span6">
+				<div class="well c-green-light t-success">
+					<h4>Archivos Administrativos</h4>
 				</div>
 			</div>
 		</div>
@@ -313,7 +370,47 @@ include ("../datos/postgresHelper.php");
 				<div class="control-group">
 					<div class="controls">
 						<button class="btn" data-dismiss="modal"><i class="icon-remove"></i> Cancelar</button>
-						<button class="btn btn-warning t-d pull-right"><i class="icon-ok"></i> Guardar Cambios</button>
+						<button class="btn btn-warning t-d pull-right" onClick="esec();"><i class="icon-ok"></i> Guardar Cambios</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="meditsub" class="modal fade in hide c-yellow-light t-warning">
+			<div class="modal-header">
+				<a data-dismiss="modal" class="close">&times;</a>
+				<h4>Modificar Subproyecto</h4>
+				<input type="hidden" id="esubpro" value="">
+				<input type="hidden" id="esubid" value="">
+			</div>
+			<div class="modal-body">
+				<div class="row show-grid">
+					<div class="span5">
+						<div class="control-group">
+							<label class="control-label">Subproyecto</label>
+							<div class="controls">
+								<input type="text" id="subpro" class="span5">
+							</div>
+						</div>
+					</div>
+					<div class="span2">
+						<div class="control-group">
+							<label for="controls" class="control-label">Fecha de Entrega</label>
+							<div class="controls">
+								<input type="text" id="msfec" class="span2" placeholder="aaaa-mm-dd">
+							</div>
+						</div>
+					</div>
+					<div class="span5">
+						<div class="control-group">
+							<label for="controls" class="control-label">Observación</label>
+							<div class="controls">
+								<textarea id="msuobs" rows="4" class="span5"></textarea>
+							</div>
+						</div>
+					</div>
+					<div class="span5">
+						<button class="btn" data-dismiss="modal"><i class="icon-remove"></i> Cancelar</button>
+						<button class="btn btn-warning pull-right" onClick="editsub();"><i class="icon-ok"></i> Guardar Cambios</button>
 					</div>
 				</div>
 			</div>

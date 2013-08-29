@@ -1,5 +1,5 @@
 $(function  () {
-	$("#ufec").datepicker({ minDate: "0" , maxDate: "" , changeMonth: true, changeYear: true, showAnim: "slide", dateFormat: "yy/mm/dd"});
+	$("#ufec,#msfec").datepicker({ minDate: "0" , maxDate: "" , changeMonth: true, changeYear: true, showAnim: "slide", dateFormat: "yy/mm/dd"});
 });
 
 function showsector () {
@@ -50,7 +50,7 @@ function savesec() {
 					setTimeout(function() {
 						$("#sasu").css('display','none');
 						location.href = '';
-					}, 3000);
+					}, 2000);
 				}else{
 					$("#saer").css('display','block');
 				}
@@ -98,7 +98,7 @@ function savesub () {
 					setTimeout(function() {
 						$("#uasu").css('display','none');
 						location.href = '';
-					}, 3000);
+					}, 2000);
 				}else{
 					$("#uaer").css('display','block');
 				}
@@ -307,7 +307,45 @@ function showesec (sec,des,obs) {
 	$("#msobs").val(obs);
 }
 function esec () {
-	// body...
+	var prm = {
+		'tra' : 'editsec',
+		'pro' : $("#spro").val(),
+		'sub' : $("#ssub").val(),
+		'sec' : $("#nsec").html(),
+		'des' : $("#msdes").val(),
+		'obs' : $("#msobs").val()
+	}
+	//alert(prm['pro']+prm['sub']+prm['sec']+prm['des']+prm['obs']);
+	$.ajax({
+		data : prm,
+		url : 'includes/incsectores.php',
+		type : 'POST',
+		dataType : 'html',
+		success : function (response) {
+			if (response == 'success') {
+				location.href='';
+			}else{
+				$("#esec").modal('hide');
+				$.msgBox({
+					title : 'ERROR',
+					content : 'Si estas viendo esto es por que fallé',
+					type : 'error',
+					opacity : 0.6,
+					autoClose : true
+				});
+			}
+		},
+		error : function (obj,que,otr) {
+			$("#esec").modal('hide');
+			$.msgBox({
+				title : 'ERROR',
+				content : 'Si estas viendo esto es por que fallé',
+				type : 'error',
+				opacity : 0.6,
+				autoClose : true
+			});
+		}
+	});
 }
 function delsec (sec) {
 	$.msgBox({
@@ -318,8 +356,143 @@ function delsec (sec) {
 		buttons : [{value:'Si'},{value:'No'}],
 		success : function (resp) {
 			if (resp == 'Si') {
-
+				var prm = {
+					'tra' : 'delsecv',
+					'pro' : $("#spro").val(),
+					'sub' : $("#ssub").val(),
+					'sec' : sec
+				};
+				$.ajax({
+					data : prm,
+					url : 'includes/incsectores.php',
+					type : 'POST',
+					dataType : 'html',
+					success : function (response) {
+						if (response == 'success') {
+							location.href='';
+						}else{
+							$.msgBox({
+								title : 'ERROR',
+								content : 'Si estas viendo esto es por que fallé',
+								type : 'error',
+								opacity : 0.6,
+								autoClose : true
+							});
+						}
+					},
+					error : function (obj,que,otr) {
+						$.msgBox({
+							title : 'ERROR',
+							content : 'Si estas viendo esto es por que fallé',
+							type : 'error',
+							opacity : 0.6,
+							autoClose : true
+						});
+					}
+				});
 			}
 		}
 	});
+}
+function showsubedit (pro,sub,des,fec,obs) {
+	//alert('hola');
+	$("#esubpro").val(pro);
+	$("#esubid").val(sub);
+	$("#subpro").val(des);
+	$("#msfec").val(fec);
+	$("#msuobs").val(obs);
+	$("#meditsub").modal('show');
+}
+function delsub (pro,sub) {
+	$.msgBox({
+		title : 'Eliminar Subproyecto '+sub+'?',
+		content : 'Realmente desea eliminar '+sub+'.?\r\nTenga en cuenta de que se eliminaran los sectores que incluya.',
+		type : 'confirm',
+		buttons : [{value:'Si'},{value:'No'}],
+		opacity : 0.6,
+		success : function  (resp) {
+			if (resp == 'Si') {
+				var prm = {
+					'tra' : 'delsub',
+					'pro' : pro,
+					'sub' : sub
+				}
+				$.ajax({
+					data : prm,
+					url : 'includes/incsectores.php',
+					type : 'POST',
+					dataType : 'html',
+					success : function (response) {
+						if (response == 'success') {
+							location.href='';
+						}else{
+							$.msgBox({
+								title : 'ERROR',
+								content : 'Si estas viendo esto es por que fallé',
+								type : 'error',
+								opacity : 0.6,
+								autoClose : true
+							});
+						}
+					},
+					error : function (obj,que,otr) {
+						$.msgBox({
+							title : 'ERROR',
+							content : 'Si estas viendo esto es por que fallé',
+							type : 'error',
+							opacity : 0.6,
+							autoClose : true
+						});
+					}
+				});
+			}
+		}
+	});
+}
+function editsub () {
+	var prm = {
+		'tra' : 'editsub',
+		'pro' : $("#esubpro").val(),
+		'sub' : $("#esubid").val(),
+		'des' : $("#subpro").val(),
+		'fec' : $("#msfec").val(),
+		'obs' : $("#msuobs").val()
+	}
+	$.ajax({
+		data : prm,
+		url : 'includes/incsectores.php',
+		type : 'POST',
+		dataType : 'html',
+		success : function (response) {
+			if (response == 'success') {
+				location.href='';
+			}else{
+				$.msgBox({
+					title : 'ERROR',
+					content : 'Si estas viendo esto es por que fallé',
+					type : 'error',
+					opacity : 0.6,
+					autoClose : true
+				});
+			}
+		},
+		error : function (obj,que,otr) {
+			$.msgBox({
+				title : 'ERROR',
+				content : 'Si estas viendo esto es por que fallé',
+				type : 'error',
+				opacity : 0.6,
+				autoClose : true
+			});
+		}
+	});
+}
+function openfc () {
+	$("#fc").click();
+}
+function openfa () {
+	$("#fa").click();
+}
+function showfiles () {
+	$("#mfiles").modal('show');
 }
