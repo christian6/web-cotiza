@@ -31,6 +31,7 @@ include ("../datos/postgresHelper.php");
 		<input type="hidden" id="txtpro" value="<?php echo $_GET['pro']; ?>" />
 		<input type="hidden" id="txtsub" value="<?php echo $_GET['sub']; ?>" />
 		<input type="hidden" id="txtsec" value="<?php echo $_GET['sec']; ?>" />
+		<input type="hidden" id="adi" value="<?php echo $_GET['adi']; ?>" />
 	</header>
 	<div id="misub">
 		<ul class="breadcrumb well">
@@ -121,7 +122,14 @@ include ("../datos/postgresHelper.php");
 													Materiales pendientes.
 												</label>
 											</div>
-
+											<div class="control-group">
+												<label class="radio inline">
+													<input type="radio" name="rbchk" value="a" onChange="selectall();" /> Seleccionar Todo.
+												</label>
+												<label class="radio inline">
+													<input type="radio" name="rbchk" value="n" onChange="selectall();" /> No Seleccionar Ninguno.
+												</label>
+											</div>
 										</caption>
 										<thead>
 											<th></th>
@@ -220,7 +228,6 @@ include ("../datos/postgresHelper.php");
 																<div class="alert-block">
 																	<div class="btn-group inline">
 																		<button class="btn btn-mini btn-success" onClick='addniple(<?php echo str_replace('"', '', $result["matmed"]); ?>,"<?php echo $result['materialesid']; ?>");'><i class="icon-plus"></i></button>
-																		<button class="btn btn-mini btn-danger"><i class="icon-trash"></i></button>
 																		<button class="btn btn-mini btn-info" onClick='tmplist("<?php echo $result['materialesid']; ?>",<?php echo str_replace('"', '', $result["matmed"]); ?>);'><i class="icon-refresh"></i></button>
 																	</div>
 																	<p class="pull-right t-warning help-inline"><label class="badge badge-info inline">Consumido <strong id="qd<?php echo str_replace('"', '', $result["matmed"]); ?>">0</strong> de <?php echo $result['cant']; ?></label>
@@ -241,7 +248,7 @@ include ("../datos/postgresHelper.php");
 
 				 							</div>
 				 						</div>
-				 						<div class="span5">
+				 						<!--<div class="span5">
 				 							<div class="well c-blue-light t-info">
 				 								<h4>Información Adicional</h4>
 				 								<p>
@@ -249,7 +256,7 @@ include ("../datos/postgresHelper.php");
 				 								</p>
 				 								<input type="file">
 				 							</div>
-				 						</div>
+				 						</div>-->
 				 					</div>
 								</div>
 			 				
@@ -300,8 +307,8 @@ include ("../datos/postgresHelper.php");
 					<div class="control-group">
 						<label for="label" class="control-label t-info">Empleado</label>
 						<div class="controls">
-							<input type="text" class="input-small" id="txtdni" name="txtdni" value="<?php echo $_SESSION['dni-icr']; ?>" DISABLED />
-							<input type="text" class="input-xlarge" id="txtnom" name="txtnom" value="<?php echo $_SESSION['nom-icr']; ?>" DISABLED />
+							<input type="text" class="span1" id="txtdni" name="txtdni" value="<?php echo $_SESSION['dni-icr']; ?>" DISABLED />
+							<input type="text" class="span4" id="txtnom" name="txtnom" value="<?php echo $_SESSION['nom-icr']; ?>" DISABLED />
 						</div>
 					</div>
 					<div class="control-group">
@@ -313,8 +320,14 @@ include ("../datos/postgresHelper.php");
 					<div class="control-group">
 						<label for="label" class="control-label t-info">Observación</label>
 						<div class="controls">
-							<textarea name="txtobser" id="txtobser" class="input-xlarge" rows="3"></textarea>
+							<textarea name="txtobser" id="txtobser" class="span4" rows="3"></textarea>
 						</div>
+					</div>
+					<div class="control-group">
+						<div id="cad" class="well pull-center c-gd">
+							<a href="javascript:openadj();" style="color: #FFBF00;">Archivo Adicional</a>
+						</div>
+						<input type="file" id="fileadj" onChange="fchan();" class="hide" />
 					</div>
 				</div>
 				<div class="progress progress-warning progress-striped active hide">

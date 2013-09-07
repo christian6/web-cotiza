@@ -11,6 +11,7 @@ $(function () {
 		}
 	}
 	$( "#txtfec" ).datepicker({ minDate: "0", maxDate: "+3M +10D" , changeMonth: true, changeYear: true, showAnim: "slide", dateFormat: "yy-mm-dd"});
+
 });
 function showpedido () {
 	$( "#mpe" ).modal("show");
@@ -108,9 +109,10 @@ function addniple (med,mat) {
 						'matid' : mat,
 						'met' : $("#nipmed").val(),
 						'tip' : $('#cbot').val(),
-						'pro' : $("#pro").val(),
-						'sub' : $("#sub").val(),
-						'sec' : $("#sec").val()
+						'pro' : $("#txtpro").val(),
+						'sub' : $("#txtsub").val(),
+						'sec' : $("#txtsec").val(),
+						'adi' : $("#adi").val()
 					}
 					$.ajax({
 						data : prm,
@@ -186,4 +188,73 @@ function tmplist (mat,med) {
 }
 function closep () {
 	alert('hello');
+}
+function delniple (id,mat,med) {
+	$.msgBox({
+		title : 'Eliminar Niple',
+		content : 'Desea eliminar el Niple?',
+		type : 'confirm',
+		buttons : [{value : 'Si'},{value : 'No'}],
+		opacity : 0.6,
+		success : function (result) {
+			if (result == 'Si') {
+				var prm = {
+					'tra' : 'delniple',
+					'id' : id
+				}
+				$.ajax({
+					data : prm,
+					url : 'includes/incpedido.php',
+					type : 'POST',
+					dataType : 'html',
+					success : function  (response) {
+						//alert(response);
+						if (response == 'success') {
+							tmplist(mat,med);
+						}else{
+							$.msgBox({
+								title : 'Error',
+								content : 'Parece que hay un error, mejor revizalo tu mismo.',
+								type : 'error',
+								opacity : 0.6
+							});
+						}
+					},
+					error : function (obj,que,otr) {
+						$.msgBox({
+							title : 'Error',
+							content : 'Si estas viendo esto es por que falle.',
+							autoClose : true,
+							opacity : 0.6
+						});
+					}
+				});
+			}
+		}
+	});
+}
+function selectall () {
+	var rb = document.getElementsByName("rbchk");
+	var mat = document.getElementsByName('mats');
+	for (var i = 0; i < rb.length; i++) {
+		if(rb[i].checked && rb[i].value == 'a'){
+			for (var i = 0; i < mat.length; i++) {
+				mat[i].checked = true;	
+			}
+		}else{
+			for (var i = 0; i < mat.length; i++) {
+				mat[i].checked = false;
+			};
+		}
+	}
+}
+function openadj () {
+	$("#fileadj").click();
+}
+function fchan () {
+	$("#cad, #cad a").animate({
+		backgroundColor : '#86B404',
+		color : '#000'
+	},1600);
+	$("#cad a").html('Listo para subir Archivo');
 }

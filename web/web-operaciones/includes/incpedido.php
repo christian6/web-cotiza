@@ -60,25 +60,26 @@ if ($_POST['tra'] == 'sp') {
 }
 if ($_POST['tra'] == 'tmpnip') {
 	$cn = new PostgreSQL();
-	$query = $cn->consulta("INSERT INTO operaciones.tmpniples(dni,materialid,metrado,tipo) VALUES('".$_SESSION['dni-icr']."',
-							'".$_POST['matid']."',".$_POST['met'].",'".$_POST['tip']."');");
+	$query = $cn->consulta("INSERT INTO operaciones.tmpniples(dni,proyecotid,subproyectoid,sector,adicionalid,materialid,metrado,tipo) VALUES('".$_SESSION['dni-icr']."',
+							'".$_POST['pro']."','".$_POST['sub']."','".$_POST['sec']."','".$_POST['adi']."','".$_POST['matid']."',".$_POST['met'].",'".$_POST['tip']."');");
 	$cn->affected_rows($query);
 	$cn->close($query);
 	echo "success";
 }
 if ($_POST['tra'] == 'listnip') {
 	$cn = new PostgreSQL();
-	$query = $cn->consulta("SELECT dni,materialid,metrado,tipo,
+	$query = $cn->consulta("SELECT id,dni,materialid,metrado,tipo,
 		(select sum(metrado)as tot from operaciones.tmpniples WHERE materialid LIKE materialid ) as tot FROM operaciones.tmpniples 
 		WHERE dni LIKE '".$_SESSION['dni-icr']."' AND materialid LIKE '".$_POST['mat']."'
-		GROUP BY dni,materialid,metrado,tipo;");
+		GROUP BY id,dni,materialid,metrado,tipo;");
 	if ($cn->num_rows($query) > 0 ) {
 		$tot = 0;
 		echo "<table class='table t-info'>";
 		while ($result = $cn->ExecuteNomQuery($query)) {
 			echo "<tr>";
+			echo "<td>".$result['id']."</td>";
 			echo "<td>".$result['materialid']."</td><td>".$_POST['med']."''</td><td>&times;</td><td>".$result['metrado']."</td><td>".$result['tipo']."</td>";
-			echo "<td><button class='btn btn-mini'><i class='icon-remove'></i></button></td>";
+			echo "<td><button class='btn btn-mini' OnClick=delniple(".$result['id'].",'".$result['materialid']."','".$_POST['med']."');><i class='icon-trash'></i></button></td>";
 			echo "</tr>";
 			$tot = $result['tot'];
 		}
@@ -86,5 +87,12 @@ if ($_POST['tra'] == 'listnip') {
 	}
 	$cn->close($query);
 	echo "|success|".$tot;
+}
+if ($_POST['tra'] == 'delniple') {
+	$cn = new PostgreSQL();
+	$query = $cn->consulta("DELETE FROM operaciones.tmpniples WHERE dni LIKE '".$_SESSION['dni-icr']."' AND id = ".$_POST['id']."");
+	$cn->affected_rows($query);
+	$cn->close($query);
+	echo "success";
 }
 ?>

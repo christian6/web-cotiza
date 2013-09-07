@@ -24,6 +24,7 @@ include ("../datos/postgresHelper.php");
 	<script src="js/project.js"></script>
 	<link rel="stylesheet" href="../css/msgBoxLight.css">
 	<script src="../modules/msgBox.js"></script>
+	<script src="http://labs.abeautifulsite.net/archived/phpFileTree/demo/php_file_tree.js"></script>
 	<style>
 		#txts{
 			color: #000;
@@ -144,24 +145,24 @@ include ("../datos/postgresHelper.php");
 							<div class="span5">
 								<div class="control-group">
 									<label class="control-label">Documento Complementarios</label>
-									<div class="controls well pull-center" style="background-color: #2D2D2D; border: .3em dashed #088ccc;">
+									<div id="bgfile1" class="controls well pull-center" style="background-color: #2D2D2D; border: .3em dashed #088ccc;">
 										<a href="javascript:openfc();"><h5>Click Aqui</h5></a>
-										<input type="file" class="hide" id="fc" accept="application/x-rar">
+										<input type="file" class="hide" id="fc" onChange="changestyle('bgfile1');" accept="application/x-rar">
 									</div>
 								</div>
 							</div>
 							<div class="span5">
 								<div class="control-group">
 									<label class="control-label">Documento Administrativos</label>
-									<div class="controls well pull-center" style="background-color: #2D2D2D; border: .3em dashed #088ccc;">
+									<div id="bgfile2" class="controls well pull-center" style="background-color: #2D2D2D; border: .3em dashed #088ccc;">
 										<a href="javascript:openfa();"><h5>Click Aqui</h5></a>
-										<input type="file" class="hide" id="fa" accept="application/x-rar">
+										<input type="file" class="hide" onChange="changestyle('bgfile2');" id="fa" accept="application/x-rar">
 									</div>
 								</div>
 							</div>
 							<div class="span5">
 								<button class="btn" data-dismiss="modal"><i class="icon-remove"></i> Cancelar</button>
-								<button class="btn btn-info t-d pull-right"><i class="icon-upload"></i> Subir Archivos</button>
+								<button class="btn btn-info t-d pull-right" onClick="uploadfile();"><i class="icon-upload"></i> Subir Archivos</button>
 							</div>
 						</div>
 					</div>
@@ -259,17 +260,66 @@ include ("../datos/postgresHelper.php");
 				</div>
 			</div>
 			<div class="span6">
-				<div class="well c-green-light t-success">
+				<div class="well c-blue-light t-info">
 					<h4>Archivos Complementarios</h4>
 					<?php
-					$ad = shell_exec('ls');
-					echo "<pre>".$ad."</pre>";
+					function ListFolder($path)
+					{
+					    //using the opendir function
+					    $dir_handle = @opendir($path) or die("Unable to open $path");
+					    
+					    //Leave only the lastest folder name
+					    $dirname = end(explode("/", $path));
+					    
+					    //display the target folder.
+					    echo ("<li>$dirname\n");
+					    echo "<ul>\n";
+					    while (false !== ($file = readdir($dir_handle))) 
+					    {
+					        if($file!="." && $file!="..")
+					        {
+					            if (is_dir($path."/".$file))
+					            {
+					                //Display a list of sub folders.
+					                ListFolder($path."/".$file);
+					            }
+					            else
+					            {
+					                //Display a list of files.
+					                echo "<li>$file</li>";
+					            }
+					        }
+					    }
+					    echo "</ul>\n";
+					    echo "</li>\n";
+					    
+					    //closing the directory
+					    closedir($dir_handle);
+					}
+
+					if ($_GET['sub'] != '') {
+						ListFolder("../project/".$_GET['id']."/".$_GET['sub']."/comp/");
+					}else{
+						ListFolder('../project/'.$_GET['id'].'/comp/');
+					}
+					
 					?>
 				</div>
 			</div>
 			<div class="span6">
-				<div class="well c-green-light t-success">
+				<div class="well c-blue-light t-info">
 					<h4>Archivos Administrativos</h4>
+					<?php
+					if ($_GET['sub'] != '') {
+						ListFolder("../project/".$_GET['id']."/".$_GET['sub']."/adm/");
+					}else{
+						ListFolder("../project/".$_GET['id']."/adm/");
+					}
+					//$adm = shell_exec($cmda);
+					//echo php_file_tree($_SERVER['DOCUMENT_ROOT'], "javascript:alert('You clicked on [link]');");
+					
+
+					?>
 				</div>
 			</div>
 		</div>

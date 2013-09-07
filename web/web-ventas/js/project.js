@@ -496,3 +496,56 @@ function openfa () {
 function showfiles () {
 	$("#mfiles").modal('show');
 }
+function uploadfile () {
+	alert('hola');
+	var rarcom = document.getElementById("fc");
+	var raradm = document.getElementById("fa");
+	var fcom = rarcom.files[0];
+	var fadm = raradm.files[0];
+	if (fcom != null && fadm != null) {
+		var data = new FormData();
+		data.append('tra','upload');
+		data.append('fcom',fcom);
+		data.append('fadm',fadm);
+		data.append('pro',$("#pro").val());
+		data.append('sub',$("#sub").val());
+		alert('variables');
+		$.ajax({
+			data : data,
+			url : 'includes/incsectores.php',
+			type : 'POST',
+			contentType : false,
+			processData : false,
+			cache : false,
+			success : function (response) {
+				alert(response);
+				if (response == 'success') {
+					location.href = '';
+				}else{
+					$.msgBox({
+						title : 'ERROR',
+						content : 'Si estas viendo esto es por que no lo realize',
+						type : 'error',
+						opacity : 0.6,
+						autoClose : true
+					});
+				}
+			},
+			error : function (obj,que,otr) {
+				$.msgBox({
+					title : 'ERROR',
+					content : 'Si estas viendo esto es por que fallé',
+					type : 'error',
+					opacity : 0.6,
+					autoClose : true
+				});
+			}
+		});
+	}else{
+		if (fcom == null) $("#fc").click();
+		if (fadm == null) $("#fa").click();
+	}
+}
+function changestyle (id) {
+	$("#"+id).animate({backgroundColor: "#FACC2E",borderColor: "#2D2D2D"},1000);
+}
