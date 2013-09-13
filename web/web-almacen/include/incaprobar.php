@@ -55,6 +55,9 @@ if ($_REQUEST['tipo'] == "a") {
 							AND materialesid LIKE '".$fila['materialesid']."'");
 				$cn->affected_rows($query);
 				$cn->close($query);
+				echo "UPDATE operaciones.metproyecto set flag = '1' WHERE proyectoid LIKE TRIM('".$re['proyectoid']."')
+							AND TRIM(subproyectoid) LIKE TRIM('".$re['subproyectoid']."') AND TRIM(sector) LIKE TRIM('".$re['sector']."')
+							AND materialesid LIKE TRIM('".$fila['materialesid']."')";
 			}
 		}
 		$c2->close($q2);

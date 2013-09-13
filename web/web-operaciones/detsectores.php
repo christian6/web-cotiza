@@ -297,10 +297,20 @@ include ("../datos/postgresHelper.php");
 			              </div>
 			            </div>
 					</div>
+					<div class="alert alert-info alert-block">
+						<p>
+							<i class="icon-question-sign"></i>
+							<strong>Tienes Adicionales?</strong>
+							<p>
+								<button class="btn btn-info"><i class="icon-remove"></i></button>
+								<button class="btn btn-info"><i class="icon-ok"></i></button>
+							</p>
+						</p>
+					</div>
 				</div>
 			</div>
 		</div>
-
+	
 		<div id="adda" class="modal fade in hide">
 			<form method="POST" enctype="multipart/form-data" action="includes/incfile.php">
 			<div class="modal-header">

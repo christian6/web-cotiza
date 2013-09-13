@@ -497,7 +497,6 @@ function showfiles () {
 	$("#mfiles").modal('show');
 }
 function uploadfile () {
-	alert('hola');
 	var rarcom = document.getElementById("fc");
 	var raradm = document.getElementById("fa");
 	var fcom = rarcom.files[0];
@@ -509,7 +508,7 @@ function uploadfile () {
 		data.append('fadm',fadm);
 		data.append('pro',$("#pro").val());
 		data.append('sub',$("#sub").val());
-		alert('variables');
+		alert($("#sub").val());
 		$.ajax({
 			data : data,
 			url : 'includes/incsectores.php',
@@ -522,6 +521,7 @@ function uploadfile () {
 				if (response == 'success') {
 					location.href = '';
 				}else{
+					$("#mfiles").modal('hide');
 					$.msgBox({
 						title : 'ERROR',
 						content : 'Si estas viendo esto es por que no lo realize',
@@ -532,6 +532,7 @@ function uploadfile () {
 				}
 			},
 			error : function (obj,que,otr) {
+				$("#mfiles").modal('hide');
 				$.msgBox({
 					title : 'ERROR',
 					content : 'Si estas viendo esto es por que fallé',

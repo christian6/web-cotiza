@@ -31,10 +31,22 @@ function savepedido () {
 	var ids = new Array();
 	var mat = document.getElementsByName("mats");
 	var c = 0;
+	var n = 0;
+	var arrnip = new Array();
 	for (var i = 0; i < mat.length; i++) {
 		if (mat[i].checked){
 			ids[c] = mat[i].id;
+			if (String(mat[i].id).substring(0,3) == '115') {
+				 arrnip[n] = mat[i].id;
+				 n++;
+			}
 			c++;
+		}
+	}
+	if (n > 0) {
+		if (!confirm('Seguro(a) que ha terminado de llenar la lista de niples?')) {
+			$("#mpe").modal('hide');
+			return;
 		}
 	}
 	if (c > 0) {
@@ -48,7 +60,7 @@ function savepedido () {
 		var dni = document.getElementById("txtdni").value;
 		//alert(op);
 		var prm = {
-			'tra' : 'sp',
+			'tra' : 'sp',//cambiar esto
 			'pro' : pro,
 			'sub' : sub,
 			'sec' : sec,
@@ -58,34 +70,60 @@ function savepedido () {
 			'obs' : obs,
 			'mat' : ids
 		}
-		if (confirm("Seguro(a) de guardar los cambios?")) {
-			$.ajax({
-				data : prm,
-				url : 'includes/incpedido.php',
-				type : 'POST',
-				dataType : 'html',
-				beforeSend : function (obj){
-					$( ".progress" ).css("display","block");
-				},
-				complete : function (obj, success){
-					if (success == 'success') {
-						$( ".progress" ).css("display","none");
-					}
-				},
-				success : function (response){
-					//alert(response);
-					if (response == 'hecho') {
-						location.href = '';
-					}
-				},
-				error : function (obj,que,otro){
-					alert("Si estas viendo esto es por que falle");
+		$("#mpe").modal('hide');
+		$.msgBox({
+			title : 'Confirmar',
+			content : 'Seguro(a) que desea guardar los datos y generar pedido a almacén?',
+			type : 'confirm',
+			opacity : 0.6,
+			buttons : [{value:'Si'},{value:'No'}],
+			success : function (result) {
+				if (result == 'Si') {
+					$("#mpe").modal('show');
+					$.ajax({
+						data : prm,
+						url : 'includes/incpedido.php',
+						type : 'POST',
+						dataType : 'html',
+						beforeSend : function (obj){
+							$( ".progress" ).css("display","block");
+						},
+						complete : function (obj, success){
+							if (success == 'success') {
+								$( ".progress" ).css("display","none");
+							}
+						},
+						success : function (response){
+							if (response.length == 15) {
+								for (var i = 0; i < arrnip.length; i++) {
+									niplesock(response,arrnip[i]);
+								}
+								uploadpeido(response);
+								location.href = '';
+							}
+						},
+						error : function (obj,que,otro){
+							$.msgBox({
+								title : 'Error',
+								content : 'Si esta viendo es por que fallé',
+								type : 'error',
+								autoClose : true,
+								opacity : 0.6
+							});
+						}
+					});
 				}
-			});
-		}
+			}
+		});
 	}else{
-		alert('Seleccione por lo menos un material');
 		$( "#mpe" ).modal('hide');
+		$.msgBox({
+			title : 'Atención',
+			content : 'Seleccione por lo menos un material',
+			type : 'warning',
+			autoClose : true,
+			opacity : 0.6
+		});		
 		return;
 	}
 }
@@ -119,6 +157,7 @@ function addniple (med,mat) {
 						url : 'includes/incpedido.php',
 						type : 'POST',
 						success : function (response) {
+							//alert(response);
 							if (response == 'success') {
 								tmplist(mat,med);
 							}else{
@@ -172,7 +211,8 @@ function tmplist (mat,med) {
 				document.getElementById("nip"+med+"").innerHTML = cad[0];
 				document.getElementById("qd"+med).innerHTML = cad[2];
 				//alert(parseFloat(document.getElementById("ct"+med).innerHTML) - parseFloat(cad[2]));
-				document.getElementById("tf"+med).innerHTML =  parseFloat(document.getElementById("ct"+med).innerHTML) - parseFloat(cad[2]);
+				var re =  parseFloat(document.getElementById("ct"+med).innerHTML) - parseFloat(cad[2]);
+				document.getElementById("tf"+med).innerHTML = re.toFixed(2);
 			}
 		},
 		error : function (obj,quepaso,otrobj) {
@@ -214,7 +254,7 @@ function delniple (id,mat,med) {
 						}else{
 							$.msgBox({
 								title : 'Error',
-								content : 'Parece que hay un error, mejor revizalo tu mismo.',
+								content : 'Parece que hay un error, mejor revisalo tu mismo.',
 								type : 'error',
 								opacity : 0.6
 							});
@@ -257,4 +297,128 @@ function fchan () {
 		color : '#000'
 	},1600);
 	$("#cad a").html('Listo para subir Archivo');
+}
+function uploadpeido (nro) {
+	var fpde = document.getElementById("fileadj");
+	var file = fpde.files[0];
+	if (file != null) {
+		var data = new FormData();
+		data.append('tra','upfile');
+		data.append('fpedido',file);
+		data.append('pro',$("#txtpro").val());
+		data.append('sub',$("#txtsub").val());
+		data.append('adi',$("#adi").val());
+		data.append('nrop',nro);
+		var url = 'includes/incpedido.php';
+		$.ajax({
+			data : data,
+			url : url,
+			type : 'POST',
+			contentType : false,
+			processData : false,
+			cache : false,
+			success : function (response) {
+				if (response != 'success') {
+					$.msgBox({
+						title : 'Error',
+						content : 'Al subir archivo.',
+						type : 'error',
+						autoClose : true,
+						opacity : 0.6
+					});
+				}
+			},
+			error : function (obj,que,otr) {
+				$.msgBox({
+					title : 'Error',
+					content : 'Si estas viendo esto es por que fallé',
+					type : 'error',
+					autoClose : true
+				});
+			}
+		});
+	}
+}
+function niplesock (nro,mat) {
+
+	var prm = {
+		'tra' : 'saveniple',//cambiar
+		'pro' : $("#txtpro").val(),
+		'sub' : $("#txtsub").val(),
+		'sec' : $("#txtsec").val(),
+		'nro' : nro,
+		'mat' : mat
+	}
+	$.ajax({
+		data : prm,
+		url : 'includes/incpedido.php',
+		type : 'POST',
+		success : function (response) {
+			alert(response);
+			if (response != 'success') {
+				$.msgBox({
+					title : 'Error',
+					content : 'Parece que hay un error, revisalo',
+					type : 'error',
+					autoClose : true,
+					opacity : 0.6
+				});
+			}
+		},
+		error : function (obj,que,otr) {
+			$.msgBox({
+				title : 'Error',
+				content : 'Si estas viendo esto es por que fallé',
+				type : 'error',
+				autoClose : true,
+				opacity : 0.6
+			});
+		}
+	});
+}
+var adi = false;
+function showadicionales () {
+	if (adi == false) {
+		tmpmodify();
+		$("#btnadi i").removeClass('icon-chevron-down').addClass('icon-chevron-up');
+		$("#adic").show( 'blind',{});
+		adi = true;
+	}else{
+		hideadicionales();
+	}
+}
+function hideadicionales () {
+	$("#btnadi i").removeClass('icon-chevron-up').addClass('icon-chevron-down');
+	$("#adic").hide( 'blind',{});
+	adi = false;
+}
+function tmpmodify () {
+	var prm = {
+		'tra' : 'tmpmod',
+		'pro' : $("#txtpro").val(),
+		'sub' : $("#txtsub").val(),
+		'sec' : $("#txtsec").val(),
+	}
+	$.ajax({
+		data : prm,
+		url : 'includes/incpedido.php',
+		type : 'POST',
+		dataType : 'html',
+		success : function (response) {
+			alert(response);
+			var cad = response.split('|');
+			if (cad[1] == 'success') {
+				$("#adic").html(cad[0]);
+			}
+		},
+		error : function (obj,que,otr) {
+			$.msgBox({
+				title : 'Error',
+				content : 'Si estas viendo esto es por que falle',
+				type : 'error',
+				autoClose : true,
+				opacity : 0.6
+			});
+		}
+	});
 }

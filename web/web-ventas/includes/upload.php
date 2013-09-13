@@ -24,9 +24,9 @@ if ($_POST['sub'] != '') {
 
 //$nombre_archivo = $_FILES['archivo']['name'];
 
-$tipo_archivo = $_FILES['archivo']['type'];
+//$tipo_archivo = $_FILES['archivo']['type'];
 
-$tamano_archivo = $_FILES['archivo']['size'];
+//$tamano_archivo = $_FILES['archivo']['size'];
 
 $tmp_archivo = $_FILES['archivo']['tmp_name'];
 

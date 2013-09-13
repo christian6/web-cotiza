@@ -28,8 +28,8 @@ include ("../datos/postgresHelper.php");
 	<script src="../bootstrap/js/bootstrap.js"></script>
 	<script>
 		 $(function() {
-        	$( "#txtfecha" ).datepicker({ minDate: 0, maxDate: "+1M +10D" , changeMonth: true, changeYear: true, showAnim: "slide", dateFormat: "dd/mm/yy" });
-        	$( "#txtfechas" ).datepicker({ minDate: 0, maxDate: "+1M +10D" , changeMonth: true, changeYear: true, showAnim: "slide", dateFormat: "dd/mm/yy" });
+        	//$( "#txtfecha" ).datepicker({ minDate: 0, maxDate: "+1M +10D" , changeMonth: true, changeYear: true, showAnim: "slide", dateFormat: "dd/mm/yy" });
+        	$( "#txtfechas,#txtfecha" ).datepicker({ minDate: 0, maxDate: "+1M +10D" , changeMonth: true, changeYear: true, showAnim: "slide", dateFormat: "yy/mm/dd" });
         	$('.dropdown-toggle').dropdown();
    		 });
 	</script>
@@ -50,47 +50,52 @@ include ("../datos/postgresHelper.php");
 	<div id="fullscreem">&nbsp;</div>
 	<div id="frmnota">
 		<h4>Nota de Salida</h4>
-		<hr />
+		<?php
+			$cn = new PostgreSQL();
+			$query = $cn->consulta("
+				SELECT p.direccion,p.ruccliente,c.nombre,e.fecent
+				FROM ventas.proyectos p INNER JOIN almacen.pedido e
+				ON p.proyectoid = e.proyectoid
+				INNER JOIN admin.clientes c
+				ON p.ruccliente=c.ruccliente
+				WHERE p.esid LIKE '55' AND c.esid LIKE '41' AND e.nropedido LIKE '".$_GET['nro']."'
+				");
+			$val = "";$ruc = ""; $rz = "";
+			if ($cn->num_rows($query)>0) {
+				$result = $cn->ExecuteNomQuery($query);
+				$val = $result['direccion'];
+				$ruc = $result['ruccliente'];
+				$rz = $result['nombre'];
+				$fec = $result['fecent'];
+			}
+			$cn->close($query);
+		?>
 		<table>
 			<tbody>
 				<tr>
-					<td><label for="lblnropedido">Nro Pedido:</label></td>
+					<td><label for="lblnropedido">Nro Pedido </label></td>
 					<td><input id="nrop" name="nrop" type="text" value="<?php echo $_GET['nro'];?>" DISABLED />
 						<input type="hidden" id="txtnrop" name="txtnrop" /></td>
 				</tr>
 				<tr>
-					<td><label for="lblfecsal">Fecha Salida:</label></td>
-					<td><input type="text" id="txtfecha" name="txtfecha"  placeholder="dd/mm/yyyy" title="Fecha de Salida" /></td>
+					<td><label for="lblfecsal">Fecha Salida </label></td>
+					<td><input type="text" id="txtfecha" name="txtfecha" value="<?php echo str_replace('-', '/', $fec); ?>"  placeholder="aaaa/mm/dd" title="Fecha de Salida" /></td>
 				</tr>
 				<tr>
-					<td><label for="lbldes">Destino:</label></td>
-					<?php
-					$cn = new PostgreSQL();
-					$query = $cn->consulta("
-						SELECT p.direccion,p.ruccliente,c.nombre
-						FROM ventas.proyectos p INNER JOIN almacen.pedido e
-						ON p.proyectoid = e.proyectoid
-						INNER JOIN admin.clientes c
-						ON p.ruccliente=c.ruccliente
-						WHERE p.esid LIKE '17' AND c.esid LIKE '41' AND e.nropedido LIKE '".$_GET['nro']."'
-						");
-					$val = "";$ruc = ""; $rz = "";
-					if ($cn->num_rows($query)>0) {
-						$result = $cn->ExecuteNomQuery($query);
-						$val = $result['direccion'];
-						$ruc = $result['ruccliente'];
-						$rz = $result['nombre'];
-					}
-					$cn->close($query);
-					?>
+					<td><label for="lbldes">Destino </label></td>
+					
 					<td><input id="txtdestino1" name="txtdestino1" value="<?php echo $val;?>" /></td>
 					<td><button class="btn btn-info" onclick="edit('p');"> <i class="icon-pencil"></i> </button></td>
 				</tr>
 			</tbody>
 			<tfoot>
 				<tr>
-					<td><button class="btn btn-warning" onclick="gendoc('c','n');"> <i class="icon-remove"></i></button></td>
-					<td><button class="btn btn-info" onclick="generar('n','<?php echo $_GET['nro']?>');"><i class="icon-print"></i></button></td>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+				</tr>
+				<tr>
+					<td><button class="btn btn-warning t-d " onclick="gendoc('c','n');"> <i class="icon-remove"></i> Salir</button></td>
+					<td><button class="btn btn-info t-d pull-right" onclick="generar('n','<?php echo $_GET['nro']?>');"><i class="icon-print"></i> Guardar Nota</button></td>
 				</tr>
 			</tfoot>
 		</table>
@@ -123,7 +128,7 @@ include ("../datos/postgresHelper.php");
 				</tr>
 				<tr>
 					<td><label for="lblfecsal">Fecha Salida:</label></td>
-					<td><input type="text" id="txtfechas" name="txtfechas" placeholder="dd/mm/yyyy" title="Fecha de Salida"/></td>
+					<td><input type="text" id="txtfechas" name="txtfechas" value="<?php echo str_replace('-', '/', $fec); ?>" placeholder="aaaa/mm/dd" title="Fecha de Salida"/></td>
 				</tr>
 				<tr>
 					<td><label for="lblplaca">Transportista:</label></td>
@@ -147,8 +152,8 @@ include ("../datos/postgresHelper.php");
 			</tbody>
 			<tfoot>
 				<tr>
-					<td><button class="btn btn-warning" onclick="gendoc('c','g')"><i class="icon-remove"></i></button></td>
-					<td><button class="btn btn-info" onclick="generar('g','<?php echo $_GET['nro']?>');"><i class="icon-print"></i></button></td>
+					<td><button class="btn btn-warning t-d" onclick="gendoc('c','g')"><i class="icon-remove"></i> Cancelar</button></td>
+					<td><button class="btn btn-info pull-right t-d" onclick="generar('g','<?php echo $_GET['nro']?>');"><i class="icon-print"></i> Guardar Guia</button></td>
 				</tr>
 			</tfoot>
 		</table>

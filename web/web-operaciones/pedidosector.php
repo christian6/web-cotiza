@@ -99,6 +99,33 @@ include ("../datos/postgresHelper.php");
 						<a href="sectorsub.php?pro=<?php echo $_GET['pro']; ?>&sub=<?php echo $_GET['sub']; ?>" class="btn btn-success"><i class="icon-arrow-left"></i> Volver</a>
 					</div>
 				</div>
+				<div class="span12">
+					<div class="well c-blue-light t-info">
+						<p>
+							<i class="icon-chevron-right"></i>
+							<strong>Debe de tener en cuenta para hacer un pedido.</strong> 
+							<p style="text-indent: 40px;">
+								<i class="icon-ok-sign"></i>
+								El pedido puede ser atentido normalmente en no menos de 15 días
+								y un poco mas de 20 días habiles, esto varia puede variar.
+							</p>
+							<p style="text-indent: 40px;">
+								<i class="icon-ok-sign"></i>
+								Los pedidos que contengan materiales para ser fabricados nececitan un promedio de 15 días para ser atendidos.
+							</p>
+							<p style="text-indent: 40px;">
+								<i class="icon-ok-sign"></i>
+								Si almacén no cuenta con <strong>Stock</strong> para los materiales que se estan solicitando el pedido puede ser atendido
+								5 días a más.
+							</p>
+							<p style="text-indent: 40px;">
+								<i class="icon-ok-sign"></i>
+								Si almacén cuenta con <strong>Stock</strong> para los materiales que se estan solicitando el pedido puede ser atendido
+								1 a 3 días.
+							</p>
+						</p>
+					</div>
+				</div>
 			</div>
 			
 					<ul id="tab" class="nav nav-tabs">
@@ -144,15 +171,15 @@ include ("../datos/postgresHelper.php");
 										<tbody>
 											<?php
 												$cn = new PostgreSQL();
-												$sql = "SELECT DISTINCT d.materialesid,m.matnom,m.matmed,m.matund,SUM(d.cant) as cant,flag
+												$sql = "SELECT DISTINCT d.materialesid,m.matnom,m.matmed,m.matund,SUM(d.cant) as cant,d.flag
 														FROM operaciones.metproyecto d INNER JOIN admin.materiales m
 														ON d.materialesid LIKE m.materialesid
 														INNER JOIN ventas.proyectos p
 														ON d.proyectoid LIKE p.proyectoid ";
 												if ($_GET['sub'] == "") {
-													$sql .= "WHERE d.proyectoid LIKE '".$_GET['pro']."' AND TRIM(d.subproyectoid) LIKE '' AND TRIM(d.sector) LIKE TRIM('".$_GET['sec']."') GROUP BY d.materialesid,m.matnom,m.matmed,m.matund,flag";
+													$sql .= "WHERE d.proyectoid LIKE '".$_GET['pro']."' AND TRIM(d.subproyectoid) LIKE '' AND TRIM(d.sector) LIKE TRIM('".$_GET['sec']."') GROUP BY d.materialesid,m.matnom,m.matmed,m.matund,d.flag";
 												}elseif ($_GET['sub'] != "") {
-													$sql .= "WHERE d.proyectoid LIKE '".$_GET['pro']."' AND TRIM(d.subproyectoid) LIKE TRIM('".$_GET['sub']."') AND TRIM(d.sector) LIKE TRIM('".$_GET['sec']."')  GROUP BY d.materialesid,m.matnom,m.matmed,m.matund,flag";
+													$sql .= "WHERE d.proyectoid LIKE '".$_GET['pro']."' AND TRIM(d.subproyectoid) LIKE TRIM('".$_GET['sub']."') AND TRIM(d.sector) LIKE TRIM('".$_GET['sec']."')  GROUP BY d.materialesid,m.matnom,m.matmed,m.matund,d.flag";
 												}
 												$query = $cn->consulta($sql);
 												if ($cn->num_rows($query) > 0) {
@@ -162,6 +189,11 @@ include ("../datos/postgresHelper.php");
 														if ($result['flag'] == 0) {
 															echo "<tr class='c-green-light'>";
 															echo "<td><input type='checkBox' DISABLED /></td>";
+															$arrni = array();
+															$j = 0;
+															if ( substr($result['materialesid'], 0,3) == '115') {
+																$arrni[$j] = $result['materialesid'];
+															}
 														}else{
 															echo "<tr class='c-yellow-light'>";
 															echo "<td><input type='checkBox' name='mats' id='".$result['materialesid']."'></td>";	
@@ -193,10 +225,22 @@ include ("../datos/postgresHelper.php");
 										</tbody>
 									</table>
 									
+									<div class="well c-yellow-light">
+										<a href="javascript:hideadicionales();" class="close">&times;</a>
+										<h4 class='t-warning'>
+											Modificación de Sector 
+											<button id="btnadi" class="btn btn-warning btn-mini" onClick="showadicionales();"><i class="icon-chevron-down"></i></button>
+										</h4>
+										<div id="adic" class='hide'>
+											
+										</div>
+									</div>
+
 				 					<div class="row show-grid">
 				 						<div class="span6">
 				 							<div class="well c-yellow-light">
-				 								<h4 class="t-warning">Niples  &nbsp;<button onClick="niplesok();" class="btn btn-warning t-d pull-right"><i class="icon-ok-circle"></i> Listo</button></h4>
+				 								<h4 class="t-warning">Niples  &nbsp;
+				 									<!--<button onClick="niplesock();" class="btn btn-warning t-d pull-right"><i class="icon-ok-circle"></i> Listo</button>--></h4>
 				 								<div class="accordion" id="niples">
 				 									<?php
 				 									$cn = new PostgreSQL();
@@ -233,7 +277,31 @@ include ("../datos/postgresHelper.php");
 																	<p class="pull-right t-warning help-inline"><label class="badge badge-info inline">Consumido <strong id="qd<?php echo str_replace('"', '', $result["matmed"]); ?>">0</strong> de <?php echo $result['cant']; ?></label>
 																		<label class="help-inline badge badge-important"> Restante <strong id="tf<?php echo str_replace('"', '', $result["matmed"]); ?>"></strong></label></p>
 																	<div class="" id="nip<?php echo str_replace('"', '', $result["matmed"]); ?>">
-																		
+																		<?php
+																			if (count($arrni) > 0) {
+																				for ($i=0; $i < count($arrni); $i++) { 
+																					if ($result['materialesid'] == $arrni[$i]) {
+																						$c = new PostgreSQL();
+																						$q = $c->consulta("SELECT nropedido,materialesid,metrado,tipo FROM operaciones.niples 
+																							WHERE proyectoid LIKE '".$_GET['pro']."' AND TRIM(subproyectoid) LIKE TRIM('".$_GET['sub']."') 
+																							AND TRIM(sector) LIKE TRIM('".$_GET['sec']."') AND materialesid LIKE '".$arrni[$i]."'");
+																						if ($c->num_rows($q) > 0) {
+																							echo "<table class='table table-hover table-condensed'>";
+																							while ($res = $c->ExecuteNomQuery($q)) {
+																								echo "<tr>";
+																								echo "<td>".$res['nropedido']."</td>";
+																								echo "<td>".$res['materialesid']."</td>";
+																								echo "<td>".$res['metrado']."</td>";
+																								echo "<td>".$res['tipo']."</td>";
+																								echo "</tr>";
+																							}
+																							echo "</table>";
+																						}
+																						$c->close($q);
+																					}
+																				}
+																			}
+																		?>
 																	</div>
 																</div>
 															</div>
@@ -327,7 +395,7 @@ include ("../datos/postgresHelper.php");
 						<div id="cad" class="well pull-center c-gd">
 							<a href="javascript:openadj();" style="color: #FFBF00;">Archivo Adicional</a>
 						</div>
-						<input type="file" id="fileadj" onChange="fchan();" class="hide" />
+						<input type="file" id="fileadj" onChange="fchan();" class="hide" accept="application/pdf"/>
 					</div>
 				</div>
 				<div class="progress progress-warning progress-striped active hide">
@@ -341,7 +409,7 @@ include ("../datos/postgresHelper.php");
 		</div>
 		<div id="mlist" class="modal fade in hide">
 			<div class="modal-header">
-				<a class="close" data-dismiss="modal">x</a>
+				<a class="close" data-dismiss="modal">&times;</a>
 				<h5>Lista de Pedidos</h5>
 			</div>
 			<div class="modal-bady">
@@ -352,7 +420,7 @@ include ("../datos/postgresHelper.php");
 										ON p.almacenid = a.almacenid
 										INNER JOIN admin.estadoes s
 										ON p.esid LIKE s.esid
-										WHERE p.proyectoid LIKE '".$_GET['pro']."' AND TRIM(p.subproyectoid) LIKE '".$_GET['sub']."' AND 
+										WHERE TRIM(p.proyectoid) LIKE '".$_GET['pro']."' AND TRIM(p.subproyectoid) LIKE '".$_GET['sub']."' AND 
 										TRIM(sector) LIKE '".$_GET['sec']."'");
 				if ($cn->num_rows($query) > 0) {
 					while ($result = $cn->ExecuteNomQuery($query)) {

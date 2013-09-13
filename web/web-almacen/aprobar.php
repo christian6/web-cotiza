@@ -32,7 +32,7 @@ if (sesaccess() == 'ok') {
 <section>
 <?php include("include/menu-al.inc"); ?>
 	<hgroup>
-		<h4>Pedido al Almacen Nro: <label for="lblnro" id="lblnro"><?php echo $_GET['nro'];?></label></h4>
+		<h4>Pedido al Almacen Nro: <label for="lblnro" id="lblnro"><?php echo TRIM($_GET['nro']);?></label></h4>
 	</hgroup>
 	<article>
 		<?php
@@ -42,7 +42,7 @@ if (sesaccess() == 'ok') {
 			# realizando una conexion hacia la base de datos
 			$cn = new PostgreSQL();
 			# ecribiendo el query
-			$query = $cn->consulta("SELECT p.proyectoid,p.subproyectoid,p.sector,p.proyectoid,r.descripcion as pronom,p.empdni,e.empnom,p.fecha::date,p.fecent,p.obser,p.almacenid,a.descri,s.esnom ".
+			$query = $cn->consulta("SELECT p.proyectoid,p.subproyectoid,p.sector,r.descripcion as pronom,p.empdni,e.empnom,p.fecha::date,p.fecent,p.obser,p.almacenid,a.descri,s.esnom ".
 									"FROM almacen.pedido p INNER JOIN ventas.proyectos r ".
 									"ON p.proyectoid=r.proyectoid ".
 									"INNER JOIN admin.empleados e ".

@@ -83,7 +83,10 @@ include ("../datos/postgresHelper.php");
 		}
 		$cn->close($query);
 	?>
-	<header></header>
+	<header>
+		<input type="hidden" id="pro" value="<?php echo $_GET['id']; ?>">
+		<input type="hidden" id="sub" value="<?php echo $_GET['sub']; ?>">
+	</header>
 	<div id="misub">
 		<ul class="breadcrumb well">
 			<li>
@@ -264,45 +267,51 @@ include ("../datos/postgresHelper.php");
 					<h4>Archivos Complementarios</h4>
 					<?php
 					function ListFolder($path)
-					{
-					    //using the opendir function
-					    $dir_handle = @opendir($path) or die("Unable to open $path");
-					    
-					    //Leave only the lastest folder name
-					    $dirname = end(explode("/", $path));
-					    
-					    //display the target folder.
-					    echo ("<li>$dirname\n");
-					    echo "<ul>\n";
-					    while (false !== ($file = readdir($dir_handle))) 
-					    {
-					        if($file!="." && $file!="..")
-					        {
-					            if (is_dir($path."/".$file))
-					            {
-					                //Display a list of sub folders.
-					                ListFolder($path."/".$file);
-					            }
-					            else
-					            {
-					                //Display a list of files.
-					                echo "<li>$file</li>";
-					            }
-					        }
-					    }
-					    echo "</ul>\n";
-					    echo "</li>\n";
-					    
-					    //closing the directory
-					    closedir($dir_handle);
+					{	
+						try {
+							//using the opendir function
+						    $dir_handle = @opendir($path) or die("Unable to open $path");
+						    
+						    //Leave only the lastest folder name
+						    $dirname = end(explode("/", $path));
+						    
+						    //display the target folder.
+						    echo ("<li>$dirname\n");
+						    echo "<ul>\n";
+						    while (false !== ($file = readdir($dir_handle))) 
+						    {
+						        if($file!="." && $file!="..")
+						        {
+						            if (is_dir($path."/".$file))
+						            {
+						                //Display a list of sub folders.
+						                ListFolder($path."/".$file);
+						            }
+						            else
+						            {
+						                //Display a list of files.
+						                echo "<li>$file</li>";
+						            }
+						        }
+						    }
+						    echo "</ul>\n";
+						    echo "</li>\n";
+						    
+						    //closing the directory
+						    closedir($dir_handle);
+						} catch (Exception $e) {
+							echo $e->getMessage();
+						}
 					}
-
-					if ($_GET['sub'] != '') {
-						ListFolder("../project/".$_GET['id']."/".$_GET['sub']."/comp/");
-					}else{
-						ListFolder('../project/'.$_GET['id'].'/comp/');
+					try {
+						if ($_GET['sub'] != '') {
+							ListFolder("../project/".$_GET['id']."/".$_GET['sub']."/comp/");
+						}else{
+							ListFolder('../project/'.$_GET['id'].'/comp/');
+						}
+					} catch (Exception $e) {
+						echo $e->getMessage();
 					}
-					
 					?>
 				</div>
 			</div>
@@ -620,8 +629,7 @@ include ("../datos/postgresHelper.php");
 				<button class="btn"><i class="icon-ok"></i></button>
 			</div>-->
 		</div>
-		<input type="hidden" id="pro" value="<?php echo $_GET['id']; ?>">
-		<input type="hidden" id="sub" value="<?php echo $_GET['sub']; ?>">
+		
 	</section>
 	<div id="space"></div>
 	<footer>

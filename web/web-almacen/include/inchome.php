@@ -24,7 +24,7 @@ if ($_POST['tra'] == "s") {
 							ON m.fordni LIKE e.empdni
 							INNER JOIN admin.cargo c
 							ON e.cargoid = c.cargoid
-							WHERE m.empdni LIKE '$dni' AND m.esid NOT LIKE '57' ORDER by m.fecha DESC LIMIT 10 OFFSET 0;");
+							WHERE m.empdni LIKE '$dni' AND m.esid NOT LIKE '57' ORDER by m.fecha DESC;");
 	if ($cn->num_rows($query) > 0) {
 		echo "<div class='accordion' id='accordion'>";
 		$i = 0;

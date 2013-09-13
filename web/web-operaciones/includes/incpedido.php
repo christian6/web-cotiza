@@ -56,11 +56,11 @@ if ($_POST['tra'] == 'sp') {
 		}
 	}
 	$cn->close($query);
-	echo "hecho";
+	echo $ncod;
 }
 if ($_POST['tra'] == 'tmpnip') {
 	$cn = new PostgreSQL();
-	$query = $cn->consulta("INSERT INTO operaciones.tmpniples(dni,proyecotid,subproyectoid,sector,adicionalid,materialid,metrado,tipo) VALUES('".$_SESSION['dni-icr']."',
+	$query = $cn->consulta("INSERT INTO operaciones.tmpniples(dni,proyectoid,subproyectoid,sector,adicionalid,materialid,metrado,tipo) VALUES('".$_SESSION['dni-icr']."',
 							'".$_POST['pro']."','".$_POST['sub']."','".$_POST['sec']."','".$_POST['adi']."','".$_POST['matid']."',".$_POST['met'].",'".$_POST['tip']."');");
 	$cn->affected_rows($query);
 	$cn->close($query);
@@ -68,8 +68,7 @@ if ($_POST['tra'] == 'tmpnip') {
 }
 if ($_POST['tra'] == 'listnip') {
 	$cn = new PostgreSQL();
-	$query = $cn->consulta("SELECT id,dni,materialid,metrado,tipo,
-		(select sum(metrado)as tot from operaciones.tmpniples WHERE materialid LIKE materialid ) as tot FROM operaciones.tmpniples 
+	$query = $cn->consulta("SELECT id,dni,materialid,metrado,tipo,(select sum(metrado)as tot from operaciones.tmpniples WHERE materialid LIKE '".$_POST['mat']."' ) as tot FROM operaciones.tmpniples 
 		WHERE dni LIKE '".$_SESSION['dni-icr']."' AND materialid LIKE '".$_POST['mat']."'
 		GROUP BY id,dni,materialid,metrado,tipo;");
 	if ($cn->num_rows($query) > 0 ) {
@@ -94,5 +93,96 @@ if ($_POST['tra'] == 'delniple') {
 	$cn->affected_rows($query);
 	$cn->close($query);
 	echo "success";
+}
+if ($_POST['tra'] == 'upfile') {
+	$folder = $_SERVER['DOCUMENT_ROOT'].'/web/project/'.$_POST['pro'].'/pedidos/';
+	$return = 'success';
+	if (!file_exists($folder)) {
+		mkdir($folder);
+		chmod($folder, 0777);
+	}
+	$tmp_file = $_FILES['fpedido']['tmp_name'];
+	$file = $folder.$_POST['nrop'].'.pdf';
+	if (!move_uploaded_file($tmp_file, $file)) {
+		$return = 'Error load file';
+	}
+	if ($return == 'success') {
+		chmod($file, 0777);
+	}
+	echo $return;
+}
+if ($_POST['tra'] == 'saveniple') {
+	$cn = new PostgreSQL();
+	$query = $cn->consulta("SELECT * FROM operaciones.tmpniples WHERE dni LIKE '".$_SESSION['dni-icr']."' AND proyectoid LIKE '".$_POST['pro']."' AND
+							TRIM(subproyectoid) LIKE '".$_POST['sub']."' AND TRIM(sector) LIKE '".$_POST['sec']."' AND materialid LIKE '".$_POST['mat']."'");
+	if ($cn->num_rows($query) > 0) {
+		while ($result = $cn->ExecuteNomQuery($query)) {
+			$c = new PostgreSQL();
+			$q = $c->consulta("INSERT INTO operaciones.niples VALUES('".$result['proyectoid']."','".$result['subproyectoid']."','".$result['sector']."',
+							'','".$_POST['nro']."','".$result['materialid']."','".$result['metrado']."','".$result['tipo']."');");
+			$c->affected_rows($q);
+			$c->close($q);
+		}
+	}
+	$cn->close($query);
+	$cn = new PostgreSQL();
+	$query = $cn->consulta("DELETE FROM operaciones.tmpniples WHERE dni LIKE '".$_SESSION['dni-icr']."' AND proyectoid LIKE '".$_POST['pro']."' AND
+							TRIM(subproyectoid) LIKE '".$_POST['sub']."' AND TRIM(sector) LIKE '".$_POST['sec']."' AND materialid LIKE '".$_POST['mat']."'");
+	$cn->affected_rows($query);
+	$cn->close($query);
+	echo "success";
+}
+if ($_POST['tra'] == 'tmpmod') {
+	$cn = new PostgreSQL();
+	$query = $cn->consulta("SELECT COUNT(*) FROM operaciones.tmpmodificaciones WHERE proyectoid LIKE '".$_POST['pro']."' AND 
+							TRIM(subproyectoid) LIKE '".$_POST['sub']."' AND TRIM(sector) LIKE '".$_POST['sec']."';");
+	$count = 0;
+	if ($cn->num_rows($query) > 0) {
+		while ($result = $cn->ExecuteNomQuery($query)) {
+			$count = $result[0];
+		}
+	}
+	$cn->close($query);
+	if ($count <= 0) {
+		$cn = new PostgreSQL();
+		$query = $cn->consulta("INSERT INTO operaciones.tmpmodificaciones SELECT * FROM operaciones.metproyecto
+		WHERE proyectoid LIKE '".$_POST['pro']."' AND TRIM(subproyectoid) LIKE '".$_POST['sub']."' AND TRIM(sector) LIKE '".$_POST['sec']."';");
+		$cn->affected_rows($query);
+		$cn->close($query);
+	}
+	$cn = new PostgreSQL();
+	$sql = "SELECT DISTINCT d.materialesid,m.matnom,m.matmed,m.matund,SUM(d.cant) as cant,d.flag
+			FROM operaciones.tmpmodificaciones d INNER JOIN admin.materiales m
+			ON d.materialesid LIKE m.materialesid
+			INNER JOIN ventas.proyectos p
+			ON d.proyectoid LIKE p.proyectoid 
+			WHERE d.proyectoid LIKE '".$_POST['pro']."' AND TRIM(d.subproyectoid) LIKE TRIM('".$_POST['sub']."') AND TRIM(d.sector) LIKE TRIM('".$_POST['sec']."')
+			GROUP BY d.materialesid,m.matnom,m.matmed,m.matund,d.flag";
+	$query = $cn->consulta($sql);
+	if ($cn->num_rows($query) > 0) {
+		$i = 1;
+		echo "<table class='table table-condensed'>";
+		echo "<caption>";
+		echo "<button class='btn btn-warning t-d pull-right'><i class='icon-check'></i> Listo</button>";
+		echo "</caption>";
+		echo "<tbody>";
+		while ($result = $cn->ExecuteNomQuery($query)) {
+			echo "<tr>";
+			echo "<td id='tc'>".$i++."</td>";
+			echo "<td>".$result['materialesid']."</td>";
+			echo "<td>".$result['matnom']."</td>";
+			echo "<td>".$result['matmed']."</td>";
+			echo "<td id='tc'>".$result['matund']."</td>";
+			echo "<td id='tc'>".$result['cant']."</td>";
+			echo "<td><input style='height: 1.1em; text-align: right;' type='number' max='9999' min='0' onBlur='console.log(this.value);' class='input-small' value='".$result['cant']."' REQUIRED ";
+			if($result['flag'] == '0'){ echo "DISABLED";}
+			echo "/></td>";
+			echo "</tr>";
+		}
+		echo "</tbody>";
+		echo "</table>";
+	}
+	$cn->close($query);
+	echo "|success";
 }
 ?>

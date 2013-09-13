@@ -115,7 +115,7 @@ include ("../datos/postgresHelper.php");
 			</div>
 		</form>
 		<hr>
-		<table class="table table-bordered table-hover">
+		<table class="table table-bordered table-hover table-condensed">
 			<caption>
 				<div class="control-group">
 					<label class="inline pull-left label label-info"><i style="background-color: rgba(254,46,46,1);">&nbsp;&nbsp;&nbsp;&nbsp;</i> Stock Critico</label>
@@ -162,7 +162,6 @@ include ("../datos/postgresHelper.php");
 						}elseif ($_POST['chkf']=="" && $_POST['chkm']=="" && $_POST['chkn']=="d") {
 							$qsql = $qsql." AND lower(matnom) LIKE lower('%".$_POST['txtdes']."%') ORDER BY matnom ASC";
 						}
-
 						$cn = new PostgreSQL();
 						$query = $cn->consulta($qsql);
 						if ($cn->num_rows($query) > 0) {
@@ -185,7 +184,7 @@ include ("../datos/postgresHelper.php");
 								echo "<td style='text-align: center;'>".$result['stockpen']."</td>";
 								?>
 								<td style="text-align: center;">
-									<button type="Button" class="btn-warning" id="<?php echo $result['materialesid'];?>" onClick="view('<?php echo $result['materialesid'];?>','<?php echo str_replace('"','',$result['matnom']);?>','<?php echo str_replace('"', '', $result['matmed']);?>');">
+									<button type="Button" class="btn-warning btn-mini" id="<?php echo $result['materialesid'];?>" onClick="view('<?php echo $result['materialesid'];?>','<?php echo str_replace('"','',$result['matnom']);?>','<?php echo str_replace('"', '', $result['matmed']);?>');">
 										<i class="icon-shopping-cart"></i>
 									</button></td>
 								<?php

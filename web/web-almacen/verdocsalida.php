@@ -89,38 +89,60 @@ include ("../datos/postgresHelper.php");
 </header>
 <section>
 	<div class="container well">
-		<h4>Imprimir Pedidos Atendidos</h4>
+		<h3>Pedidos Atendidos</h3>
 		<form class="form" name="frmnf" action ="" method="POST">
 			<div class="row show-grid">
 				<div class="span9">
 					<div class="row show-grid">
 						<div class="span2">
-							<label><input type="radio" name="btnr" id="btnn" value="n" onChange="searchtype();" /> Nro Documento</label>
+							<div class="control-group info">
+								<div class="control">
+									<label class="radio"><input type="radio" name="btnr" id="btnn" value="n" onChange="searchtype();" /> Nro Documento</label>
+								</div>
+							</div>
 						</div>
 						<div class="span2">
-							<label><input type="radio" name="btnr" id="btnf" value="f" onChange="searchtype();" /> Entre Fechas</label>
+							<div class="control-group info">
+								<div class="control">
+									<label class="radio"><input type="radio" name="btnr" id="btnf" value="f" onChange="searchtype();" /> Entre Fechas</label>
+								</div>
+							</div>
 						</div>
 					</div>
 					<div class="row show-grid">
 						<div class="span2">
-							<label><input type="radio" name="btnrd" value="g" REQUIRED /> Guia de Remision</label>
+							<div class="control-group info">
+								<div class="control">
+									<label class="radio"><input type="radio" name="btnrd" value="g" REQUIRED /> Guia de Remision</label>
+								</div>
+							</div>
 						</div>
 						<div class="span2">
-							<label><input type="radio" name="btnrd" value="n" REQUIRED /> Nota de Salida</label>
+							<div class="control-group info">
+								<div class="control">
+									<label class="radio"><input type="radio" name="btnrd" value="n" REQUIRED /> Nota de Salida</label>
+								</div>
+							</div>
 						</div>
 					</div>
 					<div class="row show-grid">
 						<div class="span3">
-							<label>Nro:</label>
-							<input type="text" name="txtnro" id="txtnro" class="span2" title="Nro" REQUIRED DISABLED>
+							<label class="label label-info">Nro</label>
+							<div class="controls">
+								<input type="text" name="txtnro" id="txtnro" class="span2" title="Nro" maxlength="8" REQUIRED DISABLED>
+							</div>
 						</div>
 						<div class="span3">
-							<label>Fecha Inicio:</label>
-							<input type="text" name="fecini" id="fecini" class="span2" REQUIRED DISABLED>
+							<label class="label label-info">Fecha Inicio</label>
+							<div class="controls">
+								<input type="text" name="fecini" id="fecini" class="span2" REQUIRED DISABLED>
+							</div>
 						</div>
 						<div class="span3">
-							<label>Fecha Fin:</label>
-							<input type="text" name="fecfin" id="fecfin" class="span2" DISABLED>
+							<label class="label label-info">Fecha Fin</label>
+							<div class="controls">
+								<input type="text" name="fecfin" id="fecfin" class="span2" DISABLED>
+							</div>
 						</div>
 					</div>
 					<button type="Submit" class="btn btn-primary" name="btnsearch" value="btnsearch"><i class="icon-search icon-white"></i> Buscar</button>
@@ -133,10 +155,10 @@ include ("../datos/postgresHelper.php");
 	        <a class="close" data-dismiss="alert">×</a>
 	        <strong>¡Bien hecho!</strong> Has anulado el Documento de Salida.
       	</div>
-		<table class="table table-bordered table-striped table-hover">
+		<table class="table table-bordered table-striped table-hover table-condensed">
 			<thead>
 				<tr>
-					<th>Item</th>
+					<th></th>
 					<th>Tipo</th>
 					<th>Nro Documento</th>
 					<th>Nro Pedido</th>
@@ -180,8 +202,10 @@ include ("../datos/postgresHelper.php");
 			$pri = "nronsalida";
 		}
 
+		echo $p.' '.$_POST['txtnro'];
+
 		if ($_POST['btnr'] == "n") {
-				$qsql = $qsql." WHERE ".$p.".$pri LIKE '".$_POST['txtnro']."' ORDER BY ".$p.".$pri ASC";
+				$qsql .= " WHERE ".$p.".$pri LIKE '".$_POST['txtnro']."' ORDER BY ".$p.".$pri ASC";
 		}elseif($_POST['btnr'] == "f"){
 			if ($_POST['fecini'] != "" && $_POST['fecfin'] == "") {
 				$qsql = $qsql." WHERE ".$p.".fecha::date = '".$_POST['fecini']."'::date  ORDER BY ".$p.".$pri ASC";
@@ -189,6 +213,8 @@ include ("../datos/postgresHelper.php");
 				$qsql = $qsql." WHERE ".$p.".fecha::date BETWEEN '".$_POST['fecini']."'::date AND '".$_POST['fecfin']."'::date  ORDER BY ".$p.".$pri ASC";
 			}
 		}
+		echo $qsql;
+
 		$i = 1;
 		$cn = new PostgreSQL();
 		$query = $cn->consulta($qsql);
