@@ -24,6 +24,19 @@ include ("../datos/postgresHelper.php");
 	<script src="js/pedido.js"></script>
 	<script src="../modules/msgBox.js"></script>
 	<link rel="stylesheet" href="../css/msgBoxLight.css">
+	<script type="text/javascript" src="../web-almacen/js/autocomplete.js"></script>
+	<script src="js/medidastand.js"></script>
+	<style>
+		.ui-autocomplete {
+			max-height: 13em;
+			overflow-y: auto;
+			/* prevent horizontal scrollbar */
+			overflow-x: hidden;
+		}
+		caption{
+			text-align: left;
+		}
+	</style>
 </head>
 <body>
 	<?php include ("includes/menu-operaciones.inc"); ?>
@@ -184,16 +197,21 @@ include ("../datos/postgresHelper.php");
 												$query = $cn->consulta($sql);
 												if ($cn->num_rows($query) > 0) {
 													$i = 1;
+													$tot = 0;
+													$arrni = array();
+													$j = 0;
+													$count = 1;
+													$flag = 1;
 													while ($result = $cn->ExecuteNomQuery($query)) {
-														
 														if ($result['flag'] == 0) {
 															echo "<tr class='c-green-light'>";
 															echo "<td><input type='checkBox' DISABLED /></td>";
-															$arrni = array();
-															$j = 0;
+															
 															if ( substr($result['materialesid'], 0,3) == '115') {
 																$arrni[$j] = $result['materialesid'];
+																$j++;
 															}
+															$flag++;
 														}else{
 															echo "<tr class='c-yellow-light'>";
 															echo "<td><input type='checkBox' name='mats' id='".$result['materialesid']."'></td>";	
@@ -212,10 +230,12 @@ include ("../datos/postgresHelper.php");
 														echo "<td id='tc'>".$result['cant']."</td>";
 														if ($r[0] >= 0) {
 															echo "<td id='tc'>".$r[0]."</td>";
+															$tot = ($tot + ($r[1] * $result['cant']));
 														}else{
 															echo "<td id='tc'>-</td>";
 														}
 														echo "</tr>";
+														$count++;
 													}
 												}else{
 
@@ -223,16 +243,102 @@ include ("../datos/postgresHelper.php");
 												$cn->close($query);
 											?>
 										</tbody>
+										<tfoot>
+											<tr>
+												<input type="hidden" id="pto" value="<?php echo $tot; ?>">
+												<input type="hidden" id="ptn" value="0">
+											</tr>
+										</tfoot>
 									</table>
 									
 									<div class="well c-yellow-light">
 										<a href="javascript:hideadicionales();" class="close">&times;</a>
 										<h4 class='t-warning'>
-											Modificación de Sector 
-											<button id="btnadi" class="btn btn-warning btn-mini" onClick="showadicionales();"><i class="icon-chevron-down"></i></button>
+											Modificación de Sector 	
+											<?php
+												$cn = new PostgreSQL();
+												$query = $cn->consulta("SELECT MAX(status) FROM operaciones.modifysec WHERE proyectoid LIKE '".$_GET['pro']."' AND TRIM(subproyectoid) LIKE '".$_GET['sub']."' AND TRIM(sector) LIKE '".$_GET['sec']."'");
+												if ($cn->num_rows($query) > 0) {
+													$msec = $cn->ExecuteNomQuery($query);
+												}
+												$cn->close($query);
+											?>
+											<button id="btnadi" class="btn btn-warning btn-mini" onClick="showadicionales();" <?php if($count == $flag){echo "DISABLED";} if($msec[0] == '0' || $msec[0] == '1'){ echo "DISABLED"; } ?>><i class="icon-chevron-down"></i></button>
 										</h4>
 										<div id="adic" class='hide'>
-											
+											<table class='table table-condensed'>
+												<caption>
+													<div class='btn-group pull-left'>
+														<button class='btn btn-warning t-d' onClick="showaddmat();"><i class='icon-list'></i> Agregar</button>
+														<button class='btn btn-warning t-d' onClick="confirmok();"><i class='icon-check'></i> Listo</button>
+													</div>
+													<div id="addmat" class="row show-grid hide">
+														<div class="span11">
+															<a onClick="javsacript:hideaddmat();" class="close">&times;</a>
+														<div class="span5">
+															<div class="control-group info">
+																<label for="controls" class="control-label">Descripción</label>
+																<div class="controls">
+																	<div class="ui-widget">
+																		<select id="combobox" class="span5" onclick="showmed();" style="display: none;">
+																		<?php
+																			$cn = new PostgreSQL();
+																			$query = $cn->consulta("SELECT DISTINCT m.matnom FROM admin.materiales m INNER JOIN almacen.inventario i ON m.materialesid=i.materialesid AND i.anio LIKE '".date("Y")."' ORDER BY matnom ASC");
+																			if ($cn->num_rows($query)>0) {
+																				while ($result = $cn->ExecuteNomQuery($query)) {
+																					echo "<option value='".$result['matnom']."'>".$result['matnom']."</option>";
+																				}
+																			}
+																			$cn->close($query);
+																		?>
+																		</select>
+																	</div>
+																</div>
+															</div>
+														</div>
+														<div class="span5">
+															<div class="control-group info">
+																<label for="controls" class="control-label">Medida</label>
+																<div class="controls">
+																	<select class="span5" name="cbomed" id="med" onClick="showdet();">
+																	</select>
+																</div>
+															</div>
+														</div>
+														<div class="span5">
+															<div class="well c-red t-white">
+																<div id="data"></div>
+															</div>
+														</div>
+														<div class="span5 well c-red-light">
+																<div class="span2">
+																	<div class="control-group info">
+																		<label for="controls" class="control-label">Cantidad</label>
+																		<div class="controls">
+																			<input type="number" id="cant" min="0" max="9999" class="span2">
+																		</div>
+																	</div>
+																</div>
+																<div class="span1">
+																	<div class="control-group">
+																		<label for="controls" class="control-label">&nbsp;</label>
+																		<div class="controls">
+																			<button class="btn btn-warning" onClick="savemat();"><i class="icon-plus"></i></button>
+																		</div>
+																	</div>	
+																</div>
+														</div>
+														</div>
+													</div>
+												</caption>
+												<tbody id="dettbl">
+												</tbody>
+											</table>
+										</div>
+										<div class="row show-grid">
+											<div class="span11">
+												<div id="msgmo" class="alert alert-info alert-block pull-center <?php if($msec[0] == '2' || $msec[0] == ''){ echo "hide"; }  ?>"><h4>Espere Aprobación</h4></div>
+											</div>
 										</div>
 									</div>
 
@@ -271,14 +377,15 @@ include ("../datos/postgresHelper.php");
 															<div class="accordion-inner c-blue-light">
 																<div class="alert-block">
 																	<div class="btn-group inline">
-																		<button class="btn btn-mini btn-success" onClick='addniple(<?php echo str_replace('"', '', $result["matmed"]); ?>,"<?php echo $result['materialesid']; ?>");'><i class="icon-plus"></i></button>
-																		<button class="btn btn-mini btn-info" onClick='tmplist("<?php echo $result['materialesid']; ?>",<?php echo str_replace('"', '', $result["matmed"]); ?>);'><i class="icon-refresh"></i></button>
+																		<button class="btn btn-mini btn-success" onClick='addniple(<?php echo str_replace('"', '', $result["matmed"]); ?>,"<?php echo $result['materialesid']; ?>");' <?php if($result['flag'] == '0'){echo "DISABLED";} ?>><i class="icon-plus"></i></button>
+																		<button class="btn btn-mini btn-info" onClick='tmplist("<?php echo $result['materialesid']; ?>",<?php echo str_replace('"', '', $result["matmed"]); ?>);' <?php if($result['flag'] == '0'){echo "DISABLED";} ?>><i class="icon-refresh"></i></button>
 																	</div>
 																	<p class="pull-right t-warning help-inline"><label class="badge badge-info inline">Consumido <strong id="qd<?php echo str_replace('"', '', $result["matmed"]); ?>">0</strong> de <?php echo $result['cant']; ?></label>
 																		<label class="help-inline badge badge-important"> Restante <strong id="tf<?php echo str_replace('"', '', $result["matmed"]); ?>"></strong></label></p>
 																	<div class="" id="nip<?php echo str_replace('"', '', $result["matmed"]); ?>">
 																		<?php
 																			if (count($arrni) > 0) {
+																				//$nc = 0;
 																				for ($i=0; $i < count($arrni); $i++) { 
 																					if ($result['materialesid'] == $arrni[$i]) {
 																						$c = new PostgreSQL();
@@ -451,6 +558,24 @@ include ("../datos/postgresHelper.php");
 			<div class="modal-footer">
 				<button class="btn pull-left" data-dismiss="modal"><i class="icon-resize-small"></i> Cancelar</button>
 
+			</div>
+		</div>
+		<div id="mconfirm" class="modal fade in c-yellow-light t-warning hide">
+			<div class="modal-header">
+				<a href="#" data-dismiss="modal" class="close">&times;</a>
+				<h4>Movito de Modificación</h4>
+			</div>
+			<div class="modal-body">
+				<div class="control-group info">
+					<label for="controls" class="control-label">Especificar motivo de la modificación</label>
+					<div class="controls">
+						<textarea name="txtmot" id="txtmot" class="span5" rows="5"></textarea>
+					</div>
+				</div>
+				<div class="controls">
+					<button class="btn btn-warning t-d" data-dismiss="modal"><i class="icon-remove"></i> Cancelar</button>
+					<button class="btn btn-info t-d pull-right" onClick="saveconfirm();"><i class="icon-ok"></i> Guardar</button>
+				</div>
 			</div>
 		</div>
 	</section>

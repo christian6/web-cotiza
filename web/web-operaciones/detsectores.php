@@ -297,7 +297,7 @@ include ("../datos/postgresHelper.php");
 			              </div>
 			            </div>
 					</div>
-					<div class="alert alert-info alert-block">
+					<!--<div class="alert alert-info alert-block">
 						<p>
 							<i class="icon-question-sign"></i>
 							<strong>Tienes Adicionales?</strong>
@@ -306,7 +306,7 @@ include ("../datos/postgresHelper.php");
 								<button class="btn btn-info"><i class="icon-ok"></i></button>
 							</p>
 						</p>
-					</div>
+					</div>-->
 				</div>
 			</div>
 		</div>

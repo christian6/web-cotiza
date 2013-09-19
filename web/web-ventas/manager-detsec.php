@@ -23,6 +23,7 @@ include ("../datos/postgresHelper.php");
 	<script src="../bootstrap/js/bootstrap.js"></script>
 	<link rel="stylesheet" href="../css/msgBoxLight.css">
 	<script src="../modules/msgBox.js"></script>
+	<script src="js/manager-detsec.js"></script>
 	<style>
 		#fullpdf{
 			display: none;
@@ -44,6 +45,12 @@ include ("../datos/postgresHelper.php");
 			padding: .5em;
 			text-align: center;
 			text-transform: uppercase;
+		}
+		#tblm thead tr th, #tblm tfoot tr th{
+			background-color:#8B0000;
+		}
+		#cpre{
+			text-align: center;
 		}
 	</style>
 	<script>
@@ -73,10 +80,14 @@ include ("../datos/postgresHelper.php");
 </head>
 <body>
 	<?php include ("includes/menu-ventas.inc"); ?>
-	<header></header>
+	<header>
+		<input type="hidden" id="pro" value="<?php echo $_GET['pro']; ?>">
+		<input type="hidden" id="sub" value="<?php echo $_GET['sub']; ?>">
+		<input type="hidden" id="sec" value="<?php echo $_GET['sec']; ?>">
+	</header>
 	<section>
 		<div class="container well">
-			<h3>Sector <?php echo $_GET['sec']; ?></h3>
+			<h3 class="t-warning">Sector <?php echo $_GET['sec']; ?></h3>
 			<?php
 				$dir = "";
 				$file = -1;
@@ -106,6 +117,7 @@ include ("../datos/postgresHelper.php");
 				</div>
 			</div>
 			<?php } ?>
+			<br>
 			<table class="table table-condensed table-hover table-bordered">
 				<thead>
 					<th></th>
@@ -134,7 +146,13 @@ include ("../datos/postgresHelper.php");
 					$query = $cn->consulta($qsql);
 					if ($cn->num_rows($query) > 0) {
 						$i = 1;
+						$arrni = array();
+						$j = 0;
 						while ($result = $cn->ExecuteNomQuery($query)) {
+							if ( substr($result['materialesid'], 0,3) == '115') {
+								$arrni[$j] = $result['materialesid'];
+								$j++;
+							}
 							echo "<tr>";
 							echo "<td id='tc'>".$i++."</td>";
 							echo "<td>".$result['materialesid']."</td>";
@@ -147,8 +165,8 @@ include ("../datos/postgresHelper.php");
 							if ($c->num_rows($q) > 0) {
 								$r = $c->ExecuteNomQuery($q);
 								echo "<td id='tc'>".$r[0]."</td>";
-								echo "<td id='tc'>".$r[1]."</td>";
-								echo "<td style='text-align: right;'>".($result['cant'] * $r[1])."</td>";
+								echo "<td id='tc'>".number_format($r[1],2)."</td>";
+								echo "<td style='text-align: right;'>".number_format($result['cant'] * $r[1],2)."</td>";
 							}else{
 								echo "<td id='tc'>-</td>";
 								echo "<td id='tc'>-</td>";
@@ -166,13 +184,204 @@ include ("../datos/postgresHelper.php");
 					$cn->close();
 				?>
 				</tbody>
-				<tfoot class="c-yellow-light">
-					<td colspan="8" style="text-align: right;"><strong>Total</strong></td>
-					<th style="text-align:right;"><?php echo $total; ?></th>
+				<tfoot>
+					<td colspan="8" style="text-align: right; background-color: rgba(8,106,135,1); color: #FFF;"><strong>Total</strong></td>
+					<th class="c-blue-light" style="text-align:right;"><?php echo number_format($total,2); ?></th>
 				</tfoot>
 			</table>
-			<div class="well c-yellow-light">
-				<a href="" class="close">&times;</a>
+			<div class="row show-grid">
+				<div class="span12">
+					<div class="well c-yellow-light t-warning">
+						<?php
+							$cn = new PostgreSQL();
+							$query = $cn->consulta("SELECT MAX(status) FROM operaciones.modifysec WHERE proyectoid LIKE '".$_GET['pro']."' AND TRIM(subproyectoid) LIKE '".$_GET['sub']."' AND TRIM(sector) LIKE '".$_GET['sec']."'");
+							if ($cn->num_rows($query) > 0) {
+								$result = $cn->ExecuteNomQuery($query);
+							}
+							$cn->close($query);
+						?>
+						<a href="javascript:hidemsec();" class="close">&times;</a>
+						<h4>Modificaciones del Sector <?php echo $_GET['sec']; ?> <button id="btnmsec" OnClick="showmsec();" class="btn btn-mini btn-warning" value="<?php echo $result[0]; ?>" <?php if($result[0] != '0'){ echo "DISABLED"; } ?>><i class="icon-chevron-down"></i></button></h4>
+						<div id="msec">
+							<?php if ($result[0] == '0'){ ?>
+								<table id="tblm" class="table table-condensed t-d">
+									<tbody>
+									<?php
+										$cn = new PostgreSQL();
+										$query = $cn->consulta("SELECT DISTINCT d.materialesid,m.matnom,m.matmed,m.matund,SUM(d.cant) as cant,d.flag
+													FROM operaciones.tmpmodificaciones d INNER JOIN admin.materiales m
+													ON d.materialesid LIKE m.materialesid
+													INNER JOIN ventas.proyectos p
+													ON d.proyectoid LIKE p.proyectoid 
+													WHERE d.proyectoid LIKE '".$_GET['pro']."' AND TRIM(d.subproyectoid) LIKE TRIM('".$_GET['sub']."') AND TRIM(d.sector) LIKE '".$_GET['sec']."'
+													GROUP BY d.materialesid,m.matnom,m.matmed,m.matund,d.flag");
+										if ($cn->num_rows($query) > 0) {
+											echo "<thead>";
+											echo "<tr>";
+												echo "<th></th>";
+												echo "<th>Codigo</th>";
+												echo "<th>Nombre</th>";
+												echo "<th>Medida</th>";
+												echo "<th>Unidad</th>";
+												echo "<th>Cantidad</th>";
+												echo "<th>Stock</th>";
+												echo "<th>Precio</th>";
+												echo "<th>Importe</th>";
+												echo "</tr>";
+											echo "</thead>";
+											$i=1;
+											$tot = 0;
+											while ($result = $cn->ExecuteNomQuery($query)) {
+												if($result['flag'] == '0'){ echo "<tr class='c-red-light'>";}else{ echo "<tr>"; }
+													echo "<td id='tc'>".$i++."</td>";
+													echo "<td>".$result['materialesid']."</td>";
+													echo "<td>".$result['matnom']."</td>";
+													echo "<td>".$result['matmed']."</td>";
+													echo "<td id='tc'>".$result['matund']."</td>";
+													echo "<td id='tc'>".$result['cant']."</td>";
+													$c = new PostgreSQL();
+													$q = $c->consulta("SELECT * FROM operaciones.sp_search_stock_mat('".$result['materialesid']."');");
+													if ($c->num_rows($q) > 0) {
+														$r = $c->ExecuteNomQuery($q);
+														echo "<td id='tc'>".$r[0]."</td>";
+														echo "<td id='tc'>".number_format($r[1],2)."</td>";
+														echo "<td style='text-align: right;'>".number_format($result['cant'] * $r[1],2)."</td>";
+														$tot += ($result['cant'] * $r[1]);
+													}else{
+														echo "<td id='tc'>-</td>";
+														echo "<td id='tc'>-</td>";
+														echo "<td id='tc'>-</td>";
+													}
+													$c->close($q);
+													//echo "<td><button class='btn btn-mini btn-danger' OnClick=delmodifymat('".$result['materialesid']."');><i class='icon-remove'></i></td>";
+													echo "</tr>";
+													
+											}
+										}
+										$cn->close($query);
+									?>
+									</tbody>
+									<tfoot>
+										<tr>
+											<th colspan="8" style="text-align: right; color: #FFF;">Total</th>
+											<td style="text-align: right;" class='c-red-light'><?php echo number_format($tot,2); ?></td>
+										</tr>
+									</tfoot>
+								</table>
+								<div class="well">
+									<div id="cpre">
+										<div class="row show-grid">
+											<div class="span3">
+												<div class="alert alert-block alert-success">
+													<strong>Precio de Original del Sector</strong><br>
+													<h5 class=" alert t-white label-success">
+														<?php echo number_format($total,2); ?>
+													</h5>
+												</div>
+											</div>
+											<div class="span3">
+												<div class="alert alert-block alert-error">
+													<strong>Nuevo Precio del Sector</strong><br>
+													<h5 class="alert t-white label-important">
+														<?php echo number_format($tot,2); ?>
+													</h5>
+												</div>
+											</div>
+											<div class="span3">
+												<div class="alert alert-block alert-info">
+													<strong>Diferencia de Precios</strong><br>
+													<h5 class="alert t-white label-info">
+														<?php if($tot > $total){ echo number_format(($tot - $total),2); }else{ echo number_format(($total - $tot),2);}?>
+													</h5>
+												</div>
+											</div>
+											<div class="span2">
+												<div class="alert alert-waring alert-block">
+													<button class="btn btn-success t-d btn-small input-small" onClick="aprobar();"><i class="icon-check"></i> Aprobar</button>
+													<button class="btn btn-danger t-d btn-small input-small"><i class="icon-remove-sign"></i> Anular</button>
+													<button class="btn btn-warning t-d btn-small input-small"><i class="icon-plus-sign"></i> Adicional</button>	
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								
+								
+							<?php } ?>
+						</div>
+					</div>
+				</div>
+				<div class="span6">
+				 	<div class="well c-yellow-light">
+				 		<h4 class="t-warning">Niples</h4>
+				 		<div class="accordion" id="niples">
+				 			<?php
+				 			$cn = new PostgreSQL();
+				 			$query = $cn->consulta("SELECT DISTINCT d.materialesid,m.matnom,TRIM(m.matmed) as matmed,m.matund,SUM(d.cant) as cant,flag
+									FROM operaciones.metproyecto d INNER JOIN admin.materiales m
+									ON d.materialesid LIKE m.materialesid
+									INNER JOIN ventas.proyectos p
+									ON d.proyectoid LIKE p.proyectoid 
+									WHERE d.materialesid LIKE '115%' AND d.proyectoid LIKE '".$_GET['pro']."' AND 
+									TRIM(d.subproyectoid) LIKE TRIM('".$_GET['sub']."') AND TRIM(d.sector) LIKE TRIM('".$_GET['sec']."')
+									GROUP BY d.materialesid,m.matnom,m.matmed,m.matund,flag
+									");
+				 			if ($cn->num_rows($query) > 0) {
+				 				while ($result = $cn->ExecuteNomQuery($query)) {
+				 			?>
+							<div class="accordion-group">
+								<div class="accordion-heading c-blue-light">
+									<a class="accordion-toggle" data-toggle="collapse" data-parent="#niples" href="#coll<?php echo $result['matmed']; ?>">
+										<div class="control-group">
+											<span class="inline">
+												<?php echo $result['matnom']." - ".$result['matmed']; ?>
+											</span>
+											<span class="badge badge-info pull-right"><strong id="ct<?php echo str_replace('"', '', $result["matmed"]); ?>"><?php echo $result['cant']."</strong> ".$result['matund']; ?></span>
+										</div>
+									</a>
+								</div>
+								<div id="coll<?php echo $result['matmed']; ?>" class="accordion-body collapse">
+									<div class="accordion-inner c-blue-light">
+										<div class="alert-block">
+											<div class="" id="nip<?php echo str_replace('"', '', $result["matmed"]); ?>">
+											<?php
+												if (count($arrni) > 0) {
+													for ($i=0; $i < count($arrni); $i++) { 
+														if ($result['materialesid'] == $arrni[$i]) {
+															$c = new PostgreSQL();
+															$q = $c->consulta("SELECT nropedido,materialesid,metrado,tipo FROM operaciones.niples 
+																WHERE proyectoid LIKE '".$_GET['pro']."' AND TRIM(subproyectoid) LIKE TRIM('".$_GET['sub']."') 
+																AND TRIM(sector) LIKE TRIM('".$_GET['sec']."') AND materialesid LIKE '".$arrni[$i]."'");
+															if ($c->num_rows($q) > 0) {
+																echo "<table class='table table-hover table-condensed'>";
+																while ($res = $c->ExecuteNomQuery($q)) {
+																	echo "<tr>";
+																	echo "<td>".$res['nropedido']."</td>";
+																	echo "<td>".$res['materialesid']."</td>";
+																	echo "<td>".$res['metrado']."</td>";
+																	echo "<td>".$res['tipo']."</td>";
+																	echo "</tr>";
+																}
+																echo "</table>";
+															}
+															$c->close($q);
+														}
+													}
+												}
+											?>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<?php
+							}
+						}
+						$cn->close($query);
+						?>
+					</div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</section>

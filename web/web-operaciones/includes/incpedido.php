@@ -161,28 +161,31 @@ if ($_POST['tra'] == 'tmpmod') {
 	$query = $cn->consulta($sql);
 	if ($cn->num_rows($query) > 0) {
 		$i = 1;
-		echo "<table class='table table-condensed'>";
-		echo "<caption>";
-		echo "<button class='btn btn-warning t-d pull-right'><i class='icon-check'></i> Listo</button>";
-		echo "</caption>";
-		echo "<tbody>";
+		$tot = 0;
 		while ($result = $cn->ExecuteNomQuery($query)) {
-			echo "<tr>";
+			if($result['flag'] == '0'){ echo "<tr class='c-red-light'>";}else{ echo "<tr>"; }
 			echo "<td id='tc'>".$i++."</td>";
 			echo "<td>".$result['materialesid']."</td>";
 			echo "<td>".$result['matnom']."</td>";
 			echo "<td>".$result['matmed']."</td>";
 			echo "<td id='tc'>".$result['matund']."</td>";
 			echo "<td id='tc'>".$result['cant']."</td>";
-			echo "<td><input style='height: 1.1em; text-align: right;' type='number' max='9999' min='0' onBlur='console.log(this.value);' class='input-small' value='".$result['cant']."' REQUIRED ";
+			echo "<td><input style='height: 1.1em; text-align: right;' type='number' max='9999' min='0' onBlur=modifyCant('".$result['materialesid']."',this.value); class='input-small' value='".$result['cant']."' REQUIRED ";
 			if($result['flag'] == '0'){ echo "DISABLED";}
 			echo "/></td>";
+			echo "<td><button class='btn btn-mini btn-danger' OnClick=delmodifymat('".$result['materialesid']."');><i class='icon-remove'></i></td>";
 			echo "</tr>";
+			$c = new PostgreSQL();
+			$q = $c->consulta("SELECT * FROM operaciones.sp_search_stock_mat('".$result['materialesid']."');");
+			if ($c->num_rows($q) > 0) {
+				$r = $c->ExecuteNomQuery($q);
+				$tot += ($result['cant'] * $r[1]);
+			}
+			$c->close($q);
 		}
-		echo "</tbody>";
-		echo "</table>";
+		
 	}
 	$cn->close($query);
-	echo "|success";
+	echo "|success|".$tot;
 }
 ?>

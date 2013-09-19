@@ -397,7 +397,7 @@ function tmpmodify () {
 		'tra' : 'tmpmod',
 		'pro' : $("#txtpro").val(),
 		'sub' : $("#txtsub").val(),
-		'sec' : $("#txtsec").val(),
+		'sec' : $("#txtsec").val()
 	}
 	$.ajax({
 		data : prm,
@@ -405,10 +405,11 @@ function tmpmodify () {
 		type : 'POST',
 		dataType : 'html',
 		success : function (response) {
-			alert(response);
 			var cad = response.split('|');
 			if (cad[1] == 'success') {
-				$("#adic").html(cad[0]);
+				$("#dettbl").html(cad[0]);
+				$("#ptn").val(cad[2]);
+				console.log(cad[2]);
 			}
 		},
 		error : function (obj,que,otr) {
@@ -421,4 +422,19 @@ function tmpmodify () {
 			});
 		}
 	});
+}
+function hideaddmat () {
+	$("#addmat").hide('blind',{},1200);
+	saddm = false;
+}
+var saddm = false;
+function showaddmat () {
+	if (saddm == false) {
+		$("#addmat").show('blind',{},1200);
+		saddm = true;
+	}else{
+		hideaddmat();
+		saddm = false;
+	}
+	
 }
