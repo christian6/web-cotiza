@@ -194,7 +194,8 @@ include ("../datos/postgresHelper.php");
 					<div class="well c-yellow-light t-warning">
 						<?php
 							$cn = new PostgreSQL();
-							$query = $cn->consulta("SELECT MAX(status) FROM operaciones.modifysec WHERE proyectoid LIKE '".$_GET['pro']."' AND TRIM(subproyectoid) LIKE '".$_GET['sub']."' AND TRIM(sector) LIKE '".$_GET['sec']."'");
+							$query = $cn->consulta("SELECT MAX(status),obs FROM operaciones.modifysec WHERE proyectoid LIKE '".$_GET['pro']."' AND TRIM(subproyectoid) LIKE '".$_GET['sub']."' AND TRIM(sector) LIKE '".$_GET['sec']."' 
+													GROUP BY fec,obs ORDER BY fec DESC LIMIT 1 OFFSET 0");
 							if ($cn->num_rows($query) > 0) {
 								$result = $cn->ExecuteNomQuery($query);
 							}
@@ -203,7 +204,17 @@ include ("../datos/postgresHelper.php");
 						<a href="javascript:hidemsec();" class="close">&times;</a>
 						<h4>Modificaciones del Sector <?php echo $_GET['sec']; ?> <button id="btnmsec" OnClick="showmsec();" class="btn btn-mini btn-warning" value="<?php echo $result[0]; ?>" <?php if($result[0] != '0'){ echo "DISABLED"; } ?>><i class="icon-chevron-down"></i></button></h4>
 						<div id="msec">
-							<?php if ($result[0] == '0'){ ?>
+							<?php //if($result['obs'] != ""){ ?>
+							<div class="alert alert-info" style="width: 95%;">
+									<a href="#" data-dismiss="alert" class="close">&times;</a>
+									<strong>Motivo de la modificación del sector <?php echo $_GET['sec']; ?></strong>
+									<p>
+										<?php echo $result['obs']; ?>
+									</p>
+							</div>
+							<?php
+							//} 
+							if ($result[0] == '0'){ ?>
 								<table id="tblm" class="table table-condensed t-d">
 									<tbody>
 									<?php
@@ -298,8 +309,8 @@ include ("../datos/postgresHelper.php");
 											<div class="span2">
 												<div class="alert alert-waring alert-block">
 													<button class="btn btn-success t-d btn-small input-small" onClick="aprobar();"><i class="icon-check"></i> Aprobar</button>
-													<button class="btn btn-danger t-d btn-small input-small"><i class="icon-remove-sign"></i> Anular</button>
-													<button class="btn btn-warning t-d btn-small input-small"><i class="icon-plus-sign"></i> Adicional</button>	
+													<button class="btn btn-danger t-d btn-small input-small" onClick="anular();"><i class="icon-remove-sign"></i> Anular</button>
+													<button class="btn btn-warning t-d btn-small input-small" onClick="shownewadi();"><i class="icon-plus-sign"></i> Adicional</button>	
 												</div>
 											</div>
 										</div>
@@ -382,6 +393,152 @@ include ("../datos/postgresHelper.php");
 					</div>
 					</div>
 				</div>
+				<div class="span5 well">
+					<div class="">
+						<h5 class="t-info">Escribe alguna observacion para el sector <?php echo $_GET['sec']; ?></h5>
+						<div class="control-group">
+							<div class="controls">
+								<textarea name="obsec" id="obsec" rows="1" maxlenght="320" onFocus="onobs();" onBlur="obsblur();" style="width: 97%;"></textarea>
+							</div>
+						</div>
+						<div class="controls">
+							<button class="btn btn-success t-d" OnClick="savemsgsec();"><i class="icon-comment"></i> Publicar</button>
+							<small class="t-info" onClick="savemsgsec();">Solo se admiten 320 caracteres.</small>
+						</div>
+						<hr>
+						<div style='width: 97%;'>
+							<?php
+								$cn = new PostgreSQL();
+								$query = $cn->consulta("SELECT id,to_char(fecha, 'HH24:MI DD/MM/YYYY') as fec,msg,tm FROM ventas.alertasec WHERE proyectoid LIKE '".$_GET['pro']."' AND TRIM(subproyectoid) LIKE '".$_GET['sub']."' 
+														AND TRIM(sector) LIKE '".$_GET['sec']."' ORDER BY fecha DESC");
+								if ($cn->num_rows($query) >= 1) {
+									while ($result = $cn->ExecuteNomQuery($query)) {
+										if ($result['tm'] == 'v') {
+											echo "<div class='alert alert-success pull-left' style='width: 26em;'>";
+											//echo "<a class='close'>&times;</a>";
+											echo "<strong>Ventas <span class='pull-right'>".$result['fec']."</span> </strong>";
+											echo "<p>".$result['msg']."</p>";
+											echo "</div>";
+										}else if($result['tm'] == 'o'){
+											echo "<div class='alert alert-waring pull-right' style='width: 26em;'>";
+											echo "<strong>Operaciones <span class='pull-right'>".$result['fec']."</span> </strong>";
+											echo "<p>".$result['msg']."</p>";
+											echo "</div>";
+										}
+									}
+								}
+								$cn->close($query);
+							?>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="mnewsec" class="modal fade in hide c-yellow-light t-warning">
+			<div class="modal-header">
+				<a href="#" class="close" data-dismiss="modal">&times;</a>
+				<h3>Generar Adicional</h3>
+			</div>
+			<div class="modal-body">
+				<div class="row show-grid">
+					<div class="span2">
+						<div class="control-group info">
+							<label for="controls" class="control-label">Codigo Sector</label>
+							<div class="controls">
+								<input type="text" class="span2" maxlenght="10" value="<?php echo $_GET['sec']; ?>" DISABLED />
+							</div>
+						</div>		
+					</div>
+					<div class="span3">
+						<div class="control-group info">
+							<label for="controls" class="control-label">Numero de Orden de Compra</label>
+							<div class="controls">
+								<input type="text" class="span2" maxlenght="10" id="noc">
+							</div>
+						</div>
+					</div>
+					<div class="span5">
+						<div class="control-group info">
+							<label for="controls" class="control-label">Descripción de Adicional</label>
+							<div class="controls">
+								<input type="text" id="adides" class="span5">
+							</div>
+						</div>
+					</div>
+					<div class="span5">
+						<div class="control-group info">
+							<label for="controls" class="control-label">Observacion de Adicional</label>
+							<div class="controls">
+								<textarea name="adiobs" id="adiobs" class="span5" rows="5"></textarea>
+							</div>
+						</div>
+					</div>
+					<div class="span5">
+						<div class="controls">
+							<button class="btn" data-dismiss='modal'><i class="icon-remove"></i> Cancelar</button>
+							<button class="btn pull-right btn-warning t-d" OnClick="nextadicional();"><i class="icon-chevron-right"></i> Continuar</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="mlistadi" class="modal fade in hide container" style="margin-left: -43%;">
+			<div class="modal-header">
+				<a data-dismiss="modal" class="close"></a>
+				<h4>Lista de Adicional</h4>
+			</div>
+			<div class="modal-body">
+				<table id="tblm" class="table table-bordered table-condensed t-d">
+					<tbody>
+					<?php
+						$cn = new PostgreSQL();
+						$query = $cn->consulta("SELECT DISTINCT d.materialesid,m.matnom,m.matmed,m.matund,SUM(d.cant) as cant,d.flag
+									FROM operaciones.tmpmodificaciones d INNER JOIN admin.materiales m
+									ON d.materialesid LIKE m.materialesid
+									INNER JOIN ventas.proyectos p
+									ON d.proyectoid LIKE p.proyectoid 
+									WHERE d.proyectoid LIKE '".$_GET['pro']."' AND TRIM(d.subproyectoid) LIKE TRIM('".$_GET['sub']."') AND TRIM(d.sector) LIKE '".$_GET['sec']."'
+									GROUP BY d.materialesid,m.matnom,m.matmed,m.matund,d.flag");
+						if ($cn->num_rows($query) > 0) {
+							echo "<thead>";
+							echo "<tr>";
+								echo "<th></th>";
+								echo "<th></th>";
+								echo "<th>Codigo</th>";
+								echo "<th>Nombre</th>";
+								echo "<th>Medida</th>";
+								echo "<th>Unidad</th>";
+								echo "<th>Cantidad</th>";
+								echo "</tr>";
+							echo "</thead>";
+							$i=1;
+							while ($result = $cn->ExecuteNomQuery($query)) {
+								if($result['flag'] == '0'){ 
+									echo "<tr class='c-red-light'>";
+									echo "<td id='tc'>".$i++."</td>";
+									echo "<td><input type='radio' DISABLED><td>";
+								}else{ 
+									echo "<tr>";
+									echo "<td id='tc'>".$i++."</td>";
+									echo "<td><input type='checkbox' name='maid' value='".$result['materialesid']."'></td>";
+								}
+									echo "<td>".$result['materialesid']."</td>";
+									echo "<td>".$result['matnom']."</td>";
+									echo "<td>".$result['matmed']."</td>";
+									echo "<td id='tc'>".$result['matund']."</td>";
+									echo "<td id='tc'>".$result['cant']."</td>";
+									echo "</tr>";
+									
+							}
+						}
+						$cn->close($query);
+					?>
+					</tbody>
+				</table>
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-warning t-d pull-left" data-dismiss="modal"><i class="icon-remove"></i> Cancelar</button>
+				<button class="btn btn-danger t-d" OnClick="savenewadi();"><i class="icon-ok"></i> Aprobar y Guadar</button>
 			</div>
 		</div>
 	</section>

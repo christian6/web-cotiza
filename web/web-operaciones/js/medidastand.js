@@ -238,3 +238,49 @@ $(document).ready(function () {
 	tmpmodify();
 	//\very();
 });
+function onobs () {
+	$("#obsec").animate({ height : "7em" },800);
+}
+function obsblur () {
+	if ($("#obsec").val() == "") {
+		$("#obsec").animate({ height : "1.5em" },800);
+	}
+}
+function savemsgsec () {
+	var prm = {
+		'tra' : 'msgsec',
+		'pro' : $("#txtpro").val(),
+		'sub' : $("#txtsub").val(),
+		'sec' : $("#txtsec").val(),
+		'obs' : $("#obsec").val(),
+		'tfr' : 'o'
+	}
+	$.ajax({
+		data : prm,
+		url : 'includes/incpedido.php',
+		type : 'POST',
+		dataType : 'html',
+		success : function (response) {
+			alert(response);
+			if (response == 'success') {
+				location.href='';
+			}else{
+				$.msgBox({
+					title : 'Error',
+					content : 'Al parecer hay un error, al publicar su mensage.',
+					type : 'warning',
+					opacity : 0.6
+				});
+			}
+		},
+		error : function (obj,que,otr) {
+			$.msgBox({
+				title : 'Error',
+				content : 'Si estas viendo esto es por que fallé',
+				type : 'error',
+				opacity : 0.6,
+				autoClose : true
+			});
+		}
+	});
+}

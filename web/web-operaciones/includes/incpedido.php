@@ -188,4 +188,11 @@ if ($_POST['tra'] == 'tmpmod') {
 	$cn->close($query);
 	echo "|success|".$tot;
 }
+if ($_POST['tra'] == 'msgsec') {
+	$cn = new PostgreSQL();
+	$query = $cn->consulta("INSERT INTO ventas.alertasec(proyectoid,subproyectoid,sector,msg,tm) VALUES('".$_POST['pro']."','".$_POST['sub']."','".$_POST['sec']."','".$_POST['obs']."','".$_POST['tfr']."')");
+	$cn->affected_rows($query);
+	$cn->close($query);
+	echo "success";
+}
 ?>

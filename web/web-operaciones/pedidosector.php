@@ -162,11 +162,11 @@ include ("../datos/postgresHelper.php");
 													Materiales pendientes.
 												</label>
 											</div>
-											<div class="control-group">
-												<label class="radio inline">
+											<div class="control-group pull-right">
+												<label class="radio inline t-info">
 													<input type="radio" name="rbchk" value="a" onChange="selectall();" /> Seleccionar Todo.
 												</label>
-												<label class="radio inline">
+												<label class="radio inline t-info">
 													<input type="radio" name="rbchk" value="n" onChange="selectall();" /> No Seleccionar Ninguno.
 												</label>
 											</div>
@@ -257,7 +257,8 @@ include ("../datos/postgresHelper.php");
 											Modificación de Sector 	
 											<?php
 												$cn = new PostgreSQL();
-												$query = $cn->consulta("SELECT MAX(status) FROM operaciones.modifysec WHERE proyectoid LIKE '".$_GET['pro']."' AND TRIM(subproyectoid) LIKE '".$_GET['sub']."' AND TRIM(sector) LIKE '".$_GET['sec']."'");
+												$query = $cn->consulta("SELECT MAX(status) FROM operaciones.modifysec WHERE proyectoid LIKE '".$_GET['pro']."' AND TRIM(subproyectoid) LIKE '".$_GET['sub']."' 
+																		AND TRIM(sector) LIKE '".$_GET['sec']."' GROUP BY fec ORDER BY fec DESC LIMIT 1 OFFSET 0");
 												if ($cn->num_rows($query) > 0) {
 													$msec = $cn->ExecuteNomQuery($query);
 												}
@@ -337,7 +338,9 @@ include ("../datos/postgresHelper.php");
 										</div>
 										<div class="row show-grid">
 											<div class="span11">
-												<div id="msgmo" class="alert alert-info alert-block pull-center <?php if($msec[0] == '2' || $msec[0] == ''){ echo "hide"; }  ?>"><h4>Espere Aprobación</h4></div>
+												<div id="msgmo" class="alert alert-info alert-block pull-center <?php if($msec[0] == '2' || $msec[0] == '' || $msec[0] == '3'){ echo "hide"; }  ?>">
+													<h4>Espere Aprobación</h4>
+												</div>
 											</div>
 										</div>
 									</div>
@@ -422,6 +425,43 @@ include ("../datos/postgresHelper.php");
 												</div>
 
 				 							</div>
+				 						</div>
+				 						<div class="span5 well">
+				 							<h5 class="t-info">Escribe alguna observacion para el sector <?php echo $_GET['sec']; ?></h5>
+											<div class="control-group">
+												<div class="controls">
+													<textarea name="obsec" id="obsec" rows="1" maxlenght="320" onFocus="onobs();" onBlur="obsblur();" style="width: 97%;"></textarea>
+												</div>
+											</div>
+											<div class="controls">
+												<button class="btn btn-success t-d" OnClick="savemsgsec();"><i class="icon-comment"></i> Publicar</button>
+												<small class="t-info" onClick="savemsgsec();">Solo se admiten 320 caracteres.</small>
+											</div>
+											<hr>
+											<div style='width: 97%;'>
+												<?php
+													$cn = new PostgreSQL();
+													$query = $cn->consulta("SELECT id,to_char(fecha, 'HH24:MI DD/MM/YYYY') as fec,msg,tm FROM ventas.alertasec WHERE proyectoid LIKE '".$_GET['pro']."' AND TRIM(subproyectoid) LIKE '".$_GET['sub']."' 
+																			AND TRIM(sector) LIKE '".$_GET['sec']."' ORDER BY fecha DESC");
+													if ($cn->num_rows($query) >= 1) {
+														while ($result = $cn->ExecuteNomQuery($query)) {
+															if ($result['tm'] == 'v') {
+																echo "<div class='alert alert-success pull-right'>";
+																//echo "<a class='close'>&times;</a>";
+																echo "<strong>Ventas <span class='pull-right'>".$result['fec']."</span> </strong>";
+																echo "<p>".$result['msg']."</p>";
+																echo "</div>";
+															}else if($result['tm'] == 'o'){
+																echo "<div class='alert alert-waring pull-left'>";
+																echo "<strong>Operaciones <span class='pull-right'>".$result['fec']."</span> </strong>";
+																echo "<p>".$result['msg']."</p>";
+																echo "</div>";
+															}
+														}
+													}
+													$cn->close($query);
+												?>
+											</div>
 				 						</div>
 				 						<!--<div class="span5">
 				 							<div class="well c-blue-light t-info">
