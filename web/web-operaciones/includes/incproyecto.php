@@ -63,5 +63,12 @@ if ($_POST['tra'] == 'pro') {
 	}
 	
 }
+if ($_POST['tra'] == 'msgplu') {
+	$cn = new PostgreSQL();
+	$query = $cn->consulta("INSERT INTO ventas.alertapro(proyectoid,subproyectoid,msg,tm) VALUES('".$_POST['pro']."','".$_POST['sub']."','".$_POST['msg']."','".$_POST['tfr']."');");
+	$cn->affected_rows($query);
+	$cn->close($query);
+	echo "success";
+}
 
 ?>

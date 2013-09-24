@@ -31,6 +31,7 @@ function peticion(){
 }
 
 function anular() {
+	$("#manular").modal('hide');
 	var nrope = document.getElementById("lblnro").innerText;
 	if (confirm("Esta Seguro de Anular el Pedido "+nrope+"?")) {
 		xmlhttp = peticion();
@@ -40,7 +41,27 @@ function anular() {
 			if (xmlhttp.readyState==4 && xmlhttp.status==200)
 			{
 				if(xmlhttp.responseText=="hecho"){
-					location.href = 'aprobarpedido.php';
+					//alert(xmlhttp.responseText);
+					var prm = {
+						'tra' : 'saveobs',
+						'obs' : $("#obsa").val(),
+						'npe' : nrope
+					}
+					$.ajax({
+						data : prm,
+						url : 'include/incaprobar.php',
+						type : 'POST',
+						dataType : 'html',
+						success : function (response) {
+							//alert(response);
+							if (response == 'success') {
+								location.href = 'aprobarpedido.php';
+							}
+						},
+						error : function (obj,que,otr) {
+							alert("Si estas viendo esto es por que falllé.");
+						}
+					});
 				}
 			}
 		}
@@ -49,4 +70,7 @@ function anular() {
 		xmlhttp.open("POST",requestUrl,true);
 		xmlhttp.send();
 	}
+}
+function showmobs () {
+	$("#manular").modal('show');
 }

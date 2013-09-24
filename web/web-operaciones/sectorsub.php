@@ -20,6 +20,8 @@ include ("../datos/postgresHelper.php");
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
 	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.js"></script>
 	<script src="../bootstrap/js/bootstrap.js"></script>
+	<link rel="stylesheet" href="../modules/msgBox.js">
+	<link rel="stylesheet" href="../css/msgBoxLight.css">
 	<style>
 		.cont{
 			text-align: center;
@@ -116,7 +118,7 @@ include ("../datos/postgresHelper.php");
 					</div>	
 				</div>
 				<div class="span3 well c-g">
-					<h5 class="t-orange">Sub Proyectos</h5>
+					<!--<h5 class="t-orange">Sub Proyectos</h5>-->
 						<div class="cont">
 							<?php
 							$cn = new PostgreSQL();							
@@ -129,7 +131,103 @@ include ("../datos/postgresHelper.php");
 							$cn->close($query);
 							?>
 						</div>
-				</div>	
+				</div>
+				<div class="span12">
+					<div class="well c-blue-light t-info">
+						<h4>Observaciones de Operaciones</h4>
+						<div class="row show-grid">
+							<div class="span12">
+								<div class="span6 well">
+									<?php
+										$cn = new PostgreSQL();
+										$query = $cn->consulta("SELECT id,to_char(fecha, 'HH24:MI DD/MM/YYYY') as fec,msg,tm FROM ventas.alertapro 
+											WHERE proyectoid LIKE '".$_GET['pro']."' AND TRIM(subproyectoid) LIKE '".$_GET['sub']."' ORDER BY fecha DESC");
+										if ($cn->num_rows($query) > 0) {
+											while ($result = $cn->ExecuteNomQuery($query)) {
+												if ($result['tm'] == 'o') {
+													echo "<div class='alert alert-warning span4 pull-right'>";
+													echo "<strong>Operaciones <span class='pull-right'>".$result['fec']."</span></strong>";
+													echo "<p>".$result['msg']."</p>";
+													echo "</div>";
+												}else if($result['tm'] == 'v'){
+													echo "<div class='alert alert-success span4'>";
+													echo "<strong>Ventas <span class='pull-right'>".$result['fec']."</span></strong>";
+													echo "<p>".$result['msg']."</p>";
+													echo "</div>";
+												}else if($result['tm'] == 'a'){
+													echo "<div class='alert alert-info span4'>";
+													echo "<strong>Gerencia <span class='pull-right'>".$result['fec']."</span></strong>";
+													echo "<p>".$result['msg']."</p>";
+													echo "</div>";
+												}
+											}
+										}
+										$cn->close($query);
+									?>
+								</div>
+								<div class="span5">
+									<input type="hidden" id="pro" value="<?php echo $_GET['pro']; ?>">
+									<input type="hidden" id="sub" value="<?php echo $_GET['sub']; ?>">
+									<div class="well">
+										<script>
+											function onlineprobs () {
+												$("#proobs").animate({height:"7em"},800);
+											}
+											function offlineprobs () {
+												if ($("#proobs").val() == "") {
+													$("#proobs").animate({height:"1.5em"},800);
+												}
+											}
+											function publishing () {
+												if ($("#proobs").val() != "") {
+													var prm = {
+														'tra' : 'msgplu',
+														'pro' : $("#pro").val(),
+														'sub' : $("#sub").val(),
+														'msg' : $("#proobs").val(),
+														'tfr' : 'o'
+													}
+													$.ajax({
+														data : prm,
+														url : 'includes/incproyecto.php',
+														type : 'POST',
+														dataType : 'html',
+														success : function (response) {
+															if (response == 'success') {
+																location.href='';
+															}
+														},
+														error : function (obj,que,otr) {
+															$.msgBox({
+																title : 'Error',
+																content : 'Si estas viendo esto es por que fallé',
+																type : 'error',
+																opacity : 0.6,
+																autoClose : true
+															});
+														}
+													});
+												}else{
+
+												}
+											}
+										</script>
+										<h5>Escribe una observacion para este proyecto</h5>
+										<div class="control-group">
+											<div class="controls">
+												<textarea name="proobs" onBlur="offlineprobs();" onFocus="onlineprobs();" id="proobs" style="width:96%;" maxlength="320" rows="1"></textarea>
+											</div>
+										</div>
+										<div class="controls">
+											<button class="btn btn-success t-d" onClick="publishing();"><i class="icon-comment"></i> Publicar</button>
+											<small>Solo se admiten 320 caracteres.</small>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</section>

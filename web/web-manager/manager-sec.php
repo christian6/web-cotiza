@@ -50,7 +50,7 @@ include ("../datos/postgresHelper.php");
 	</style>
 </head>
 <body>
-<?php include ("includes/menu-ventas.inc"); ?>
+<?php include ("includes/menu-manager.inc"); ?>
 	<header></header>
 	<div id="misub">
 		<ul class="breadcrumb well">
@@ -170,7 +170,7 @@ include ("../datos/postgresHelper.php");
 														'pro' : $("#pro").val(),
 														'sub' : $("#sub").val(),
 														'msg' : $("#proobs").val(),
-														'tfr' : 'v'
+														'tfr' : 'a'
 													}
 													$.ajax({
 														data : prm,
@@ -274,9 +274,7 @@ include ("../datos/postgresHelper.php");
 													ListFolder("../project/".$_GET['pro']."/adm/");
 												}
 												//$adm = shell_exec($cmda);
-												//echo php_file_tree($_SERVER['DOCUMENT_ROOT'], "javascript:alert('You clicked on [link]');");
-												
-
+												//echo php_file_tree($_SERVER['DOCUMENT_ROOT'], "javascript:alert('You clicked on [link]');");												
 												?>
 											</div>
 										</div>

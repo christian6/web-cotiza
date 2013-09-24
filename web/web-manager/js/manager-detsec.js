@@ -110,7 +110,7 @@ function savemsgsec () {
 		'sub' : $("#sub").val(),
 		'sec' : $("#sec").val(),
 		'obs' : $("#obsec").val(),
-		'tfr' : 'v'
+		'tfr' : 'a'
 	}
 	$.ajax({
 		data : prm,

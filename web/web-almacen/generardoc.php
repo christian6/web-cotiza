@@ -29,7 +29,7 @@ include ("../datos/postgresHelper.php");
 	<script>
 		 $(function() {
         	//$( "#txtfecha" ).datepicker({ minDate: 0, maxDate: "+1M +10D" , changeMonth: true, changeYear: true, showAnim: "slide", dateFormat: "dd/mm/yy" });
-        	$( "#txtfechas,#txtfecha" ).datepicker({ minDate: 0, maxDate: "+1M +10D" , changeMonth: true, changeYear: true, showAnim: "slide", dateFormat: "yy/mm/dd" });
+        	$( "#txtfechas,#txtfecha" ).datepicker({ minDate: 0, maxDate: "+1M +10D" , changeMonth: true, changeYear: true, showAnim: "slide", dateFormat: "yy-mm-dd" });
         	$('.dropdown-toggle').dropdown();
    		 });
 	</script>

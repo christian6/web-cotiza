@@ -43,7 +43,7 @@ include ("../datos/postgresHelper.php");
 	</script>
 </head>
 <body>
-<?php include ("includes/menu-ventas.inc"); ?>
+<?php include ("includes/menu-manager.inc"); ?>
 	<header></header>
 	<div id="misub">
 		<ul class="breadcrumb well">

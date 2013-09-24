@@ -25,17 +25,13 @@ include ("../datos/postgresHelper.php");
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.js"></script>
 	<script src="../bootstrap/js/bootstrap.js"></script>
-	<script>
-		$(function() {
-        	$('.dropdown-toggle').dropdown();
-   		 });
-	</script>
 </head>
 <body>
 <header>
 </header>
 <section>
 	<?php include("include/menu-al.inc"); ?>
+	<div class="container well">
 	<hgroup>
 		<h4>Atender Pedido Nro : <?php echo $_REQUEST['nro'];?></h4>
 	</hgroup>
@@ -62,6 +58,9 @@ include ("../datos/postgresHelper.php");
 
 			if ($cn->num_rows($query)>0) {
 				while ($result = $cn->ExecuteNomQuery($query)) {
+					$pro = $result['proyectoid'];
+					$sub = $result['subproyectoid'];
+					$sec = $result['sector'];
 				?>
 				<div class="row show-grid">
 					<div class="span6">
@@ -100,8 +99,10 @@ include ("../datos/postgresHelper.php");
 								<label for="lbles"><b>Estado:</b> <?php echo $result['esnom'];?></label>
 							</div>
 						</div>
-						<button type="Button" class="btn btn-primary" onclick="atender('<?php echo $nrop;?>');"><i class="icon-shopping-cart icon-white"></i> Despachar</button>
-						<button type="Button" class="btn btn-warning"onClick="location.href='verpedido.php'"><i class="icon-chevron-left"></i>Atras</button>
+						<div class="btn-group">
+							<button type="Button" class="btn btn-warning t-d"onClick="location.href='verpedido.php'"><i class="icon-chevron-left"></i>Atras</button>
+							<button type="Button" class="btn btn-info t-d" onclick="atender('<?php echo $nrop;?>');"><i class="icon-shopping-cart"></i> Despachar</button>	
+						</div>
 					</div>
 				</div>
 				<img class='img1' src="../resource/cajas.gif">
@@ -130,8 +131,13 @@ include ("../datos/postgresHelper.php");
 						$query = $cn->consulta("SELECT * FROM almacen.sp_consultar_existencia('".$nrop."')");
 						if ($cn->num_rows($query)>0) {
 							$i = 1;
+							$j = 0;
+    						$arrni = array();
 							while ($result = $cn->ExecuteNomQuery($query)) {
-
+								if ( substr($result['materialesid'], 0,3) == '115') {
+									$arrni[$j] = $result['materialesid'];
+									$j++;
+								}
 								if($status == '37'){
 									if ($result['auto'] == '1') {
 										if ($result['existencia'] < $result['cantidad']) {
@@ -189,6 +195,102 @@ include ("../datos/postgresHelper.php");
 				</tbody>
 			</table>
 	</article>
+		<div class="row show-grid">
+		<div class="span8">
+			<div class="well c-yellow-light">
+				<h4 class="t-warning">Niples  &nbsp;
+					<!--<button onClick="niplesock();" class="btn btn-warning t-d pull-right"><i class="icon-ok-circle"></i> Listo</button>--></h4>
+				<div class="accordion" id="niples">
+					<?php
+					$cn = new PostgreSQL();
+					$query = $cn->consulta("SELECT DISTINCT d.materialesid,m.matnom,TRIM(m.matmed) as matmed,m.matund,SUM(d.cant) as cant,flag
+						FROM operaciones.metproyecto d INNER JOIN admin.materiales m
+						ON d.materialesid LIKE m.materialesid
+						INNER JOIN ventas.proyectos p
+						ON d.proyectoid LIKE p.proyectoid 
+						WHERE d.materialesid LIKE '115%' AND d.proyectoid LIKE '".$pro."' AND 
+						TRIM(d.subproyectoid) LIKE TRIM('".$sub."') AND TRIM(d.sector) LIKE TRIM('".$sec."')
+						GROUP BY d.materialesid,m.matnom,m.matmed,m.matund,flag
+						");
+					if ($cn->num_rows($query) > 0) {
+						while ($result = $cn->ExecuteNomQuery($query)) {
+							$nmed = str_replace('"', '', $result["matmed"]);
+							$nmed = str_replace('/', 'l', $nmed);
+					?>
+					<div class="accordion-group">
+						<div class="accordion-heading c-blue-light">
+							<a class="accordion-toggle" data-toggle="collapse" data-parent="#niples" href="#coll<?php echo $nmed; ?>">
+								<div class="control-group">
+									<span class="inline">
+										<?php echo $result['matnom']." - ".$result['matmed']; ?>
+									</span>
+									<span class="badge badge-info pull-right"><strong id="ct<?php echo str_replace('"', '', $result["matmed"]); ?>"><?php echo $result['cant']."</strong> ".$result['matund']; ?></span>
+								</div>
+							</a>
+						</div>
+						<div id="coll<?php echo $nmed; ?>" class="accordion-body collapse">
+							<div class="accordion-inner c-blue-light">
+								<div class="alert-block">
+									<div class="" id="nip<?php echo str_replace('"', '', $result["matmed"]); ?>">
+										<?php
+											if (count($arrni) > 0) {
+												//$nc = 0;
+												for ($i=0; $i < count($arrni); $i++) { 
+													if ($result['materialesid'] == $arrni[$i]) {
+														$c = new PostgreSQL();
+														$q = $c->consulta("SELECT nropedido,materialesid,metrado,tipo FROM operaciones.niples 
+															WHERE proyectoid LIKE '".$pro."' AND TRIM(subproyectoid) LIKE TRIM('".$sub."') 
+															AND TRIM(sector) LIKE TRIM('".$sec."') AND materialesid LIKE '".$arrni[$i]."' and flag like '1'");
+														if ($c->num_rows($q) > 0) {
+															echo "<table class='table table-hover table-condensed'>";
+															while ($res = $c->ExecuteNomQuery($q)) {
+																echo "<tr>";
+																echo "<td>".$res['nropedido']."</td>";
+																echo "<td>".$res['materialesid']."</td>";
+																echo "<td>".$res['metrado']."</td>";
+																echo "<td>".$res['tipo']."</td>";
+																echo "</tr>";
+															}
+															echo "</table>";
+														}
+														$c->close($q);
+													}
+												}
+											}
+										?>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<?php
+						}
+					}
+					$cn->close($query);
+					?>
+				</div>
+
+				</div>
+			
+		</div>
+		<div class="span4">
+			<div class="well c-green-light">
+				<h4 class="t-success">Archivo Adjunto</h4>
+				<?php
+				$dir = $_SERVER['HTTP_HOST']."/web/project/".$pro."/pedidos/".$_GET['nro'].".pdf";
+				//echo $dir;
+				if (file_exists($_SERVER['DOCUMENT_ROOT']."/web/project/".$pro."/pedidos/".$_GET['nro'].".pdf")) {
+					echo "<a href='http://".$dir."' target='_blank'>".$_GET['nro'].".pdf</a>";
+				}else{
+					echo "<div class='alert alert-error'>";
+					echo "<strong>No se ha encontrado el archivo.</strong>";
+					echo "</div>";
+				}
+				?>
+			</div>
+		</div>
+	</div>
+	</div>
 </section>
 <div style="height: 70px;"></div>
 <footer>

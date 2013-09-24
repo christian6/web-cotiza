@@ -18,6 +18,7 @@
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown">Proyectos <b class="caret"></b></a>
 			            <ul class="dropdown-menu">
 			               <li><a href="http://190.41.246.91/web/web-manager/proyectoma.php">Proyectos</a></li>
+			               <li><a href="http://190.41.246.91/web/web-manager/manager-pro.php">Manager</a></li>
 			            </ul>
 			        </li>
 			        <li class="divider-vertical"></li>

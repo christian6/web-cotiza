@@ -169,7 +169,7 @@ function cabdatos()
 							ON t.traruc = p.traruc
 							INNER JOIN admin.conductor c
 							ON t.traruc=c.traruc
-							WHERE g.nroguia = '".$this->nro_."'"
+							WHERE g.nroguia = '".$this->nro_."' AND g.esid LIKE '46'"
 		);
 	if ($cn->num_rows($query)>0) {
 		$result = $cn->ExecuteNomQuery($query);
@@ -210,7 +210,7 @@ function cabdatos()
 	$this->SetXY(105,48);
 	$this->SetFont('Arial','',8);
 	$this->SetTextColor(29,29,29);
-	$this->MultiCell(70,4,$llegada,0,'C',false);
+	$this->MultiCell(70,4,utf8_decode($llegada),0,'C',false);
 
 	# Destinatario de Guia
 	$this->SetLineWidth(0);
@@ -224,7 +224,7 @@ function cabdatos()
 	$this->SetXY(15,66);
 	$this->SetFont('Arial','',8);
 	$this->SetTextColor(29,29,29);
-	$this->Cell(80,4,$rz,0,1,'C',false);
+	$this->Cell(80,4,utf8_decode($rz),0,1,'C',false);
 	$this->SetXY(10,72);
 	$this->Cell(60,4,utf8_decode('Número de RUC:  '.$ruc),0,1,'C',false); 
 
@@ -243,7 +243,8 @@ function cabdatos()
 	$anio = substr($ftra, 0,4);
 	$mes = substr($ftra, 5,7);
 	$dia = substr($ftra, 8,10);
-	$this->Cell(0,4,$dia.' de '.$meses[$mes - 1].' del '.$anio,0,1,'C',false);
+	//$this->Cell(0,4,$dia.' de '.$meses[$mes - 1].' del '.$anio,0,1,'C',false);
+	$this->Cell(0,4,$ftra,0,1,'C',false);
 
 	#Unidad de Transporte y Conductor
 	$this->SetLineWidth(0);
@@ -303,9 +304,43 @@ function FancyTable()
 
 function fnline()
 {
-  $this->SetFont('Arial','',16);
-  $this->cell(0,0,'_____________________________________________________________',0,0,'C',false);
-  $this->Ln(8);
+	$this->SetFont('Arial','',16);
+	$this->cell(0,0,'_____________________________________________________________',0,0,'C',false);
+	$this->Ln(8);
+}
+function RowNiples($data)
+{
+	$nb=0;
+	for($i=0;$i<count($data);$i++)
+		$nb=max($nb,$this->NbLines($this->widths[$i],$data[$i]));
+	$h=4*$nb;
+	$this->CheckPageBreak($h);
+	$algs = '';
+	for($i=0;$i<count($data);$i++)
+	{
+		$w=$this->widths[$i];
+		$algs = 'L';
+		$w=$this->widths[$i];
+		if ($w == 17 ) {
+			$algs = 'R';
+		}else if($w == 18 || $w == 25 || $w == 20){
+			$algs = 'C';
+		}
+		$a=isset($this->aligns[$i]) ? $this->aligns[$i] : $algs;
+		$x=$this->GetX();
+		$y=$this->GetY();
+		//$this->Rect($x,$y,$w,$h);
+		$this->MultiCell($w,4,$data[$i],'TB',$a,false);
+		$this->SetXY($x+$w,$y);
+	}
+	$this->Ln($h);
+}
+function ListNiples()
+{
+	$pdf->SetFillColor(255,255,210);
+	$pdf->SetTextColor(0);
+	$pdf->SetFont('Arial','',6.5);
+	$pdf->SetLineWidth(.1);
 }
 
 function Footer()
@@ -315,8 +350,8 @@ function Footer()
 	// Arial Italic 8
 	$this->SetFont('Arial','I',8);
 	$this->Cell(0,10,'Page '.$this->PageNo().'/{nb}',0,0,'C');
-  $this->SetX(0);
-  $this->Cell(0,0,'Fecha Impresion: '.date("d-m-Y H:i:s"),0,1,'L',false);
+	$this->SetX(0);
+	$this->Cell(0,0,'Fecha Impresion: '.date("d-m-Y H:i:s"),0,1,'L',false);
 }
 
 }
@@ -345,6 +380,32 @@ $query = $cn->consulta("SELECT * FROM almacen.sp_consultardetguia('".$nro."')");
 $cn->close($query);
 $pdf->Ln(-2);
 $pdf->fnline();
+$pdf->AliasNbPages();
+$pdf->AddPage();
+$pdf->cabnro();
+// Obteniendo Nro de Pedido
+$cn = new PostgreSQL();
+$query = $cn->consulta("SELECT nropedido FROM almacen.guiaremision WHERE nroguia LIKE '".$nro."' AND esid LIKE '46' LIMIT 1 OFFSET 0;");
+$npe = $cn->ExecuteNomQuery($query);
+$npe = $npe[0];
+$cn->close($query);
+$pdf->SetFillColor(255,255,210);
+$pdf->SetTextColor(0);
+$pdf->SetFont('Arial','',6.5);
+$pdf->SetLineWidth(.1);
+$query = $cn->consulta("SELECT n.materialesid,m.matnom,m.matmed,n.metrado,n.tipo FROM operaciones.niples n
+						INNER JOIN admin.materiales m
+						ON n.materialesid LIKE m.materialesid
+						WHERE nropedido LIKE '".$npe."';");
+if ($cn->num_rows($query) > 0) {
+	$pdf->SetWidths(array(18,22,50,20,18,20,18));
+	$i=1;
+	$pdf->SetXY(10,50);
+	while ($result = $cn->ExecuteNomQuery($query)) {
+		$pdf->RowNiples(array($i++,$result['materialesid'],$result['matnom'],$result['matmed'],'x',$result['metrado'],$result['tipo']));
+	}
+}
+$cn->close($query);
 $pdf->Output();
 
 

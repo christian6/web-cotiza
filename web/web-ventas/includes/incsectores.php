@@ -62,8 +62,8 @@ if ($_POST['tra'] == 'upload') {
 			shell_exec('tar -xf '.$_SERVER['DOCUMENT_ROOT'].'/web/project/'.$_POST['pro'].'/adm/administracion.rar -C '.$_SERVER['DOCUMENT_ROOT'].'/web/project/'.$_POST['pro'].'/adm/');
 			shell_exec('rm -rf '.$_SERVER['DOCUMENT_ROOT'].'/web/project/'.$_POST['pro'].'/comp/complementario.rar');
 			shell_exec('rm -rf '.$_SERVER['DOCUMENT_ROOT'].'/web/project/'.$_POST['pro'].'/adm/administracion.rar');
-			shell_exec('chmod -R 0007 '.$_SERVER['DOCUMENT_ROOT'].'/web/project/'.$_POST['pro'].'/comp/*');
-			shell_exec('chmod -R 0007 '.$_SERVER['DOCUMENT_ROOT'].'/web/project/'.$_POST['pro'].'/adm/*');
+			shell_exec('chmod -R 444 '.$_SERVER['DOCUMENT_ROOT'].'/web/project/'.$_POST['pro'].'/comp/*');
+			shell_exec('chmod -R 444 '.$_SERVER['DOCUMENT_ROOT'].'/web/project/'.$_POST['pro'].'/adm/*');
 		}
 	}else if($_POST['sub'] != ''){
 		if (!file_exists($_SERVER['DOCUMENT_ROOT'].'/web/project/'.$_POST['pro'].'/'.$_POST['sub'].'/comp/')) {
@@ -86,10 +86,17 @@ if ($_POST['tra'] == 'upload') {
 			shell_exec('tar -xf '.$_SERVER['DOCUMENT_ROOT'].'/web/project/'.$_POST['pro'].'/'.$_POST['sub'].'/comp/complementario.rar -C '.$_SERVER['DOCUMENT_ROOT'].'/web/project/'.$_POST['pro'].'/comp/');
 			shell_exec('rm -rf '.$_SERVER['DOCUMENT_ROOT'].'/web/project/'.$_POST['pro'].'/'.$_POST['sub'].'/comp/complementario.rar');
 			shell_exec('rm -rf '.$_SERVER['DOCUMENT_ROOT'].'/web/project/'.$_POST['pro'].'/'.$_POST['sub'].'/adm/administracion.rar');
-			shell_exec('chmod -R 0007 '.$_SERVER['DOCUMENT_ROOT'].'/web/project/'.$_POST['pro'].'/'.$_POST['sub'].'/comp/*');
-			shell_exec('chmod -R 0007 '.$_SERVER['DOCUMENT_ROOT'].'/web/project/'.$_POST['pro'].'/'.$_POST['sub'].'/adm/*');
+			shell_exec('chmod -R 444 '.$_SERVER['DOCUMENT_ROOT'].'/web/project/'.$_POST['pro'].'/'.$_POST['sub'].'/comp/*');
+			shell_exec('chmod -R 444 '.$_SERVER['DOCUMENT_ROOT'].'/web/project/'.$_POST['pro'].'/'.$_POST['sub'].'/adm/*');
 		}
 	}
 	echo $return;
+}
+if ($_POST['tra'] == 'msgplu') {
+	$cn = new PostgreSQL();
+	$query = $cn->consulta("INSERT INTO ventas.alertapro(proyectoid,subproyectoid,msg,tm) VALUES('".$_POST['pro']."','".$_POST['sub']."','".$_POST['msg']."','".$_POST['tfr']."');");
+	$cn->affected_rows($query);
+	$cn->close($query);
+	echo "success";
 }
 ?>

@@ -7,7 +7,7 @@ if (sesaccess() == 'ok') {
 include ("../datos/postgresHelper.php");
 ?>
 <!doctype html>
-<html lang="en">
+<html lang="es">
 <head>
 	<meta charset="UTF-8">
 	<title>Administrar Detalle de Sector</title>
@@ -79,7 +79,7 @@ include ("../datos/postgresHelper.php");
 	</script>
 </head>
 <body>
-	<?php include ("includes/menu-ventas.inc"); ?>
+	<?php include ("includes/menu-manager.inc"); ?>
 	<header>
 		<input type="hidden" id="pro" value="<?php echo $_GET['pro']; ?>">
 		<input type="hidden" id="sub" value="<?php echo $_GET['sub']; ?>">

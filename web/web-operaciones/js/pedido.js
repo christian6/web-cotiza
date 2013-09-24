@@ -207,6 +207,8 @@ function tmplist (mat,med) {
 		type : 'POST',
 		success : function (response) {
 			var cad = response.split('|');
+			alert(med);
+			alert(response);
 			if (cad[1] == 'success') {
 				document.getElementById("nip"+med+"").innerHTML = cad[0];
 				document.getElementById("qd"+med).innerHTML = cad[2];

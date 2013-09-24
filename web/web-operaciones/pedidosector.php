@@ -364,10 +364,12 @@ include ("../datos/postgresHelper.php");
 															");
 				 									if ($cn->num_rows($query) > 0) {
 				 										while ($result = $cn->ExecuteNomQuery($query)) {
+				 											$nmed = str_replace('"', '', $result["matmed"]);
+		 													$nmed = str_replace('/', 'l', $nmed);
 				 									?>
 													<div class="accordion-group">
 														<div class="accordion-heading c-blue-light">
-															<a class="accordion-toggle" data-toggle="collapse" data-parent="#niples" href="#coll<?php echo $result['matmed']; ?>">
+															<a class="accordion-toggle" data-toggle="collapse" data-parent="#niples" href="#coll<?php echo $nmed; ?>">
 																<div class="control-group">
 																	<span class="inline">
 																		<?php echo $result['matnom']." - ".$result['matmed']; ?>
@@ -376,12 +378,12 @@ include ("../datos/postgresHelper.php");
 																</div>
 															</a>
 														</div>
-														<div id="coll<?php echo $result['matmed']; ?>" class="accordion-body collapse">
+														<div id="coll<?php echo $nmed; ?>" class="accordion-body collapse">
 															<div class="accordion-inner c-blue-light">
 																<div class="alert-block">
 																	<div class="btn-group inline">
 																		<button class="btn btn-mini btn-success" onClick='addniple(<?php echo str_replace('"', '', $result["matmed"]); ?>,"<?php echo $result['materialesid']; ?>");' <?php if($result['flag'] == '0'){echo "DISABLED";} ?>><i class="icon-plus"></i></button>
-																		<button class="btn btn-mini btn-info" onClick='tmplist("<?php echo $result['materialesid']; ?>",<?php echo str_replace('"', '', $result["matmed"]); ?>);' <?php if($result['flag'] == '0'){echo "DISABLED";} ?>><i class="icon-refresh"></i></button>
+																		<button class="btn btn-mini btn-info" onClick=tmplist("<?php echo $result['materialesid']; ?>","<?php echo str_replace('"', '', $result["matmed"]); ?>"); <?php if($result['flag'] == '0'){echo "DISABLED";} ?>><i class="icon-refresh"></i></button>
 																	</div>
 																	<p class="pull-right t-warning help-inline"><label class="badge badge-info inline">Consumido <strong id="qd<?php echo str_replace('"', '', $result["matmed"]); ?>">0</strong> de <?php echo $result['cant']; ?></label>
 																		<label class="help-inline badge badge-important"> Restante <strong id="tf<?php echo str_replace('"', '', $result["matmed"]); ?>"></strong></label></p>
@@ -394,7 +396,7 @@ include ("../datos/postgresHelper.php");
 																						$c = new PostgreSQL();
 																						$q = $c->consulta("SELECT nropedido,materialesid,metrado,tipo FROM operaciones.niples 
 																							WHERE proyectoid LIKE '".$_GET['pro']."' AND TRIM(subproyectoid) LIKE TRIM('".$_GET['sub']."') 
-																							AND TRIM(sector) LIKE TRIM('".$_GET['sec']."') AND materialesid LIKE '".$arrni[$i]."'");
+																							AND TRIM(sector) LIKE TRIM('".$_GET['sec']."') AND materialesid LIKE '".$arrni[$i]."' and flag like '1'");
 																						if ($c->num_rows($q) > 0) {
 																							echo "<table class='table table-hover table-condensed'>";
 																							while ($res = $c->ExecuteNomQuery($q)) {
@@ -454,6 +456,12 @@ include ("../datos/postgresHelper.php");
 															}else if($result['tm'] == 'o'){
 																echo "<div class='alert alert-waring pull-left'>";
 																echo "<strong>Operaciones <span class='pull-right'>".$result['fec']."</span> </strong>";
+																echo "<p>".$result['msg']."</p>";
+																echo "</div>";
+															}
+															else if($result['tm'] == 'a'){
+																echo "<div class='alert alert-info pull-left'>";
+																echo "<strong>Gerencia <span class='pull-right'>".$result['fec']."</span> </strong>";
 																echo "<p>".$result['msg']."</p>";
 																echo "</div>";
 															}

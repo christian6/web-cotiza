@@ -35,7 +35,7 @@ switch ($_REQUEST['tipo']) {
 		$cn = new PostgreSQL();
 		# nroguia, nropedido, puntollega, razonsocial, ruc, fectra, fecha, traruc, condni, nroplaca
 		$query = $cn->consulta("INSERT INTO almacen.guiaremision(nroguia,nropedido,puntollega,razonsocial,ruc,fectra,traruc,condni,nroplaca)
-				VALUES(TRIM('$nguia'),TRIM('$nrop'),TRIM('$destino'),TRIM('$rz'),TRIM('$ruc'),to_date('$fec','dd-mm-yyyy'),TRIM('$tra'),TRIM('$con'),TRIM('$mov'))");
+				VALUES(TRIM('$nguia'),TRIM('$nrop'),TRIM('$destino'),TRIM('$rz'),TRIM('$ruc'),to_date('".$fec."','yyyy-mm-dd'),TRIM('$tra'),TRIM('$con'),TRIM('$mov'))");
 		$cn->affected_rows($query);
 		$cn->close($query);
 		# Guardar detalle de guia de remision
@@ -100,7 +100,7 @@ switch ($_REQUEST['tipo']) {
 		$nnota = TRIM($nnota);
 		# Guardando la cabecera de la nota
 		$cn = new PostgreSQL();
-		$query = $cn->consulta("INSERT INTO almacen.notasalida(nronsalida,nropedido,fecsal,destino) VALUES(TRIM('$nnota'),TRIM('$nrop'),to_date('$fec','dd-mm-yyyy'),TRIM('$des'))");
+		$query = $cn->consulta("INSERT INTO almacen.notasalida(nronsalida,nropedido,fecsal,destino) VALUES(TRIM('$nnota'),TRIM('$nrop'),to_date('$fec','yyyy-mm-dd'),TRIM('$des'))");
 		$cn->affected_rows($query);
 		$cn->close($query);
 		# Guardar Detalle de nota de salida

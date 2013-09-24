@@ -202,7 +202,7 @@ include ("../datos/postgresHelper.php");
 			$pri = "nronsalida";
 		}
 
-		echo $p.' '.$_POST['txtnro'];
+		//echo $p.' '.$_POST['txtnro'];
 
 		if ($_POST['btnr'] == "n") {
 				$qsql .= " WHERE ".$p.".$pri LIKE '".$_POST['txtnro']."' ORDER BY ".$p.".$pri ASC";
@@ -213,7 +213,7 @@ include ("../datos/postgresHelper.php");
 				$qsql = $qsql." WHERE ".$p.".fecha::date BETWEEN '".$_POST['fecini']."'::date AND '".$_POST['fecfin']."'::date  ORDER BY ".$p.".$pri ASC";
 			}
 		}
-		echo $qsql;
+		//echo $qsql;
 
 		$i = 1;
 		$cn = new PostgreSQL();

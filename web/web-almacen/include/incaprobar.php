@@ -55,13 +55,18 @@ if ($_REQUEST['tipo'] == "a") {
 							AND materialesid LIKE '".$fila['materialesid']."'");
 				$cn->affected_rows($query);
 				$cn->close($query);
-				echo "UPDATE operaciones.metproyecto set flag = '1' WHERE proyectoid LIKE TRIM('".$re['proyectoid']."')
-							AND TRIM(subproyectoid) LIKE TRIM('".$re['subproyectoid']."') AND TRIM(sector) LIKE TRIM('".$re['sector']."')
-							AND materialesid LIKE TRIM('".$fila['materialesid']."')";
+				//echo "UPDATE operaciones.metproyecto set flag = '1' WHERE proyectoid LIKE TRIM('".$re['proyectoid']."')
+				//			AND TRIM(subproyectoid) LIKE TRIM('".$re['subproyectoid']."') AND TRIM(sector) LIKE TRIM('".$re['sector']."')
+				//			AND materialesid LIKE TRIM('".$fila['materialesid']."')";
 			}
 		}
 		$c2->close($q2);
-		
+		// update tabla niples
+		$cn = new PostgreSQL();
+		$query = $cn->consulta("UPDATE operaciones.niples set flag = '0' where nropedido LIKE '".$_REQUEST['nro']."';");
+		$cn->affected_rows($query);
+		$cn->close($query);
+
 		//auditoria
 		$c = new PostgreSQL();
 		$tb = "almacen_pedido";
@@ -70,6 +75,15 @@ if ($_REQUEST['tipo'] == "a") {
 		$q = $_REQUEST['nro']." data update 33";
 		$b = "Se anulo el pedido nro ".$_REQUEST['nro'];
 		$c->auditoria($tb,$t,$u,$q,$b);
+
 		echo "hecho";
+}
+
+if ($_POST['tra'] == 'saveobs') {
+	$cn = new PostgreSQL();
+	$query = $cn->consulta("INSERT INTO almacen.alertapedido(nropedido,msg,status) VALUES('".$_POST['npe']."','".$_POST['obs']."','1');");
+	$cn->affected_rows($query);
+	$cn->close($query);
+	echo "success";
 }
 ?>

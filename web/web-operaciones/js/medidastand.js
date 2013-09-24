@@ -185,7 +185,7 @@ function confirmok () {
 	var nue = $("#ptn").val();
 	tmpmodify();
 	console.log(ori +' '+nue);
-	if (parseFloat(nue) < parseFloat(ori) && parseFloat(nue) > 0) {
+	if (parseFloat(nue) < parseFloat(ori) && parseFloat(nue) > 0 || parseFloat(nue) == parseFloat(ori)) {
 		saveconfirm();
 		console.log('nuevo es menor');
 	}else if(parseFloat(nue) > parseFloat(ori) && parseFloat(nue) > 0){
@@ -261,7 +261,7 @@ function savemsgsec () {
 		type : 'POST',
 		dataType : 'html',
 		success : function (response) {
-			alert(response);
+			//alert(response);
 			if (response == 'success') {
 				location.href='';
 			}else{

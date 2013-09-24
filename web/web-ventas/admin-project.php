@@ -90,7 +90,7 @@ include ("../datos/postgresHelper.php");
 	<div id="misub">
 		<ul class="breadcrumb well">
 			<li>
-				<a href="index.php">Home</a>
+				<a href="index.php">Inicio</a>
 				<span class="divider">/</span>
 			</li>
 			<li>

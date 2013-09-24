@@ -44,6 +44,8 @@ function gendoc(oc,doc){
 }
 
 function generar (doc,nro) {
+	//var fec = document.getElementById("txtfechas").value;
+	//alert(fec);
 	if(confirm("Seguro(a) que Desea Generar el Documento?")){
 		xmlhttp = peticion();
 		if (doc == "g") {
@@ -78,6 +80,7 @@ function generar (doc,nro) {
 			var omov = cmov.options[cmov.selectedIndex].value;
 			var ccon = document.getElementById("cbocon");
 			var ocon = ccon.options[ccon.selectedIndex].value;
+			//alert(fec);
 
 			requestUrl = "include/incgendoc.php" + "?tipo=g"+"&nro="+encodeURIComponent(nro)+"&des="+encodeURIComponent(destino)+
 			"&rz="+encodeURIComponent(rz)+"&ruc="+encodeURIComponent(ruc)+"&fec="+encodeURIComponent(fec)+

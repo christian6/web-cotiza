@@ -113,7 +113,7 @@ function valpedido($nrop='')
 								echo "<td>".$result['fecha']."</td>";
 								echo "<td>".$result['fecent']."</td>";
 								echo "<td style='text-align:center;'>".$result['esnom']."</td>";
-								echo "<td style='text-align:center;'><a href='generardoc?nro=".$result['nropedido']."'><i class='icon-edit'></i></a></td>";
+								echo "<td style='text-align:center;'><a href='generardoc.php?nro=".$result['nropedido']."'><i class='icon-edit'></i></a></td>";
 								echo "<td style='text-align:center;'><a href='../reports/almacen/pdf/rptpedidomat.php?nro=".$result['nropedido']."' target='_blank'><i class='icon-eye-open'><i></a></td>";
 								echo "</tr>";
 							}
