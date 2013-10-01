@@ -189,9 +189,9 @@ function Cab(){
 	if ($cn->num_rows($query)>0) {
 		while ($result = $cn->ExecuteNomQuery($query)) {
       $this->SetXY(40,40);
-    	$this->cell(150,0,$result['cliente'],0,0,'L',false);
+    	$this->cell(150,0,utf8_decode($result['cliente']),0,0,'L',false);
       $this->SetXY(40,44);
-    	$this->cell(150,0,$result['nompro'],0,1,'L',false);
+    	$this->cell(150,0,utf8_decode($result['nompro']),0,1,'L',false);
       //$this->SetXY(40,48);
 			/*$this->cell(150,0,$result[''],0,1,'L',false);
       $this->SetXY(40,52);
@@ -201,18 +201,18 @@ function Cab(){
       $this->SetXY(40,60);
       $this->cell(150,0,$result['fecha'],0,1,'L',false);
       $this->SetXY(40,64);
-      $this->cell(150,0,$result['emp'],0,1,'L',false);
+      $this->cell(150,0,utf8_decode($result['emp']),0,1,'L',false);
       //
       $this->SetXY(125,40);
-			$this->cell(150,0,$result['direccion'],0,1,'L',false);
+			$this->cell(150,0,utf8_decode($result['direccion']),0,1,'L',false);
       $this->SetXY(125,44);
-      $this->cell(150,0,$result['distnom'],0,1,'L',false);
+      $this->cell(150,0,utf8_decode($result['distnom']),0,1,'L',false);
       $this->SetXY(125,48);
-      $this->cell(150,0,$result['provnom'],0,1,'L',false);
+      $this->cell(150,0,utf8_decode($result['provnom']),0,1,'L',false);
       $this->SetXY(125,52);
-      $this->cell(150,0,$result['deparnom'],0,1,'L',false);
+      $this->cell(150,0,utf8_decode($result['deparnom']),0,1,'L',false);
       $this->SetXY(125,56);
-			$this->cell(150,0,$result['paisnom'],0,0,'L',false);
+			$this->cell(150,0,utf8_decode($result['paisnom']),0,0,'L',false);
       $this->SetXY(125,60);
       $this->cell(150,0,$result['fecent'],0,0,'L',false);
       $subid = $result['subproyectoid'];
@@ -308,6 +308,53 @@ function tfoot($sto)
   $this->cell(0,0,'SON: '.$let->letra(),0,1,'R',false);
   $this->Ln(4);
 }
+function RowNiples($data)
+{
+  $nb=0;
+  for($i=0;$i<count($data);$i++)
+    $nb=max($nb,$this->NbLines($this->widths[$i],$data[$i]));
+  $h=4*$nb;
+  $this->CheckPageBreak($h);
+  $algs = '';
+  for($i=0;$i<count($data);$i++)
+  {
+    $w=$this->widths[$i];
+    $algs = 'L';
+    $w=$this->widths[$i];
+    if ($w == 17 ) {
+      $algs = 'R';
+    }else if($w == 18 || $w == 25 || $w == 20){
+      $algs = 'C';
+    }
+    $a=isset($this->aligns[$i]) ? $this->aligns[$i] : $algs;
+    $x=$this->GetX();
+    $y=$this->GetY();
+    //$this->Rect($x,$y,$w,$h);
+    $this->MultiCell($w,4,$data[$i],'TB',$a,false);
+    $this->SetXY($x+$w,$y);
+  }
+  $this->Ln($h);
+}
+
+//Cab sin detalle
+function Cabnip(){
+  
+  $proid = "";
+  $subid = "";
+  $secid = "";
+
+  $this->SetFont('Arial','B',10);
+  $this->SetXY(150,10);
+  $this->Cell(50,0,'Materiales',0,0,'C',false);
+
+  //-------------------------------------------------------------------------------------------
+  $this->SetFont('Arial','B',16);
+  $this->SetXY(80,25);
+  $this->cell(150,0,'Nro Pedido al Almacen',0,0,'C',false);
+  $this->SetXY(80,32);
+  $this->cell(150,0,$this->nro_,0,2,'C',false);
+}
+
 //Pie de Pagina
 function Footer()
 {
@@ -342,5 +389,24 @@ $query = $cn->consulta("SELECT * FROM almacen.spconsultardetpedidomat('".$nro."'
       $cn->close($query);
     }
 $pdf->fnline();
+$pdf->AddPage();
+$pdf->Cabnip();
+$pdf->SetFillColor(255,255,210);
+$pdf->SetTextColor(0);
+$pdf->SetFont('Arial','',6.5);
+$pdf->SetLineWidth(.1);
+$query = $cn->consulta("SELECT n.materialesid,m.matnom,m.matmed,n.metrado,n.tipo FROM operaciones.niples n
+            INNER JOIN admin.materiales m
+            ON n.materialesid LIKE m.materialesid
+            WHERE nropedido LIKE '".$nro."';");
+if ($cn->num_rows($query) > 0) {
+  $pdf->SetWidths(array(18,22,60,30,18,20,18));
+  $i=1;
+  $pdf->SetXY(10,50);
+  while ($result = $cn->ExecuteNomQuery($query)) {
+    $pdf->RowNiples(array($i++,$result['materialesid'],$result['matnom'],$result['matmed'],'x',$result['metrado'],$result['tipo']));
+  }
+}
+$cn->close($query);
 $pdf->Output();
 ?>

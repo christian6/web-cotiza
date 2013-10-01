@@ -35,6 +35,7 @@
               <li><a href="http://190.41.246.91/web/web-almacen/existencia-all-pedido.php">Total de Pedidos</a></li>
               <li><a href="http://190.41.246.91/web/web-almacen/stock-fisico.php">Stock Fisico</a></li>
               <li><a href="http://190.41.246.91/web/web-almacen/existencia_total.php">Pedidos y Proyectos</a></li>
+              <li><a href="http://190.41.246.91/web/web-almacen/suministro-pro.php">Proyectos</a></li>
               <li class="divider"></li>
               <li class="nav-header">Consultas</li>
               <li><a href="http://190.41.246.91/web/web-almacen/ini-kardex.php">Kardex</a></li>

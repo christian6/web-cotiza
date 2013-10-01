@@ -279,7 +279,9 @@ function selectall () {
 	var rb = document.getElementsByName("rbchk");
 	var mat = document.getElementsByName('mats');
 	for (var i = 0; i < rb.length; i++) {
-		if(rb[i].checked && rb[i].value == 'a'){
+		if (rb[i].disabled == false) {
+			return false;
+		}else if(rb[i].checked && rb[i].value == 'a'){
 			for (var i = 0; i < mat.length; i++) {
 				mat[i].checked = true;	
 			}

@@ -335,13 +335,6 @@ function RowNiples($data)
 	}
 	$this->Ln($h);
 }
-function ListNiples()
-{
-	$pdf->SetFillColor(255,255,210);
-	$pdf->SetTextColor(0);
-	$pdf->SetFont('Arial','',6.5);
-	$pdf->SetLineWidth(.1);
-}
 
 function Footer()
 {
@@ -381,25 +374,27 @@ $cn->close($query);
 $pdf->Ln(-2);
 $pdf->fnline();
 $pdf->AliasNbPages();
-$pdf->AddPage();
-$pdf->cabnro();
+
 // Obteniendo Nro de Pedido
 $cn = new PostgreSQL();
 $query = $cn->consulta("SELECT nropedido FROM almacen.guiaremision WHERE nroguia LIKE '".$nro."' AND esid LIKE '46' LIMIT 1 OFFSET 0;");
 $npe = $cn->ExecuteNomQuery($query);
 $npe = $npe[0];
 $cn->close($query);
-$pdf->SetFillColor(255,255,210);
-$pdf->SetTextColor(0);
-$pdf->SetFont('Arial','',6.5);
-$pdf->SetLineWidth(.1);
+
 $query = $cn->consulta("SELECT n.materialesid,m.matnom,m.matmed,n.metrado,n.tipo FROM operaciones.niples n
 						INNER JOIN admin.materiales m
 						ON n.materialesid LIKE m.materialesid
 						WHERE nropedido LIKE '".$npe."';");
 if ($cn->num_rows($query) > 0) {
-	$pdf->SetWidths(array(18,22,50,20,18,20,18));
+	$pdf->SetWidths(array(18,22,60,30,18,20,18));
 	$i=1;
+	$pdf->AddPage();
+	$pdf->cabnro();
+	$pdf->SetFillColor(255,255,210);
+	$pdf->SetTextColor(0);
+	$pdf->SetFont('Arial','',6.5);
+	$pdf->SetLineWidth(.1);
 	$pdf->SetXY(10,50);
 	while ($result = $cn->ExecuteNomQuery($query)) {
 		$pdf->RowNiples(array($i++,$result['materialesid'],$result['matnom'],$result['matmed'],'x',$result['metrado'],$result['tipo']));

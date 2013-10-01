@@ -558,7 +558,7 @@ include ("../datos/postgresHelper.php");
 				</div>
 			</div>
 			<div class="modal-footer">
-				<button class="btn  pull-left" data-dismiss="modal"><i class="icon-resize-small"></i> Cancelar</button>
+				<button class="btn  pull-left" data-dismiss="modal"><i class="icon-remove"></i> Cancelar</button>
 				<button class="btn btn-primary pull-right" onClick="savepedido();"><i class="icon-ok icon-white"></i> Guardar Cambios</button>
 			</div>
 		</div>
@@ -604,8 +604,7 @@ include ("../datos/postgresHelper.php");
 				?>
 			</div>
 			<div class="modal-footer">
-				<button class="btn pull-left" data-dismiss="modal"><i class="icon-resize-small"></i> Cancelar</button>
-
+				<button class="btn pull-left" data-dismiss="modal"><i class="icon-remove"></i> Cancelar</button>
 			</div>
 		</div>
 		<div id="mconfirm" class="modal fade in c-yellow-light t-warning hide">

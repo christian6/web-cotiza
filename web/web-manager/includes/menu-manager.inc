@@ -29,6 +29,13 @@
 			               <li><a href="http://190.41.246.91/web/web-manager/solicitudmat.php">Solicitud de Materiales</a></li>
 			            </ul>
 			        </li>
+			        <li class="divider-vertical"></li>
+			        <li class="dropdown">
+			        	<a href="#" class="dropdown-toogle" data-toggle="dropdown">Analisís <b class="caret"></b></a>
+			        	<ul class="dropdown-menu">
+			        		<li><a href="http://190.41.246.91/web/web-manager/proxanio.php">Proyecto</a></li>
+			        	</ul>
+			        </li>
 				</ul>
 				<ul class="nav pull-right">
 		          	<li class="dropdown">
