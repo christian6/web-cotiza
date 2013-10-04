@@ -19,12 +19,15 @@ if ($_POST['tra'] == "s") {
 }elseif($_POST['tra'] == "l"){
 	$dni = $_SESSION['dni-icr'];
 	$cn = new PostgreSQL();
-	$query = $cn->consulta("SELECT m.nromen,m.fordni,e.empnom,e.empape,c.carnom,m.fecha::date as fec,to_char(m.fecha,'HH24:MI:SS') as ti,m.question,m.body,m.esid
+	$query = $cn->consulta("SELECT m.nromen,m.fordni,(SELECT n.empnom FROM admin.empleados n WHERE n.empdni LIKE m.empdni) as empnom,
+							(SELECT n.empape FROM admin.empleados n WHERE n.empdni LIKE m.empdni) as empape,
+							(SELECT r.carnom FROM admin.empleados n INNER JOIN admin.cargo r ON r.cargoid = n.cargoid WHERE n.empdni LIKE m.empdni) as carnom,
+							m.fecha::date as fec,to_char(m.fecha,'HH24:MI:SS') as ti,m.question,m.body,m.esid
 							FROM admin.mensaje m INNER JOIN admin.empleados e
-							ON m.fordni LIKE e.empdni
-							INNER JOIN admin.cargo c
-							ON e.cargoid = c.cargoid
-							WHERE m.empdni LIKE '$dni' AND m.esid NOT LIKE '57' ORDER by m.fecha DESC;");
+							ON m.fordni LIKE e.empdni ".
+							/*INNER JOIN admin.cargo c
+							ON e.cargoid = c.cargoid*/
+							" WHERE m.fordni LIKE '$dni' AND m.esid NOT LIKE '57' ORDER by m.fecha DESC LIMIT 10 OFFSET 0;");
 	if ($cn->num_rows($query) > 0) {
 		echo "<div class='accordion' id='accordion'>";
 		$i = 0;

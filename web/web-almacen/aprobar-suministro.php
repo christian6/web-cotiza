@@ -91,43 +91,47 @@ include ("../datos/postgresHelper.php");
 				$cn = new PostgreSQL();
 				$sql = "";
 				if ($_POST['txtfeci'] != "" && $_POST['txtfecf'] != "" && $_POST['cboal'] != "") {
-					$sql = "
-								SELECT s.nrosuministro,a.descri,e.empnom,s.fecha::date,s.fecreq,d.esnom FROM almacen.suministro s
-								INNER JOIN admin.almacenes a
-								ON s.almacenid=a.almacenid
-								INNER JOIN admin.empleados e
-								ON s.empdni=e.empdni
-								INNER JOIN admin.estadoes d
-								ON s.esid=d.esid
-								WHERE s.esid LIKE '40' AND s.almacenid LIKE '".$_POST['cboal']."' AND  s.fecha::date BETWEEN to_date('".$_POST['txtfeci']."','dd-mm-yyyy') AND to_date('".$_POST['txtfecf']."','dd-mm-yyyy')
-								ORDER BY s.nrosuministro ASC
-							 ";
+					$sql = "SELECT s.nrosuministro,a.descri,e.empnom,s.fecha::date,s.fecreq,d.esnom FROM almacen.suministro s
+							INNER JOIN admin.almacenes a
+							ON s.almacenid=a.almacenid
+							INNER JOIN admin.empleados e
+							ON s.empdni=e.empdni
+							INNER JOIN admin.estadoes d
+							ON s.esid=d.esid
+							WHERE s.esid LIKE '40' AND s.almacenid LIKE '".$_POST['cboal']."' AND  s.fecha::date BETWEEN to_date('".$_POST['txtfeci']."','dd-mm-yyyy') AND to_date('".$_POST['txtfecf']."','dd-mm-yyyy')
+							ORDER BY s.nrosuministro ASC";
 				}else if($_POST["txtfeci"] != "" && $_POST["txtfecf"] == ""){
-					$sql = "
-								SELECT s.nrosuministro,a.descri,e.empnom,s.fecha::date,s.fecreq,d.esnom FROM almacen.suministro s
-								INNER JOIN admin.almacenes a
-								ON s.almacenid=a.almacenid
-								INNER JOIN admin.empleados e
-								ON s.empdni=e.empdni
-								INNER JOIN admin.estadoes d
-								ON s.esid=d.esid
-								WHERE s.esid LIKE '40' AND s.almacenid LIKE '".$_POST['cboal']."' AND  s.fecha::date = to_date('".$_POST['txtfeci']."','dd-mm-yyyy')
-							 	ORDER BY s.nrosuministro ASC
-							 ";
-				}elseif ($_POST['txtfeci'] == "" && $_POST['txtfecf'] == "" && $_POST['cboal'] != "") {
-					$sql = "
-								SELECT s.nrosuministro,a.descri,e.empnom,s.fecha::date,s.fecreq,d.esnom FROM almacen.suministro s
-								INNER JOIN admin.almacenes a
-								ON s.almacenid=a.almacenid
-								INNER JOIN admin.empleados e
-								ON s.empdni=e.empdni
-								INNER JOIN admin.estadoes d
-								ON s.esid=d.esid
-								WHERE s.esid LIKE '40' AND s.almacenid LIKE '".$_POST['cboal']."'
-								ORDER BY s.nrosuministro ASC
-							 ";
+					$sql = "SELECT s.nrosuministro,a.descri,e.empnom,s.fecha::date,s.fecreq,d.esnom FROM almacen.suministro s
+							INNER JOIN admin.almacenes a
+							ON s.almacenid=a.almacenid
+							INNER JOIN admin.empleados e
+							ON s.empdni=e.empdni
+							INNER JOIN admin.estadoes d
+							ON s.esid=d.esid
+							WHERE s.esid LIKE '40' AND s.almacenid LIKE '".$_POST['cboal']."' AND  s.fecha::date = to_date('".$_POST['txtfeci']."','dd-mm-yyyy')
+							ORDER BY s.nrosuministro ASC";
+				}else if ($_POST['txtfeci'] == "" && $_POST['txtfecf'] == "" && $_POST['cboal'] != "") {
+					$sql = "SELECT s.nrosuministro,a.descri,e.empnom,s.fecha::date,s.fecreq,d.esnom FROM almacen.suministro s
+							INNER JOIN admin.almacenes a
+							ON s.almacenid=a.almacenid
+							INNER JOIN admin.empleados e
+							ON s.empdni=e.empdni
+							INNER JOIN admin.estadoes d
+							ON s.esid=d.esid
+							WHERE s.esid LIKE '40' AND s.almacenid LIKE '".$_POST['cboal']."'
+							ORDER BY s.nrosuministro ASC";
 				}
-
+			}else{
+				$sql = "SELECT s.nrosuministro,a.descri,e.empnom,s.fecha::date,s.fecreq,d.esnom FROM almacen.suministro s
+						INNER JOIN admin.almacenes a
+						ON s.almacenid=a.almacenid
+						INNER JOIN admin.empleados e
+						ON s.empdni=e.empdni
+						INNER JOIN admin.estadoes d
+						ON s.esid=d.esid
+						WHERE s.esid LIKE '40' AND s.almacenid LIKE '0001'
+						ORDER BY s.nrosuministro ASC";
+			}
 				$query = $cn->consulta($sql);
 
 				if ($cn->num_rows($query) > 0) {
@@ -151,7 +155,7 @@ include ("../datos/postgresHelper.php");
 								</div>";
 				}
 				$cn->close($query);
-			}
+			
 			?>
 		</tbody>
 	</table>

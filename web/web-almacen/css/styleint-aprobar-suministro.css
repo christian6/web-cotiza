@@ -71,8 +71,8 @@ h3{ font-family: 'Roboto Condensed', sans-serif; }
 	display         : inline;
 	background-color: rgb(169,3,41);
 	border-radius   : 1em;
-	top             : 8em;
-	left            : 5%;
+	top             : 0;
+	right            : 0;
 	height          : 8.5em;
 	width           : 5em;
 	text-align      : center;

@@ -152,6 +152,9 @@ include ("../datos/postgresHelper.php");
 			<br>
 			<h4 class="t-success">Detalle de Suministro</h4>
 			<table class="table table-condensed table-hover">
+				<caption>
+					<button class="btn btn-small btn-success pull-left t-d" OnClick="showsum();"><i class="icon-ok"></i> Orden de Suministro</button>
+				</caption>
 				<thead>
 					<th></th>
 					<th>Codigo</th>
@@ -165,6 +168,63 @@ include ("../datos/postgresHelper.php");
 				<tbody id="tdet">
 				</tbody>
 			</table>
+		</div>
+		<div id="mos" class="modal fade in hide t-warning c-yellow-light">
+			<div class="modal-header">
+				<a data-dismiss="modal" class="close">&times;</a>
+				<h4>Generar Orden de Suministro</h4>
+			</div>
+			<div class="modal-body">
+				<div class="row show-grid">
+					<div class="span2">
+						<div class="control-group info">
+							<label for="controls" class="control-label">Almacen</label>
+							<div class="controls">
+								<select name="cboal" id="cboal" class="span2">
+									<?php
+									$cn = new PostgreSQL();
+									$query = $cn->consulta("SELECT * FROM admin.almacenes");
+									if ($cn->num_rows($query) > 0) {
+										while ($result = $cn->ExecuteNomQuery($query)) {
+											echo "<option value='".$result['almacenid']."'>".$result['descri']."</option>";
+										}
+									}
+									$cn->close($query);
+									?>
+								</select>
+							</div>
+						</div>
+					</div>
+					<div class="span2">
+						<div class="control-group info">
+							<label for="controls" class="control-label">Fecha Requerida</label>
+							<div class="controls">
+								<input type="text" class="span2" id="fec">
+							</div>
+						</div>
+					</div>
+					<div class="span2">
+						<div class="control-group info">
+							<label for="controls" class="control-label">DNI</label>
+							<div class="controls">
+								<input type="text" class="span2" id="dni" value="<?php echo $_SESSION['dni-icr']; ?>" DISABLED />
+							</div>
+						</div>
+					</div>
+					<div class="span3">
+						<div class="control-group info">
+							<label for="controls" class="control-label">Nombres</label>
+							<div class="controls">
+								<input type="text" id="nom" class="span3" value="<?php echo $_SESSION['nom-icr']; ?>" DISABLED />
+							</div>
+						</div>
+					</div>
+					<div class="span5">
+						<button class="btn" data-dismiss="modal"><i class="icon-remove"></i> Cancelar</button>
+						<button class="btn btn-warning t-d pull-right" OnClick="gensuministro();"><i class="icon-ok"></i> Guardar Cambios</button>
+					</div>
+				</div>
+			</div>
 		</div>
 	</section>
 	<div id="space"></div>
