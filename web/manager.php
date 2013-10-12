@@ -74,7 +74,7 @@ if (sesaccess() == 'ok') {
             </a>
         </li>
         <li>      
-            <a href="../web-cotiza/intranet/menu-int.php" title=""><span class="icon"> <i aria-hidden="false" class="icon-services"></i></span><span>Logistica</span></a>   
+            <a href="http://190.41.246.91:8000/logistica/security/login/?dni=<?php echo $_SESSION['dni-icr']; ?>&nom=<?php echo $_SESSION['nom-icr']; ?>&cargo=<?php echo $_SESSION['car-icr']; ?>&usr=<?php echo $_SESSION['user-icr']; ?>"><span class="icon"> <i aria-hidden="false" class="icon-services"></i></span><span>Logistica</span></a>   
         </li> 
         <li>
             <a  href="web-almacen/home.php" title=""><span  class="icon"><i  aria-hidden="true" class="icon-portfolio"></i></span><span>Almacen</span></a>
