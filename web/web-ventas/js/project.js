@@ -4,6 +4,7 @@ $(function  () {
 
 function showsector () {
 	$( "#msec" ).modal("show");
+	console.log('aqui');
 }
 function showsubpro () {
 	$("#msub").modal("show");

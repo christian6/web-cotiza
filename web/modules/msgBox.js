@@ -234,3 +234,16 @@ function msg (options) {
         }
     });
 };
+
+function msgError (title,content,close) {
+    if (title == null) { title = 'Error'; }
+    if (content == null) { content = 'Si estas viendo esto es por que fallé.' }
+    if (close == null) { close = true }
+    $.msgBox({
+        title : title,
+        content : content,
+        type : 'error',
+        opacity : 0.8,
+        autoClose : close
+    });
+}

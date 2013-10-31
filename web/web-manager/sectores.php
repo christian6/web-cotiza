@@ -83,10 +83,31 @@ include ("../datos/postgresHelper.php");
 		</ul>
 	</div>
 	<section>
+		<?php
+			$cn = new PostgreSQL();
+			$query = $cn->consulta("SELECT descripcion FROM ventas.proyectos WHERE proyectoid LIKE '".$_GET['proid']."'");
+			if ($cn->num_rows($query) > 0) {
+				$nom_pro = $cn->ExecuteNomQuery($query);
+			}
+			$cn->close($query);
+			if ($_GET['sub'] != '') {
+				$cn = new PostgreSQL();
+				$query = $cn->consulta("SELECT subproyecto FROM ventas.subproyectos WHERE proyectoid LIKE '".$_GET['proid']."' AND subproyectoid LIKE '".$_GET['sub']."'");
+				if ($cn->num_rows($query) > 0) {
+					$nom_sub = $cn->ExecuteNomQuery($query);
+				}
+				$cn->close($query);
+			}
+		?>
 		<div class="container well">
 			<div class="span5">
-				<h3>Administración de Proyectos</h3>
+				<h3>Administración de Proyecto <?php echo $nom_pro[0]; ?></h3>
 				<input type="hidden" id="txtproid" name="txtproid" value="<?php echo $_REQUEST['proid']; ?>">
+
+			<h4>Proyecto <?php echo($nom_pro[0]); ?></h4>
+			<?php if ($_GET['sub'] != ''): ?>
+				<h4>Subproyecto <?php echo($nom_sub[0]); ?></h4>
+			<?php endif ?>
 			</div>
 		<div class="row show-grid">
 			<div class="span8 well">
@@ -165,10 +186,10 @@ include ("../datos/postgresHelper.php");
 					</div>
 				</div>
 			</div>
-			<div class="span8 well">
+			<!--<div class="span8 well">
 				<h5>Adicionales del Proyecto</h5>
 				<div id="cont">
-					<?php
+					<?php/*
 					$cn = new PostgreSQL();
 					$query = $cn->consulta("SELECT * FROM ventas.adicionales WHERE esid LIKE '56' AND proyectoid LIKE '".$_GET['proid']."' 
 											AND TRIM(subproyectoid) LIKE TRIM('".$_GET['sub']."'); ");
@@ -177,10 +198,10 @@ include ("../datos/postgresHelper.php");
 							echo "<div id='ad'>".$result['descrip']."</div>";
 						}
 					}
-					$cn->close($query);
+					$cn->close($query);*/
 					?>
 				</div>
-			</div>
+			</div>-->
 			<div class="span6">
 				<div class="well c-blue-light t-info">
 					<h4>Archivos Complementarios</h4>

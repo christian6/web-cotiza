@@ -41,16 +41,36 @@ if ($_REQUEST['tra'] == 'med') {
 	}
 	$cn->close($query);
 ?>
-	<dl class="dl-horizontal">
+	<!--<dl class="dl-horizontal">
 		<dt>Codigo</dt>
-		<dd id="cod"><?php echo $cod; ?></dd>
+		<dd id="cod"><?php# echo $cod; ?></dd>
 		<dt>Nombre</dt>
-		<dd><?php echo $nom; ?></dd>
+		<dd><?php# echo $nom; ?></dd>
 		<dt>Medida</dt>
-		<dd><?php echo $med; ?></dd>
+		<dd><?php #echo $med; ?></dd>
 		<dt>Unidad</dt>
-		<dd><?php echo $und; ?></dd>
-	</dl>
+		<dd><?php #echo $und; ?></dd>
+	</dl>-->
+	<table style="background-color: rgba(255,255,255,0);" class="table table-condensed">
+		<tbody style="background-color: rgba(255,255,255,0);">
+			<tr>
+				<th>Codigo</th>
+				<td id="cod"><?php echo $cod; ?></td>
+			</tr>
+			<tr>
+				<th>Decripción</th>
+				<td><?php echo $nom; ?></td>
+			</tr>
+			<tr>
+				<th>Medida</th>
+				<td><?php echo $med; ?></td>
+			</tr>
+			<tr>
+				<th>Unidad</th>
+				<td><?php echo $und; ?></td>
+			</tr>
+		</tbody>
+	</table>
 <?php
 }else if($_REQUEST['tra'] == 'save'){
 

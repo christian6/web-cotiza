@@ -118,7 +118,7 @@ function savemsgsec () {
 		type : 'POST',
 		dataType : 'html',
 		success : function (response) {
-			alert(response);
+			//alert(response);
 			if (response == 'success') {
 				location.href='';
 			}else{

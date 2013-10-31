@@ -26,12 +26,13 @@ include ("../datos/postgresHelper.php");
     	#cont{
     		display: inline-table;
     		/*border: solid .1em #222;*/
-    		border-radius: 5em;
+    		border-radius: 1em;
     		box-shadow: 0 0 1em #222;
-    		height: 7em;
-    		width: 8em;
+    		height: 8em;
+    		width: 10em;
     		padding: 1.5em;
     		margin: 1em;
+    		vertical-align: middle;
     	}
     	#co{ text-align: center; }
 		h6{
@@ -39,6 +40,21 @@ include ("../datos/postgresHelper.php");
 			margin: -.1em;
 		}
 		#cont a{ text-decoration: none; }
+		fieldset{
+			/*border: 1px solid black;*/
+			padding-left: 10px;
+			padding-right: 10px;
+			/*width: 96%;*/
+		}
+		fieldset legend{
+			background-color: #3A87AE;
+			color: #FFFFFA;
+			padding: .2em .5em;
+			/*border-color: #2d2D2D;*/
+			border-right-width: 3px;
+			border-left-width: 3px;
+			border-style: dashed;
+		}
     </style>
 </head>
 <body>
@@ -73,6 +89,7 @@ include ("../datos/postgresHelper.php");
 									?>
 									<div id="cont" class="c-yellow-light t-d pull-center">
 										<a href="" class="close">&times;</a>
+										<a href="" class="close pull-left"><i class="icon-edit"></i></a>
 										<a href="admin-project.php?id=<?php echo $result['proyectoid']; ?>">
 											<!--<i class='icon-'></i>-->
 											<label><?php echo $result['descripcion']; ?></label>
@@ -121,170 +138,173 @@ include ("../datos/postgresHelper.php");
 			<form action="" method="POST" name="frmproject" id="frmproject">
 				<input type="hidden" id="new" name="new" value="<?php echo $_POST['new']; ?>" />
 				<div class="row show-grid">
-					<div class="span4">
-						<div class="control-group info">
-							<label for="controls" class="t-info">Nombre de Proyecto</label>
-							<div class="controls">
-								<input type="text" name="des" id="des" class="span4" value="<?php echo $_POST['des']; ?>" placeholder="Ingrese Descripcion de Proyecto">
+					<div class="span10">
+						<fieldset>
+							<legend>Datos Generales</legend>
+							<div class="span4">
+								<div class="control-group info">
+									<label for="controls" class="t-info">Nombre de Proyecto</label>
+									<div class="controls">
+										<input type="text" name="des" id="des" class="span4" value="<?php echo $_POST['des']; ?>" placeholder="Ingrese Descripcion de Proyecto">
+									</div>
+								</div>	
 							</div>
-						</div>	
-					</div>
-					<!--
-					<div class="span4">
-						<div class="control-group info">
-							<label for="controls" class="control-label">Nombre Corto</label>
-							<div class="controls">
-								<input type="text" id="nomcor" name="nomcor" class="span4" value="<?php echo $_POST['nomcor']; ?>">
+							<div class="span2">
+								<div class="control-group info">
+									<label for="controls" class="t-info">Fecha de Entrega</label>
+									<div class="controls">
+										<input type="text" id="fec" name="fec" placeholder="aaaa-mm-dd" class="span2" value="<?php echo $_POST['fec']; ?>" >
+									</div>
+								</div>
 							</div>
-						</div>
-					</div>-->
-					<div class="span2">
-						<div class="control-group info">
-							<label for="controls" class="t-info">Fecha de Entrega</label>
-							<div class="controls">
-								<input type="text" id="fec" name="fec" placeholder="aaaa-mm-dd" class="span2" value="<?php echo $_POST['fec']; ?>" >
-							</div>
-						</div>
-					</div>
-					<div class="span4">
-						<div class="control-group info">
-							<label for="controls" class="t-info">Cliente</label>
-							<div class="controls">
-								<select name="cli" id="cli" class="span4">
-									<?php
-									$cn = new PostgreSQL();
-									$query = $cn->consulta("SELECT ruccliente,nombre FROM admin.clientes WHERE esid LIKE '41' ORDER BY nombre ASC");
-									if ($cn->num_rows($query) > 0) {
-										while ($result = $cn->ExecuteNomQuery($query)) {
-											if ($_POST['cli'] == $result['ruccliente']) {
-												echo "<option value='".$result['ruccliente']."' SELECTED>".$result['nombre']."</option>";
-											}else{
-												echo "<option value='".$result['ruccliente']."'>".$result['nombre']."</option>";
+							<div class="span3">
+								<div class="control-group info">
+									<label for="controls" class="t-info">Cliente</label>
+									<div class="controls">
+										<select name="cli" id="cli" class="span3">
+											<?php
+											$cn = new PostgreSQL();
+											$query = $cn->consulta("SELECT ruccliente,nombre FROM admin.clientes WHERE esid LIKE '41' ORDER BY nombre ASC");
+											if ($cn->num_rows($query) > 0) {
+												while ($result = $cn->ExecuteNomQuery($query)) {
+													if ($_POST['cli'] == $result['ruccliente']) {
+														echo "<option value='".$result['ruccliente']."' SELECTED>".$result['nombre']."</option>";
+													}else{
+														echo "<option value='".$result['ruccliente']."'>".$result['nombre']."</option>";
+													}
+												}
 											}
-										}
-									}
-									$cn->close($query);
-									?>
-								</select>
+											$cn->close($query);
+											?>
+										</select>
+									</div>
+								</div>
 							</div>
-						</div>
+						</fieldset>
 					</div>
-					<div class="span2">
-						<div class="control-group info">
-							<label for="controls" class="t-info">Pais</label>
-							<div class="controls">
-								<select name="pais" id="pais" class="span2" onChange="javascript:submit();">
-									<?php
-									$cn = new PostgreSQL();
-									$query = $cn->consulta("SELECT paisid,paisnom FROM admin.pais ORDER BY paisnom ASC;");
-									if ($cn->num_rows($query) > 0) {
-										while ($result = $cn->ExecuteNomQuery($query)) {
-											if ($_POST['pais'] == $result['paisid']) {
-												echo "<option value='".$result['paisid']."' SELECTED>".$result['paisnom']."</option>";
-											}else{
-												echo "<option value='".$result['paisid']."'>".$result['paisnom']."</option>";
+					<div class="span10">
+						<fieldset>
+							<legend>Datos de Proyecto</legend>
+						
+							<div class="span2">
+								<div class="control-group info">
+									<label for="controls" class="t-info">Pais</label>
+									<div class="controls">
+										<select name="pais" id="pais" class="span2" onChange="javascript:submit();">
+											<?php
+											$cn = new PostgreSQL();
+											$query = $cn->consulta("SELECT paisid,paisnom FROM admin.pais ORDER BY paisnom ASC;");
+											if ($cn->num_rows($query) > 0) {
+												while ($result = $cn->ExecuteNomQuery($query)) {
+													if ($_POST['pais'] == $result['paisid']) {
+														echo "<option value='".$result['paisid']."' SELECTED>".$result['paisnom']."</option>";
+													}else{
+														echo "<option value='".$result['paisid']."'>".$result['paisnom']."</option>";
+													}
+												}
 											}
-										}
-									}
-									$cn->close($query);
-									?>
-								</select>
-							</div>
-						</div>
-					</div>
-					<div class="span2">
-									<div class="control-group info">
-										<label for="controls" class="t-info">Departamento</label>
-										<div class="controls">
-											<select  id="dep" name="dep" class="span2" onChange="javascript:submit();">
-												<?php
-												$cn = new PostgreSQL();
-												$query = $cn->consulta("SELECT departamentoid,deparnom FROM admin.departamento WHERE paisid LIKE '".$_POST['pais']."'");
-												if ($cn->num_rows($query) > 0) {
-													while ($result = $cn->ExecuteNomQuery($query)) {
-														if ($_POST['dep'] == $result['departamentoid']) {
-															echo "<option value='".$result['departamentoid']."' SELECTED>".$result['deparnom']."</option>";
-														}else{
-															echo "<option value='".$result['departamentoid']."'>".$result['deparnom']."</option>";
-														}
-													}
-												}
-												$cn->close($query);
-												?>
-											</select>
-										</div>
+											$cn->close($query);
+											?>
+										</select>
 									</div>
 								</div>
-								<div class="span2">
-									<div class="control-group info">
-										<label for="controls" class="t-info">Provincia</label>
-										<div class="controls">
-											<select  id="pro" name="pro" class="span2" onChange="javascript:submit();">
-												<?php
-												$cn = new PostgreSQL();
-												$query = $cn->consulta("SELECT provinciaid,provnom FROM admin.provincia WHERE paisid LIKE '".$_POST['pais']."' AND departamentoid LIKE '".$_POST['dep']."'");
-												if ($cn->num_rows($query) > 0) {
-													while ($result = $cn->ExecuteNomQuery($query)) {
-														if ($_POST['pro'] == $result['provinciaid']) {
-															echo "<option value='".$result['provinciaid']."' SELECTED>".$result['provnom']."</option>";
-														}else{
-															echo "<option value='".$result['provinciaid']."'>".$result['provnom']."</option>";
-														}
+							</div>
+							<div class="span2">
+								<div class="control-group info">
+									<label for="controls" class="t-info">Departamento</label>
+									<div class="controls">
+										<select  id="dep" name="dep" class="span2" onChange="javascript:submit();">
+											<?php
+											$cn = new PostgreSQL();
+											$query = $cn->consulta("SELECT departamentoid,deparnom FROM admin.departamento WHERE paisid LIKE '".$_POST['pais']."'");
+											if ($cn->num_rows($query) > 0) {
+												while ($result = $cn->ExecuteNomQuery($query)) {
+													if ($_POST['dep'] == $result['departamentoid']) {
+														echo "<option value='".$result['departamentoid']."' SELECTED>".$result['deparnom']."</option>";
+													}else{
+														echo "<option value='".$result['departamentoid']."'>".$result['deparnom']."</option>";
 													}
 												}
-												$cn->close($query);
-												?>
-											</select>
-										</div>
+											}
+											$cn->close($query);
+											?>
+										</select>
 									</div>
 								</div>
-								<div class="span3">
-									<div class="control-group info">
-										<label for="controls" class="t-info">Distrito</label>
-										<div class="controls">
-											<select  id="dis" name="dis" class="span3">
-												<?php
-												$cn = new PostgreSQL();
-												$query = $cn->consulta("SELECT distritoid,distnom FROM admin.distrito WHERE paisid LIKE '".$_POST['pais']."' AND departamentoid LIKE '".$_POST['dep']."' AND provinciaid LIKE '".$_POST['pro']."'");
-												if ($cn->num_rows($query) > 0) {
-													while ($result = $cn->ExecuteNomQuery($query)) {
-														if ($_POST['dis'] == $result['distritoid']) {
-															echo "<option value='".$result['distritoid']."' SELECTED>".$result['distnom']."</option>";
-														}else{
-															echo "<option value='".$result['distritoid']."'>".$result['distnom']."</option>";
-														}
+							</div>
+							<div class="span2">
+								<div class="control-group info">
+									<label for="controls" class="t-info">Provincia</label>
+									<div class="controls">
+										<select  id="pro" name="pro" class="span2" onChange="javascript:submit();">
+											<?php
+											$cn = new PostgreSQL();
+											$query = $cn->consulta("SELECT provinciaid,provnom FROM admin.provincia WHERE paisid LIKE '".$_POST['pais']."' AND departamentoid LIKE '".$_POST['dep']."'");
+											if ($cn->num_rows($query) > 0) {
+												while ($result = $cn->ExecuteNomQuery($query)) {
+													if ($_POST['pro'] == $result['provinciaid']) {
+														echo "<option value='".$result['provinciaid']."' SELECTED>".$result['provnom']."</option>";
+													}else{
+														echo "<option value='".$result['provinciaid']."'>".$result['provnom']."</option>";
 													}
 												}
-												$cn->close($query);
-												?>
-											</select>
-										</div>
+											}
+											$cn->close($query);
+											?>
+										</select>
 									</div>
 								</div>
-					<div class="span4">
-						<div class="control-group info">
-							<label for="controls" class="t-info">Dirección</label>
-							<div class="controls">
-								<input type="text" id="dir" name="dir" placeholder="Ave jr calle" class="span4" value="<?php echo $_POST['dir']; ?>" >
 							</div>
-						</div>
-					</div>
-					<div class="span2">
-						<div class="control-group info">
-							<label for="controls" class="t-info">Estado</label>
-							<div class="controls">
-								<input type="text" class="span2" value="ACTIVO" DISABLED>
+							<div class="span3">
+								<div class="control-group info">
+									<label for="controls" class="t-info">Distrito</label>
+									<div class="controls">
+										<select  id="dis" name="dis" class="span3">
+											<?php
+											$cn = new PostgreSQL();
+											$query = $cn->consulta("SELECT distritoid,distnom FROM admin.distrito WHERE paisid LIKE '".$_POST['pais']."' AND departamentoid LIKE '".$_POST['dep']."' AND provinciaid LIKE '".$_POST['pro']."'");
+											if ($cn->num_rows($query) > 0) {
+												while ($result = $cn->ExecuteNomQuery($query)) {
+													if ($_POST['dis'] == $result['distritoid']) {
+														echo "<option value='".$result['distritoid']."' SELECTED>".$result['distnom']."</option>";
+													}else{
+														echo "<option value='".$result['distritoid']."'>".$result['distnom']."</option>";
+													}
+												}
+											}
+											$cn->close($query);
+											?>
+										</select>
+									</div>
+								</div>
 							</div>
-						</div>
-					</div>
-					<div class="span4">
-						<div class="control-group info">
-							<label for="controls" class="t-info">Observación</label>
-							<div class="controls">
-								<textarea name="obs" id="obs" rows="4" class="span4"><?php echo $_POST['obs']; ?></textarea>
+							<div class="span4">
+								<div class="control-group info">
+									<label for="controls" class="t-info">Dirección</label>
+									<div class="controls">
+										<input type="text" id="dir" name="dir" placeholder="Ave jr calle" class="span4" value="<?php echo $_POST['dir']; ?>" >
+									</div>
+								</div>
 							</div>
-						</div>
+							<div class="span2">
+								<div class="control-group info">
+									<label for="controls" class="t-info">Estado</label>
+									<div class="controls">
+										<input type="text" class="span2" value="ACTIVO" DISABLED>
+									</div>
+								</div>
+							</div>
+							<div class="span3">
+								<div class="control-group info">
+									<label for="controls" class="t-info">Observación</label>
+									<div class="controls">
+										<textarea name="obs" id="obs" rows="4" class="span3"><?php echo $_POST['obs']; ?></textarea>
+									</div>
+								</div>
+							</div>
+						</fieldset>
 					</div>
+					
 				</div>
 			</form>	
 			

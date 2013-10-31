@@ -276,21 +276,23 @@ function delniple (id,mat,med) {
 	});
 }
 function selectall () {
-	var rb = document.getElementsByName("rbchk");
-	var mat = document.getElementsByName('mats');
-	for (var i = 0; i < rb.length; i++) {
-		if (rb[i].disabled == false) {
-			return false;
-		}else if(rb[i].checked && rb[i].value == 'a'){
-			for (var i = 0; i < mat.length; i++) {
-				mat[i].checked = true;	
+	//var rb = document.getElementsByName("rbchk");
+	//var mat = document.getElementsByName('mats');
+	$("[name=rbchk]").each(function () {
+		var rb = this;
+		if (rb.checked) {
+			var status = false;
+			if (rb.value == "a") {
+				status = true;
+			}else if(rb.value == "n"){
+				status = false;
 			}
-		}else{
-			for (var i = 0; i < mat.length; i++) {
-				mat[i].checked = false;
-			};
+			$("[name=mats]").each(function () {
+				var chk = this;
+				chk.checked = status;
+			});
 		}
-	}
+	});
 }
 function openadj () {
 	$("#fileadj").click();

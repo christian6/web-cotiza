@@ -11,14 +11,14 @@
 			<div class="nav-collapse in">
 				<ul class="nav" role="navigation">
 					<li class="active"><a href="http://190.41.246.91/web/web-almacen/home.php"><i class="icon-home"></i></a></li>
-          <li class="dropdown">
+          <!--<li class="dropdown">
              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Pedidos <b class="caret"></b></a>
              <ul class="dropdown-menu">
                <li><a href="http://190.41.246.91/web/web-almacen/pedidosal.php">Pedidos</a></li>
                <li><a href="http://190.41.246.91/web/web-almacen/estadopedido.php">Consulta Pedido</a></li>
              </ul>
-          </li>
-					<li class="divider-vertical"></li>
+          </li>-->
+					<!--<li class="divider-vertical"></li>
 					<li class="dropdown">
 		          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Suministro <b class="caret"></b></a>
 		          <ul class="dropdown-menu">
@@ -26,8 +26,8 @@
                 <li class="divider"></li>
 		            <li><a href="http://190.41.246.91/web/web-almacen/osumcot.php">Osum a SCotizacion</a></li>
 		          </ul>
-		      </li>
-          <li class="divider-vertical"></li>
+		      </li>-->
+          <!--<li class="divider-vertical"></li>-->
           <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">Existencia <b class="caret"></b></a>
               <ul class="dropdown-menu">
@@ -64,6 +64,9 @@
               <li><a href="http://190.41.246.91/web/web-almacen/ingresoxcompra.php">Ingreso Orden de Compra</a></li>
               <li><a href="notaingreso.php">Nota de Ingreso</a></li>
               <li class="divider"></li>
+              <li class="nav-header">Devoculiones</li>
+              <li><a href="http://190.41.246.91/web/web-almacen/devolucion.php">Crear Devolucion</a></li>
+              <li><a href="http://190.41.246.91/web/web-almacen/list-devolucion.php">Devoluciones</a></li>
             </ul>
           </li>
 				</ul>

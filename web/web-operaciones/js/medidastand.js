@@ -236,7 +236,7 @@ function very () {
 }
 $(document).ready(function () {
 	tmpmodify();
-	//\very();
+	first_resize();
 });
 function onobs () {
 	$("#obsec").animate({ height : "7em" },800);
@@ -283,4 +283,67 @@ function savemsgsec () {
 			});
 		}
 	});
+}
+var fresize = false;
+function first_resize () {
+	if (fresize == false) {
+		$("#fresi i").removeClass("icon-resize-small").addClass("icon-resize-full");
+		$("#ipri").animate({ height:"0em"},1200);
+		fresize = true;
+	}else{
+		$("#fresi i").removeClass("icon-resize-full").addClass("icon-resize-small");
+		$("#ipri").animate({ height:"30em"},1200);
+		fresize = false;
+	}
+}
+function fullview (dir) {
+	$("#fullscreen-icr").show("clip",2000);
+	document.getElementById("fullpdf").src=dir;
+}
+function closefull () {
+	$("#fullscreen-icr").hide("clip",2000);
+}
+function uploadmodify () {
+	var fpde = document.getElementById("pmo");
+	var file = fpde.files[0];
+	if (file != null) {
+		var data = new FormData();
+		data.append('tra','upmo');
+		data.append('pmo',file);
+		data.append('pro',$("#txtpro").val());
+		data.append('sub',$("#txtsub").val());
+		data.append('sec',$("#txtsec").val());
+		var url = 'includes/incpedido.php';
+		$.ajax({
+			data : data,
+			url : url,
+			type : 'POST',
+			contentType : false,
+			processData : false,
+			cache : false,
+			success : function (response) {
+				console.log(response);
+				if (response != 'success') {
+					$.msgBox({
+						title : 'Error',
+						content : 'Al subir archivo.',
+						type : 'error',
+						autoClose : true,
+						opacity : 0.8
+					});
+				}else{
+					$("#mpla").modal("hide");
+					alert("Se ha subido correctamente.");
+				}
+			},
+			error : function (obj,que,otr) {
+				$.msgBox({
+					title : 'Error',
+					content : 'Si estas viendo esto es por que fallé',
+					type : 'error',
+					autoClose : true
+				});
+			}
+		});
+	}
 }

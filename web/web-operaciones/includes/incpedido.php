@@ -195,4 +195,43 @@ if ($_POST['tra'] == 'msgsec') {
 	$cn->close($query);
 	echo "success";
 }
+
+if ($_POST['tra'] == 'upmo') {
+	
+	if ($_POST['sub'] == '') {
+		$folder = $_SERVER['DOCUMENT_ROOT'].'/web/project/'.$_POST['pro'].'/modify/'.$_POST['sec'];
+		$path = 'modify/'.$_POST['sec'];
+	}else{
+		$folder = $_SERVER['DOCUMENT_ROOT'].'/web/project/'.$_POST['pro'].'/modify/'.$_POST['sub'].'/'.$_POST['sec'];
+		$path = 'modify/'.$_POST['sub'].'/'.$_POST['sec'];
+	}
+	$return = 'success';
+	$path = explode('/', $path);
+	$base = $_SERVER['DOCUMENT_ROOT'].'/web/project/'.$_POST['pro'].'/';
+	for ($i=0; $i < count($path); $i++) { 
+		$base = $base.$path[$i].'/';
+		if (!file_exists($base)) {
+			mkdir($base);
+			chmod($base, 0777);
+		}
+	}
+	/*if (!file_exists($folder)) {
+		mkdir($folder);
+		chmod($folder, 0777);
+		echo "se crea ";
+	}else{
+		echo "si existe";
+	}*/
+	$tmp_file = $_FILES['pmo']['tmp_name'];
+	$fec = date("Ymd-Hi");
+	$file = $folder.'/'.$_POST['sec'].'-'.$fec.'.pdf';
+	if (!move_uploaded_file($tmp_file, $file)) {
+		$return = 'Error load file';
+	}
+	if ($return == 'success') {
+		chmod($file, 0777);
+	}
+	echo $return;
+}
+
 ?>

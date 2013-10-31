@@ -66,8 +66,28 @@ include ("../datos/postgresHelper.php");
 		</ul>
 	</div>
 	<section>
+		<?php
+			$cn = new PostgreSQL();
+			$query = $cn->consulta("SELECT descripcion FROM ventas.proyectos WHERE proyectoid LIKE '".$_GET['pro']."'");
+			if ($cn->num_rows($query) > 0) {
+				$nom_pro = $cn->ExecuteNomQuery($query);
+			}
+			$cn->close($query);
+			if ($_GET['sub'] != '') {
+				$cn = new PostgreSQL();
+				$query = $cn->consulta("SELECT subproyecto FROM ventas.subproyectos WHERE proyectoid LIKE '".$_GET['pro']."' AND subproyectoid LIKE '".$_GET['sub']."'");
+				if ($cn->num_rows($query) > 0) {
+					$nom_sub = $cn->ExecuteNomQuery($query);
+				}
+				$cn->close($query);
+			}
+		?>
 		<div class="container well">
-			<h3 class="t-d">Administrador de Sectores</h3>
+			<h3 class="t-info">Administrador de Proyecto <?php echo($nom_pro[0]); ?></h3>
+			<h4 class="t-warning">Proyecto <?php echo($nom_pro[0]); ?></h4>
+			<?php if ($_GET['sub'] != ''): ?>
+				<h4 class="t-warning">Subproyecto <?php echo($nom_sub[0]); ?></h4>
+			<?php endif ?>
 			<div class="row show-grid">
 				<div class="span8 well c-yellow">
 					<div id="cont">

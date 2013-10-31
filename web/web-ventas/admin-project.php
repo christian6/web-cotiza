@@ -82,6 +82,21 @@ include ("../datos/postgresHelper.php");
 			$res = 1;
 		}
 		$cn->close($query);
+
+		$cn = new PostgreSQL();
+		$query = $cn->consulta("SELECT descripcion FROM ventas.proyectos WHERE proyectoid LIKE '".$_GET['id']."'");
+		if ($cn->num_rows($query) > 0) {
+			$nom_pro = $cn->ExecuteNomQuery($query);
+		}
+		$cn->close($query);
+		if ($_GET['sub'] != '') {
+			$cn = new PostgreSQL();
+			$query = $cn->consulta("SELECT subproyecto FROM ventas.subProyectos WHERE proyectoid LIKE '".$_GET['id']."' AND subproyectoid LIKE '".$_GET['sub']."'");
+			if ($cn->num_rows($query) > 0) {
+				$nom_sub = $cn->ExecuteNomQuery($query);
+			}
+			$cn->close($query);
+		}
 	?>
 	<header>
 		<input type="hidden" id="pro" value="<?php echo $_GET['id']; ?>">
@@ -97,7 +112,12 @@ include ("../datos/postgresHelper.php");
 				<a href="proyecto.php">Proyecto</a>
 				<span class="divider">/</span>
 			</li>
-			<li class="active">admin-project</li>
+			<?php if ($_GET['sub'] == ''): ?>
+				<li class="active">admin-project</li>
+			<?php else: ?>	
+					<a href="admin-project.php?id=<?php echo $_GET['id'];?>">Admin Proyecto</a>
+			<?php endif ?>
+			
 		</ul>
 	</div>
 	<section>
@@ -106,17 +126,24 @@ include ("../datos/postgresHelper.php");
 			<div class="span8 well">
 				<div class="row show-grid">
 					<div class="span5">
-						<h4>Administración de Proyectos</h4>
+						<h4 class="t-info">Administración de Proyecto <?php echo $nom_pro[0]; ?></h4>
+
+						<h5 class="t-warning"> Nombre Proyecto : <?php echo $nom_pro[0]; ?></h5>
+						<?php if( $_GET['sub'] != '') {?>
+							<h5 class="t-warning"> Nombre Proyecto : <?php echo $nom_sub[0]; ?></h5>
+						<?php } ?>
+
 						<input type="hidden" id="txtproid" name="txtproid" value="<?php echo $_REQUEST['id']; ?>">
 						<div class="btn-group">
 							<button title="Nuevo Sector" class="btn btn-danger" onClick="showsector();" <?php if( $status == 55 || $status == 59) { echo "DISABLED"; }?> />
 								<i class="icon-th"></i> 
 								<span class="visible-desktop"><h6>Nuevo Sector</h6></span>
 							</button>
-							<button class="btn btn-danger" onClick="showadicional();" <?php if( $status == 55 || $status == 59) { echo "DISABLED"; }?> DISABLED/>
+							<!--<button class="btn btn-danger" onClick="showadicional();" <?php if( $status == 55 || $status == 59) { echo "DISABLED"; }?> DISABLED/>
 								<i class="icon-th-list"></i>
 								<span class="visible-desktop"><h6>Nuevo Adicional</h6></span>
-							</button>
+							</button>-->
+							<?php if ($_GET['sub'] == ''){ ?>
 							<button title="Nuevo Subproyecto" class="btn btn-danger" onClick="showsubpro();" <?php if( $status == 55 || $status == 59) { echo "DISABLED"; }?> />
 								<i class="icon-th-large"></i>
 								<span class="visible-desktop"><h6>Nuevo Sub-Proyecto</h6></span>
@@ -133,6 +160,7 @@ include ("../datos/postgresHelper.php");
 								<i class="icon-ok"></i>
 								<span class="visible-desktop"><h6>Confirmar</h6></span>
 							</button>
+							<?php } ?>
 						</div>
 						<hr class="hs">
 					</div>
@@ -245,95 +273,10 @@ include ("../datos/postgresHelper.php");
 					</div>
 				</div>
 			</div>
-			<div class="span8 well">
-				<h5>Adicionales del Proyecto</h5>
-				<div id="cont">
-					<?php
-					$cn = new PostgreSQL();
-					$query = $cn->consulta("SELECT * FROM ventas.adicionales WHERE esid LIKE '56' AND proyectoid LIKE '".$_GET['id']."' 
-											AND TRIM(subproyectoid) LIKE TRIM('".$_GET['sub']."'); ");
-					//echo "SELECT * FROM ventas.adicionales WHERE esid LIKE '56' AND proyectoid LIKE '".$_GET['id']."' AND TRIM(subproyectoid) LIKE TRIM('".$_GET['sub']."'); ";
-					if ($cn->num_rows($query) > 0) {
-						while ($result = $cn->ExecuteNomQuery($query)) {
-							echo "<div id='ad'>".$result['descrip']."</div>";
-						}
-					}
-					$cn->close($query);
-					?>
-				</div>
-			</div>
-			<div class="span6">
-				<div class="well c-blue-light t-info">
-					<h4>Archivos Complementarios</h4>
-					<?php
-					function ListFolder($path)
-					{	
-						try {
-							//using the opendir function
-						    $dir_handle = @opendir($path) or die("Unable to open $path");
-						    
-						    //Leave only the lastest folder name
-						    $dirname = end(explode("/", $path));
-						    
-						    //display the target folder.
-						    echo ("<li>$dirname\n");
-						    echo "<ul>\n";
-						    while (false !== ($file = readdir($dir_handle))) 
-						    {
-						        if($file!="." && $file!="..")
-						        {
-						            if (is_dir($path."/".$file))
-						            {
-						                //Display a list of sub folders.
-						                ListFolder($path."/".$file);
-						            }
-						            else
-						            {
-						                //Display a list of files.
-						                echo "<li>$file</li>";
-						            }
-						        }
-						    }
-						    echo "</ul>\n";
-						    echo "</li>\n";
-						    
-						    //closing the directory
-						    closedir($dir_handle);
-						} catch (Exception $e) {
-							echo $e->getMessage();
-						}
-					}
-					try {
-						if ($_GET['sub'] != '') {
-							ListFolder("../project/".$_GET['id']."/".$_GET['sub']."/comp/");
-						}else{
-							ListFolder('../project/'.$_GET['id'].'/comp/');
-						}
-					} catch (Exception $e) {
-						echo $e->getMessage();
-					}
-					?>
-				</div>
-			</div>
-			<div class="span6">
-				<div class="well c-blue-light t-info">
-					<h4>Archivos Administrativos</h4>
-					<?php
-					if ($_GET['sub'] != '') {
-						ListFolder("../project/".$_GET['id']."/".$_GET['sub']."/adm/");
-					}else{
-						ListFolder("../project/".$_GET['id']."/adm/");
-					}
-					//$adm = shell_exec($cmda);
-					//echo php_file_tree($_SERVER['DOCUMENT_ROOT'], "javascript:alert('You clicked on [link]');");
-					
 
-					?>
-				</div>
-			</div>
-		</div>
-		</div>
-		<!--
+
+
+			<!--
 			AQUI VA LA ASIGNACION DE RESPONSABLE EN VENTAS
 		-->
 		<div id="msec" class="modal fade in hide">
@@ -629,6 +572,99 @@ include ("../datos/postgresHelper.php");
 				<button class="btn"><i class="icon-ok"></i></button>
 			</div>-->
 		</div>
+
+
+			<!--
+			<div class="span8 well">
+				<h5>Adicionales del Proyecto</h5>
+				<div id="cont">
+					<?php
+					/*$cn = new PostgreSQL();
+					$query = $cn->consulta("SELECT * FROM ventas.adicionales WHERE esid LIKE '56' AND proyectoid LIKE '".$_GET['id']."' 
+											AND TRIM(subproyectoid) LIKE TRIM('".$_GET['sub']."'); ");
+					//echo "SELECT * FROM ventas.adicionales WHERE esid LIKE '56' AND proyectoid LIKE '".$_GET['id']."' AND TRIM(subproyectoid) LIKE TRIM('".$_GET['sub']."'); ";
+					if ($cn->num_rows($query) > 0) {
+						while ($result = $cn->ExecuteNomQuery($query)) {
+							echo "<div id='ad'>".$result['descrip']."</div>";
+						}
+					}
+					$cn->close($query);*/
+					?>
+				</div>
+			</div>
+			-->
+			<div class="span6">
+				<div class="well c-blue-light t-info">
+					<h4>Archivos Complementarios</h4>
+					<?php
+					function ListFolder($path)
+					{	
+						try {
+							//using the opendir function
+						    $dir_handle = @opendir($path) or die("Unable to open $path");
+						    
+						    //Leave only the lastest folder name
+						    $dirname = end(explode("/", $path));
+						    
+						    //display the target folder.
+						    echo ("<li>$dirname\n");
+						    echo "<ul>\n";
+						    while (false !== ($file = readdir($dir_handle))) 
+						    {
+						        if($file!="." && $file!="..")
+						        {
+						            if (is_dir($path."/".$file))
+						            {
+						                //Display a list of sub folders.
+						                ListFolder($path."/".$file);
+						            }
+						            else
+						            {
+						                //Display a list of files.
+						                echo "<li>$file</li>";
+						            }
+						        }
+						    }
+						    echo "</ul>\n";
+						    echo "</li>\n";
+						    
+						    //closing the directory
+						    closedir($dir_handle);
+						} catch (Exception $e) {
+							echo $e->getMessage();
+						}
+					}
+					try {
+						if ($_GET['sub'] != '') {
+							ListFolder("../project/".$_GET['id']."/".$_GET['sub']."/comp/");
+						}else{
+							ListFolder('../project/'.$_GET['id'].'/comp/');
+						}
+					} catch (Exception $e) {
+						echo $e->getMessage();
+					}
+					?>
+				</div>
+			</div>
+			<div class="span6">
+				<div class="well c-blue-light t-info">
+					<h4>Archivos Administrativos</h4>
+					<?php
+					if ($_GET['sub'] != '') {
+						ListFolder("../project/".$_GET['id']."/".$_GET['sub']."/adm/");
+					}else{
+						ListFolder("../project/".$_GET['id']."/adm/");
+					}
+					//$adm = shell_exec($cmda);
+					//echo php_file_tree($_SERVER['DOCUMENT_ROOT'], "javascript:alert('You clicked on [link]');");
+					
+
+					?>
+				</div>
+			</div>
+		</div>
+		</div>
+		
 		
 	</section>
 	<div id="space"></div>

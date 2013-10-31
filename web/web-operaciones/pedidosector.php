@@ -36,6 +36,38 @@ include ("../datos/postgresHelper.php");
 		caption{
 			text-align: left;
 		}
+		#cont{
+			border: 4px dashed white;
+			border-radius: .3em;
+			/*display: inline-block;*/
+			/*margin: 5px;*/
+			padding: 1em;
+			text-align: center;
+			width: 97%;
+		}
+		#lcont{
+			color: #FFF;
+			padding: 0 1em 0 1em;
+			text-align: left;
+		}
+		#planos{
+			display: inline-table;
+			width: 30%;
+		}
+		#planos fieldset legend{
+			color: #FFFFFF;
+			text-align: left;
+		}
+		#planos fieldset{
+			border-radius: .5em;
+			color: #FFF;
+		}
+		#fullscreen-icr{
+			text-align: center;
+		}
+		#fullscreen-icr .btn{
+			margin-top: 3.2em;
+		}
 	</style>
 </head>
 <body>
@@ -139,6 +171,61 @@ include ("../datos/postgresHelper.php");
 						</p>
 					</div>
 				</div>
+			</div>
+			<div class="well c-gd">
+				<fieldset id="cont">
+					<!--<legend id="lcont">Contenedor de Planos</legend>-->
+					<?php
+						if ($_GET['sub'] == '') {
+							$path1 = 'http://190.41.246.91/web/project/'.$_GET['pro'].'/'.$_GET['sec'].'.pdf';
+							$path = $_SERVER['DOCUMENT_ROOT']."/web/project/".$_GET['pro']."/modify/".$_GET['sec'];
+						}else{
+							$path1 = 'http://190.41.246.91/web/project/'.$_GET['pro'].'/'.$_GET['sub'].'/'.$_GET['sec'].'pdf';
+							$path = $_SERVER['DOCUMENT_ROOT']."/web/project/".$_GET['pro']."/modify/".$_GET['sub']."/".$_GET['sec'];
+						}
+						if (file_exists($path)) {	
+							$proot = opendir($path);
+							while ( ($file = readdir($proot)) !== false) {
+								if (is_file($path."/".$file)) {
+							?>
+							<div id="planos">
+								<fieldset>
+									<legend id="lcont"><?php echo $_GET['sec']; ?>
+										<button id="ffull" class="btn btn-warning" onClick='fullview("<?php echo 'http://190.41.246.91/web/project/'.$_GET['pro'].'/'.$_GET['sec'].'.pdf'; ?>");'><i class="icon-eye-open"></i></button>
+										<!--<button id="fresi" class="btn btn-warning" onClick="first_resize();"><i class="icon-resize-small"></i></button>-->
+									</legend>
+									<iframe src="<?php echo $path1; ?>" frameborder="0"></iframe>
+								</fieldset>
+							</div>
+								<div id="planos">
+									<fieldset>
+										<legend>
+											<div class="btn-group">
+												<button class="btn btn-warning" onClick=fullview("<?php echo 'http://190.41.246.91/web/project/'.$_GET['pro'].'/modify/'.$_GET['sec'].'/'.$file; ?>");><i class="icon-eye-open"></i></button>
+												<!--<button class="btn btn-warning" onClick=""><i class="icon-resize-small"></i></button>-->
+											</div>
+											<?php echo $file; ?>
+										</legend>
+										<iframe src="<?php echo 'http://190.41.246.91/web/project/'.$_GET['pro'].'/modify/'.$_GET['sec'].'/'.$file; ?>" frameborder="0"></iframe>
+									</fieldset>
+								</div>
+							<?php
+								}
+							}
+							closedir();
+						}else{
+						?>
+						<fieldset>
+							<legend id="lcont"><?php echo $_GET['sec']; ?>
+								<button id="ffull" class="btn btn-warning" onClick='fullview("<?php echo 'http://190.41.246.91/web/project/'.$_GET['pro'].'/'.$_GET['sec'].'.pdf'; ?>");'><i class="icon-eye-open"></i></button>
+								<button id="fresi" class="btn btn-warning" onClick="first_resize();"><i class="icon-resize-small"></i></button>
+							</legend>
+							<iframe id="ipri" style="width: 100%; height: 30em;" src="<?php echo 'http://190.41.246.91/web/project/'.$_GET['pro'].'/'.$_GET['sec'].'.pdf'; ?>" frameborder="0"></iframe>
+						</fieldset>
+						<?php
+						}
+					?>
+				</fieldset>
 			</div>
 			
 					<ul id="tab" class="nav nav-tabs">
@@ -271,6 +358,7 @@ include ("../datos/postgresHelper.php");
 												<caption>
 													<div class='btn-group pull-left'>
 														<button class='btn btn-warning t-d' onClick="showaddmat();"><i class='icon-list'></i> Agregar</button>
+														<button class="btn btn-warning t-d" onClick="$('#mpla').modal('show');"><i class="icon-file"></i> Subir Plano</button>
 														<button class='btn btn-warning t-d' onClick="confirmok();"><i class='icon-check'></i> Listo</button>
 													</div>
 													<div id="addmat" class="row show-grid hide">
@@ -625,7 +713,35 @@ include ("../datos/postgresHelper.php");
 				</div>
 			</div>
 		</div>
+		<div id="mpla" class="modal fade in c-blue-light t-info hide">
+			<div class="modal-header">
+				<a data-dismiss="modal" class="close">&times;</a>
+				<h3>Subir plano modificado</h3>
+			</div>
+			<div class="modal-body">
+				<div class="control-group">
+					<label class="label-control"><strong>Subir Plano</strong></label>
+					<div class="controls">
+						<input type="file" id="pmo" class="span2 hide" accept="application/pdf">
+					</div>
+				</div>
+				<div class="well c-gd pull-center">
+					<a href="javascript:$('#pmo').click();">Click Browser</a>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-warning pull-left t-d" data-dismiss="modal"><i class="icon-remove"></i> Salir</button>
+				<button class="btn btn-primary" onClick="uploadmodify();"><i class="icon-upload icon-white"></i> Subir</button>
+			</div>
+		</div>
 	</section>
+	<!--
+	sitio de planos views
+	-->
+	<div id="fullscreen-icr">
+		<button class="btn btn-danger" onClick="closefull();"><i class="icon-remove"></i></button>
+		<iframe id="fullpdf" src="" width="100%" height="87%" frameborder="0"></iframe>
+	</div>
 	<div id="space"></div>
 	<footer></footer>
 </body>
