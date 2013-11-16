@@ -42,7 +42,7 @@ $car = $_SESSION['car-icr'];
 <button id="btnclose" class="btn btn-mini btn-primary" onclick="javascript:document.location.href = '../../web/includes/session-destroy.php';"> <i class="icon-lock"></i> Cerrar Session</button>
 </p>
 </div>
-<?php if ($_SESSION['accessicr']==true) {?>
+<?php if (true) {?>
 <section>
 	<?include("../includes/menu.inc");?>
 	<fieldset id="dgen">
