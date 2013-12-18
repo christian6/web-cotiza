@@ -43,6 +43,20 @@ include ("../datos/postgresHelper.php");
 			</div>
 			<br>
 			<br><br>
+			<table class="table table-condensed">
+				<thead>
+					<tr>
+						<th class="span1">Item</th>
+						<th class="span2">Codigo</th>
+						<th class="span6">Descripción</th>
+						<th class="span4">Medida</th>
+						<th class="span1">Unidad</th>
+						<th class="span1">Cantidad</th>
+						<th class="span1">Stock</th>
+						<th class="span1">Add</th>
+					</tr>
+				</thead>
+			</table>
 			<?php
 				$cn = new PostgreSQL();
 				$query = $cn->consulta("SELECT DISTINCT proyectoid, descripcion FROM ventas.proyectos WHERE esid LIKE '55';");
@@ -65,6 +79,8 @@ include ("../datos/postgresHelper.php");
 											$qs = $cs->consulta("SELECT * FROM operaciones.sp_search_stock_mat('".$res['materialesid']."')");
 											if ($cs->num_rows($qs) > 0) {
 												$r = $cs->ExecuteNomQuery($qs);
+											}else{
+												$r[0] = '';
 											}
 											$cs->close($q);
 											if ($r[0] < $res['cant']) {
@@ -122,10 +138,13 @@ include ("../datos/postgresHelper.php");
 					echo "<tbody>";
 					while ($result = $cn->ExecuteNomQuery($query)) {
 						$cs = new PostgreSQL();
-						$qs = $cs->consulta("SELECT * FROM operaciones.sp_search_stock_mat('".$res['materialesid']."')");
+						$qs = $cs->consulta("SELECT * FROM operaciones.sp_search_stock_mat('".$result['materialesid']."')");
 						if ($cs->num_rows($qs) > 0) {
 							$r = $cs->ExecuteNomQuery($qs);
+						}else{
+							$r[0] = '';
 						}
+						echo $r[0];
 						if ($r[0] < $result['cantidad']) {
 							echo "<tr class='c-red-light'>";
 						}else{
@@ -140,7 +159,7 @@ include ("../datos/postgresHelper.php");
 						echo "<td class='span4'>".$result['matmed']."</td>";
 						echo "<td>".$result['matund']."</td>";
 						echo "<td >".$result['cantidad']."</td>";
-						if($r[0]!=''){echo "<td>".$r[0]."</td>";}else{echo "<td>-</td>";}
+						if($r[0]!=''){echo "<td>".$r[0]."</td>";}else if($r[0] == '' ){echo "<td>-</td>";}
 						echo "<td><button class='btn btn-mini btn-warning' onClick=addmatsuminsitro('".$result['materialesid']."',".$sum.");><i class='icon-plus'></i></button></td>";
 						echo "</tr>";
 					}

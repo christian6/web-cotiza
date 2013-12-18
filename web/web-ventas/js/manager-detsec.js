@@ -46,7 +46,7 @@ function aprobar () {
 					dataType : 'html',
 					success : function (response) {
 						if (response == 'success') {
-							location.href='';
+							location.reload();
 						}
 					},
 					error : function (obj,que,otr) {
@@ -86,7 +86,7 @@ function anular () {
 					success : function (response) {
 						alert(response);
 						if (response == 'success') {
-							location.href='';
+							location.reload();
 						}
 					},
 					error : function (obj,que,otr) {
@@ -120,7 +120,7 @@ function savemsgsec () {
 		success : function (response) {
 			//alert(response);
 			if (response == 'success') {
-				location.href='';
+				location.reload();
 			}else{
 				$.msgBox({
 					title : 'Error',
@@ -190,7 +190,7 @@ function savenewadi () {
 						success : function (response) {
 							//alert(response);
 							if (response == 'success') {
-								location.href ='';
+								location.reload();
 							}else{
 								$.msgBox({
 									title : 'Error',

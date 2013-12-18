@@ -21,6 +21,8 @@ include ("../datos/postgresHelper.php");
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.js"></script>
     <script src="../bootstrap/js/bootstrap.js"></script>
+    <script src="../modules/msgBox.js"></script>
+    <link rel="stylesheet" href="../css/msgBoxLight.css">
     <script src="js/project.js"></script>
     <style>
     	#cont{
@@ -41,7 +43,7 @@ include ("../datos/postgresHelper.php");
 		}
 		#cont a{ text-decoration: none; }
 		fieldset{
-			/*border: 1px solid black;*/
+			border-radius: .5em;
 			padding-left: 10px;
 			padding-right: 10px;
 			/*width: 96%;*/
@@ -62,15 +64,14 @@ include ("../datos/postgresHelper.php");
 	<header></header>
 	<section>
 		<div class="container well">
-			<div class="pull-center">
-				<h3>Proyectos de Ventas</h3>
+			<div class="">
+				<h3><em>Proyectos de Ventas</em></h3>
 			</div>
 				<div class="row show-grid">
-					<div class="span1 well">
-						<button class="btn btn-primary" onClick="addnew();">
-							<i class="icon-plus icon-white"></i>
-							<h6>Nuevo</h6>
-							<!--<img src="../resource/add48.png" alt="">-->
+					<div class="span1 alert alert-success pull-center">
+						<button class="btn btn-success t-d" onClick="addnew();">
+							<i class="icon-plus"></i>
+							<h6 class="t-d"><em>Nuevo</em></h6>
 						</button>	
 					</div>
 						<div class="span10 well">
@@ -89,11 +90,12 @@ include ("../datos/postgresHelper.php");
 									?>
 									<div id="cont" class="c-yellow-light t-d pull-center">
 										<a href="" class="close">&times;</a>
-										<a href="" class="close pull-left"><i class="icon-edit"></i></a>
+										<a href="javascript:editpro('<?php echo $result['proyectoid']; ?>');" class="close pull-left"><i class="icon-edit"></i></a>
 										<a href="admin-project.php?id=<?php echo $result['proyectoid']; ?>">
 											<!--<i class='icon-'></i>-->
-											<label><?php echo $result['descripcion']; ?></label>
-											<label><?php echo $result['esnom']; ?></label>
+											<cite class="t-success"><?php echo $result['descripcion']; ?></cite>
+											<br>
+											<em class='t-warning'><small><?php echo $result['esnom']; ?></small></em>
 										</a>
 							  		</div>
 							  		<?php
@@ -112,10 +114,10 @@ include ("../datos/postgresHelper.php");
 				</div>
 			
 		</div>
-	<div id="mpro" class="modal fade in hide span11 mitad11 c-blue-light t-info">
+	<div id="mpro" class="modal fade in hide span11 mitad11 c-green-light t-info">
 		<div class="modal-header">
 			<a href="#" class="close" data-dismiss="modal">&times;</a>
-			<h3>Agregar Proyecto</h3>
+			<h4><em>Agregar Proyecto</em></h4>
 		</div>
 		<div class="modal-body">
 			<div class="row show-grid">
@@ -137,6 +139,9 @@ include ("../datos/postgresHelper.php");
 			</div>
 			<form action="" method="POST" name="frmproject" id="frmproject">
 				<input type="hidden" id="new" name="new" value="<?php echo $_POST['new']; ?>" />
+				<div id="editer">
+					
+				</div>
 				<div class="row show-grid">
 					<div class="span10">
 						<fieldset>
@@ -151,17 +156,25 @@ include ("../datos/postgresHelper.php");
 							</div>
 							<div class="span2">
 								<div class="control-group info">
+									<label for="controls" class="t-info">Fecha de Inicio</label>
+									<div class="controls">
+										<input type="text" id="feci" name="feci" placeholder="aaaa-mm-dd" class="span2" value="<?php echo $_POST['feci']; ?>" >
+									</div>
+								</div>
+							</div>
+							<div class="span2">
+								<div class="control-group info">
 									<label for="controls" class="t-info">Fecha de Entrega</label>
 									<div class="controls">
 										<input type="text" id="fec" name="fec" placeholder="aaaa-mm-dd" class="span2" value="<?php echo $_POST['fec']; ?>" >
 									</div>
 								</div>
 							</div>
-							<div class="span3">
+							<div class="span6">
 								<div class="control-group info">
 									<label for="controls" class="t-info">Cliente</label>
 									<div class="controls">
-										<select name="cli" id="cli" class="span3">
+										<select name="cli" id="cli" class="span6">
 											<?php
 											$cn = new PostgreSQL();
 											$query = $cn->consulta("SELECT ruccliente,nombre FROM admin.clientes WHERE esid LIKE '41' ORDER BY nombre ASC");
@@ -282,7 +295,7 @@ include ("../datos/postgresHelper.php");
 								<div class="control-group info">
 									<label for="controls" class="t-info">Dirección</label>
 									<div class="controls">
-										<input type="text" id="dir" name="dir" placeholder="Ave jr calle" class="span4" value="<?php echo $_POST['dir']; ?>" >
+										<input type="text" id="dir" name="dir" placeholder="Av Jr calle" class="span4" value="<?php echo $_POST['dir']; ?>" >
 									</div>
 								</div>
 							</div>
@@ -304,7 +317,12 @@ include ("../datos/postgresHelper.php");
 							</div>
 						</fieldset>
 					</div>
-					
+					<!--<input type="hidden" name="pais" id="pais" value="<?php echo $_POST['pais']; ?>">
+					<input type="hidden" name="dep" id="dep" value="<?php echo $_POST['dep']; ?>">
+					<input type="hidden" name="pro" id="pro" value="<?php echo $_POST['pro']; ?>">
+					<input type="hidden" name="dis" id="dis" value="<?php echo $_POST['dis']; ?>">
+					<input type="hidden" name="cli" id="cli" value="<?php echo $_POST['cli']; ?>">-->
+					<input type="hidden" name="pid" id="pid" value="<?php echo $_POST['pid']; ?>">
 				</div>
 			</form>	
 			
@@ -314,6 +332,9 @@ include ("../datos/postgresHelper.php");
 			<button class="btn btn-primary" onClick="saveproject();"><i class="icon-ok icon-white"></i> Guardar Cambios</button>
 		</div>
 	</div>
+	<form action="" name="frmedit" method='POST'>
+		
+	</form>
 	</section>
 	<div id="space"></div>
 	<footer></footer>

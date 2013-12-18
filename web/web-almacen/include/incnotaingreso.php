@@ -34,9 +34,9 @@ if (isset($_REQUEST['tra'])) {
 				$result = $cn->ExecuteNomQuery($query);
 				if (intval($result[0]) <= 0) {
 					$c = new PostgreSQL();
-					$q = $c->consulta("INSERT INTO almacen.inventario(materialesid, almacenid, precio, stockmin, stock, stockpen, stockdev, 
+					$q = $c->consulta("INSERT INTO almacen.inventario(materialesid, almacenid, precio, preven, stockmin, stock, stockpen, stockdev, 
 										anio, fecing, nrocompra, rucproveedor, esid)
-										VALUES('".$_REQUEST['matid']."','".$_REQUEST['alid']."',".$_REQUEST['pre'].",10,0,0,0,'".date("Y")."',now()::date,'".$_REQUEST['ncom']."','".$_REQUEST['rucp']."','23')");
+										VALUES('".$_REQUEST['matid']."','".$_REQUEST['alid']."',".$_REQUEST['pre'].",".(($_REQUEST['pre'])+($_REQUEST['pre'] * 0.10)).",10,0,0,0,'".date("Y")."',now()::date,'".$_REQUEST['ncom']."','".$_REQUEST['rucp']."','23')");
 					$c->affected_rows($query);
 					$c->close($q);
 				}
@@ -58,13 +58,12 @@ if (isset($_REQUEST['tra'])) {
 				$stkact = $result[0];
 			}
 			$cn->close($query);
-
 			$sal = (intval($stkact) + intval($_REQUEST['cantidad']));
 			/// Guardando kardex historico ingresos
 			///// En el flag el valor 1 es activado 0 desctivados para ser consultados
 			$cn = new PostgreSQL();
 			$query = $cn->consulta("INSERT INTO almacen.entradasalida(tdoc,nrodoc,almacenid,materialesid,stkact,cantent,cantsal,saldo,precio,flag)
-    								VALUES ('NI','".$nroning."','".$_REQUEST['alid']."','".$_REQUEST['matid']."',".$stkact.", 0,".$_REQUEST['cantidad'].", ".$sal.", ".$_REQUEST['pre'].",'1');");
+    								VALUES ('NI','".$nroning."','".$_REQUEST['alid']."','".$_REQUEST['matid']."',".$stkact.",".$_REQUEST['cantidad'].", 0, ".$sal.", ".$_REQUEST['pre'].",'1');");
     					
 			$cn->affected_rows($query);
 			$cn->close($query);
@@ -83,7 +82,7 @@ if (isset($_REQUEST['tra'])) {
 			}
 			//Actualizar Stock de Inventario
 			$cn = new PostgreSQL();
-			$query = $cn->consulta("UPDATE almacen.inventario SET precio=".$_REQUEST['pre'].",stock=$sal,fecing = now()::date, nrocompra='".$_REQUEST['ncom']."',rucproveedor='".$_REQUEST['rucp']."' WHERE anio LIKE '".date("Y")."' AND materialesid LIKE '".$_REQUEST['matid']."'");
+			$query = $cn->consulta("UPDATE almacen.inventario SET precio=".$_REQUEST['pre'].",preven=".(($_REQUEST['pre']+($_REQUEST['pre']*0.10)))." ,stock=$sal,fecing = now()::date, nrocompra='".$_REQUEST['ncom']."',rucproveedor='".$_REQUEST['rucp']."' WHERE anio LIKE '".date("Y")."' AND materialesid LIKE '".$_REQUEST['matid']."'");
 			$cn->affected_rows($query);
 			$cn->close($query);
 		}

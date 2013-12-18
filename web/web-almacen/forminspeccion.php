@@ -58,8 +58,8 @@ if ($_POST['btns']== "btns") {
 			$cn = new PostgreSQL();
 			$query = $cn->consulta("SELECT n.nroningreso,c.fecent,n.fecha::date
 									FROM almacen.notaingreso n INNER JOIN logistica.compras c
-									ON n.nrocompra LIKE c.nrocompra
-									WHERE n.nroningreso LIKE '".$_REQUEST['nro']."' LIMIT 1 OFFSET 0");
+									ON TRIM(n.nrocompra) LIKE c.nrocompra
+									WHERE n.nroningreso LIKE '".$_GET['nro']."' LIMIT 1 OFFSET 0");
 			if ($cn->num_rows($query) > 0) {
 				$result = $cn->ExecuteNomQuery($query);
 				$nro = $result[0];
@@ -76,7 +76,7 @@ if ($_POST['btns']== "btns") {
 							<div class="control-group">
 								<label for="label" class="label label-info">Nro de Nota de Ingreso</label>
 								<div class="controls">
-									<input type="text" class="uneditable-input" id="txtnroing" name='txtnroing' onBlur="valid(this,'<?php echo $nro; ?>');" value="<?php echo $nro; ?>" title="Nro de Nota de Ingreso" REQUIRED/>
+									<input type="text" class="uneditable-input" id="txtnroing" name='txtnroing' onBlur="valid(this,'<?php echo $nro; ?>');" value="<?php echo $_GET['nro']; ?>" title="Nro de Nota de Ingreso" REQUIRED/>
 								</div>
 							</div>
 							<div class="control-group">

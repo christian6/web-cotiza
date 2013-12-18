@@ -1,3 +1,6 @@
+$(document).ready(function  () {
+	resizesmall();
+});
 function openfile () {
 	$(" #adda ").modal("show");
 }
@@ -126,7 +129,7 @@ function search(des){
 			url : 'includes/incmeter.php',
 			type: 'POST',
 			success : function(response){
-				//alert(response);
+					////console.log('des '+response);
             if (response != "") {
                 setTimeout(function() {
                     $( "#matmed" ).html(response);
@@ -144,7 +147,7 @@ function search(des){
 	}
 }
 function showdet () {
-	var nom = document.getElementById("nommat").value;
+	var nom = document.getElementById("matnom").value;
 	var cbo = document.getElementById("cbomed");
 	var opm = cbo.options[cbo.selectedIndex].value;
 	//alert(nom +" "+opm);
@@ -159,7 +162,7 @@ function showdet () {
 			url : 'includes/incmeter.php',
 			type : 'POST',
 			success : function(response){
-				//alert(response);
+				//console.log('medida '+response);
 	            if (response != "") {
 	                //setTimeout(function() {
 	                $( "#data" ).html(response);
@@ -177,7 +180,7 @@ function showdet () {
 	}
 }
 function savemat () {
-	if ($("#cod").html() != '') {
+	if ($.trim($("#cod").html()) != '') {
 		var prm = {
 			'tra' : 'savedata',
 			'pro' : $("#pro").val(),
@@ -196,6 +199,7 @@ function savemat () {
 				if (response == 'success') {
 					//$("#tbld").html('');
 					listtbl();
+					$("#matnom").val('');
 					$("#matmed").html('');
 					$("#data").html('');
 					$("#cant").val('');
@@ -399,4 +403,318 @@ function savenmat () {
 			});
 		}
 	});
+}
+
+var searchProyecto = function  (it,e) {
+	var evt = e ? e : event;
+    var key = window.Event ? evt.which : evt.keyCode;
+    if (key == 13) {
+    	//alert(txtse.value);
+    	//search($.trim($("#nommat").val()));
+     var prm = {
+	   	'tra' : 'lpro',
+	   }
+	   if (it.id == 'nro') {
+	   	prm['nro'] = it.value;
+	   	prm['tipo'] = 'nro';
+	   }else{
+	   	prm['nom'] = it.value;
+	   	prm['tipo'] = 'des';
+	   }
+  
+		$.ajax({
+			url : 'includes/incmeter.php',
+			type : 'POST',
+			data : prm,
+			success : function (response) {
+				//console.log(response);
+				response = JSON.parse(response);
+				if (response.status == 'success') {
+					var tb = document.getElementById('lpro');
+					tb.innerHTML = "";
+					for (var i = 0; i < response.list.length; i++) {
+						var tr = document.createElement('tr'),	item = document.createElement('td'), cod = document.createElement('td'),
+							pro = document.createElement('td'),cli = document.createElement('td'),te = document.createElement('td'),
+							btn = document.createElement('btn'),ico = document.createElement('i');
+						item.setAttribute('id','tc');
+						te.setAttribute('id','tc');
+						ico.setAttribute('class','icon-chevron-right');
+						btn.setAttribute('class', "btn btn-mini btn-success t-d");
+						btn.appendChild(ico);
+						btn.setAttribute('onClick',"listSector('"+response.list[i].proyectoid+"')");
+						item.innerHTML = i + 1;
+						cod.innerHTML = response.list[i].proyectoid;
+						pro.innerHTML = response.list[i].descripcion;
+						cli.innerHTML = response.list[i].razonsocial;
+						te.appendChild(btn);
+						tr.appendChild(item);
+						tr.appendChild(cod);
+						tr.appendChild(pro);
+						tr.appendChild(cli);
+						tr.appendChild(te);
+						tb.appendChild(tr);
+					};
+					
+				};
+			},
+			error : function (obj,que,otr) {
+				msgError(null,null,null);
+			}
+		});
+}
+}
+var showOpenCopyPro = function () {
+	$("#mlp").modal('show');
+}
+var listSector = function  (pro) {
+	$("#mb1").hide('slide',900);
+	listSubproyecto(pro);
+	$.ajax({
+		url : 'includes/incmeter.php',
+		type : 'POST',
+		data : { 'tra' : 'lsec','pro' : pro },
+		dataType : 'json',
+		complete : function (obj, com) {
+			if (com == 'success') {
+				$("#mb2").show('slide',2100);
+			}
+		},
+		success : function (response) {
+			//console.log(response);
+			if (response.status == 'success') {
+				var tb = document.getElementById('lsec');
+				tb.innerHTML = "";
+				for (var i = 0; i < response.list.length; i++) {
+					var tr = document.createElement('tr'),	item = document.createElement('td'), cod = document.createElement('td'),
+						sec = document.createElement('td'),te = document.createElement('td'),	btn = document.createElement('btn'),ico = document.createElement('i');
+					item.setAttribute('id','tc');
+					te.setAttribute('id','tc');
+					ico.setAttribute('class','icon-share-alt');
+					btn.setAttribute('class', "btn btn-mini btn-info t-d");
+					btn.appendChild(ico);
+					btn.setAttribute('onClick',"listMaterials('"+pro+"','','"+response.list[i].nroplano+"')");
+					item.innerHTML = i + 1;
+					cod.innerHTML = response.list[i].nroplano;
+					sec.innerHTML = response.list[i].sector;
+					te.appendChild(btn);
+					tr.appendChild(item);
+					tr.appendChild(cod);
+					tr.appendChild(sec);
+					tr.appendChild(te);
+					tb.appendChild(tr);
+				};
+			};
+		},
+		error : function (obj,que,otr) {
+			msgError(null,null,null);
+		}
+	});
+}
+var listSubproyecto = function (pro) {
+	$.ajax({
+		url : 'includes/incmeter.php',
+		type : 'POST',
+		data : {'tra' : 'lsub', 'pro' : pro },
+		dataType : 'json',
+		success : function (response) {
+			//console.log(response);
+			if (response.status == 'success') {
+				var tb = document.getElementById('lsub');
+				tb.innerHTML = "";
+				for (var i = 0; i < response.list.length; i++) {
+					var tr = document.createElement('tr'),	item = document.createElement('td'), cod = document.createElement('td'),
+						sub = document.createElement('td'),te = document.createElement('td'),	btn = document.createElement('btn'),ico = document.createElement('i');
+					item.setAttribute('id','tc');
+					te.setAttribute('id','tc');
+					ico.setAttribute('class','icon-chevron-right');
+					btn.setAttribute('class', "btn btn-mini btn-success t-d");
+					btn.appendChild(ico);
+					btn.setAttribute('onClick',"listsubsec('"+pro+"','"+response.list[i].subproyectoid+"')");
+					item.innerHTML = i + 1;
+					cod.innerHTML = response.list[i].subproyectoid;
+					sub.innerHTML = response.list[i].subproyecto;
+					te.appendChild(btn);
+					tr.appendChild(item);
+					tr.appendChild(cod);
+					tr.appendChild(sub);
+					tr.appendChild(te);
+					tb.appendChild(tr);
+				};
+			};
+		},
+		error : function (obj,que,otr) {
+			msgError(null,null,null);
+		}
+	});
+}
+function backFirst () {
+	$("#mb2").hide('slide',1200);
+	$("#mb1").show('slide',900);
+}
+var listsubsec = function (pro,sub) {
+	$.ajax({
+		url : 'includes/incmeter.php',
+		type : 'POST',
+		data : { 'tra' : 'lsec','pro' : pro, 'sub' : sub },
+		dataType : 'json',
+		success : function (response) {
+			//console.log('sec sub '+response);
+			if (response.status == 'success') {
+				var tb = document.getElementById('lsec');
+				tb.innerHTML = "";
+				for (var i = 0; i < response.list.length; i++) {
+					var tr = document.createElement('tr'),	item = document.createElement('td'), cod = document.createElement('td'),
+						sec = document.createElement('td'),te = document.createElement('td'),	btn = document.createElement('btn'),ico = document.createElement('i');
+					item.setAttribute('id','tc');
+					te.setAttribute('id','tc');
+					ico.setAttribute('class','icon-share-alt');
+					btn.setAttribute('class', "btn btn-mini btn-info t-d");
+					btn.appendChild(ico);
+					btn.setAttribute('onClick',"listMaterials('"+pro+"','"+sub+"',"+response.list[i].nroplano+"')");
+					item.innerHTML = i + 1;
+					cod.innerHTML = response.list[i].nroplano;
+					sec.innerHTML = response.list[i].sector;
+					te.appendChild(btn);
+					tr.appendChild(item);
+					tr.appendChild(cod);
+					tr.appendChild(sec);
+					tr.appendChild(te);
+					tb.appendChild(tr);
+				};
+			};
+		},
+		error : function (obj,que,otr) {
+			msgError(null,null,null);
+		}
+	});
+}
+function backFirst () {
+	$("#mb2").hide('slide',1200);
+	$("#mb1").show('slide',900);
+}
+function backTwo () {
+	$("#mb3").hide('slide',1200);
+	$("#mb2").show('slide',900);
+	document.getElementById('btnccm').setAttribute('onClick','backFirst();');
+	$("#btnccsaved").addClass('hide');
+	document.getElementById('btnccsaved').setAttribute('onClick','');
+}
+var listMaterials = function (pro,sub,sec) {
+	$("#mb2").hide('slide',1200);
+	document.getElementById('btnccm').setAttribute('onClick','backTwo();');
+	$("#btnccsaved").removeClass('hide');	
+	$.ajax({
+		url : 'includes/incmeter.php',
+		type : 'POST',
+		data : {'tra':'lmat','pro':pro,'sub':sub,'sec':sec},
+		dataType : 'json',
+		complete : function (obj,success) {
+			if (success == 'success') {
+					$("#mb3").show('slide',900);
+			}
+		},
+		success : function (response) {
+			////console.log(response);
+			if (response.status == 'success') {
+				var tb = document.getElementById('lmat');
+				tb.innerHTML = "";
+				for (var i = 0; i < response.list.length; i++) {
+					var tr = document.createElement('tr'),
+							item = document.createElement('td'),cod = document.createElement('td'),nom =document.createElement('td'),med=document.createElement('td'),
+							und = document.createElement('td'),cant = document.createElement('td'),tc = document.createElement('td'), chk = document.createElement('input');
+					item.setAttribute('id','tc');
+					tc.setAttribute('id','tc');
+					cant.setAttribute('id','tc');
+					chk.setAttribute('type','CheckBox');
+					chk.setAttribute('name','ccmat');
+					chk.setAttribute('value', "'"+response.list[i].materialesid+"'");
+
+					item.innerHTML = i + 1;
+					cod.innerHTML = response.list[i].materialesid;
+					nom.innerHTML = response.list[i].matnom;
+					med.innerHTML = response.list[i].matmed;
+					und.innerHTML = response.list[i].matund;
+					cant.innerHTML = response.list[i].cant;
+					tc.appendChild(chk);
+					
+					tr.appendChild(item);
+					tr.appendChild(cod);
+					tr.appendChild(nom);
+					tr.appendChild(med);
+					tr.appendChild(und);
+					tr.appendChild(cant);
+					tr.appendChild(tc);
+					tb.appendChild(tr);
+				};
+				if (response.list.length > 0) {
+					document.getElementById('btnccsaved').setAttribute('onClick','savedCopyListmateriales("'+pro+'","'+sub+'","'+sec+'");');
+				}
+			};
+		},
+		error : function (obj,que,otr) {
+			msgError(null,null,null);
+		}
+	});
+}
+var chkccm = function () {
+	$('input[name=rbt]').each(function () {
+		var item = this;
+		if (item.checked) {
+			var sts = false;
+			if (item.value == 'f') {
+				sts = true;
+			}else if(item.value == 'n'){
+				sts = false;
+			}
+			$('input[name=ccmat]').each(function () {
+				var chk = this;
+				chk.checked = sts;
+			});
+		};
+	});
+}
+var savedCopyListmateriales = function (pro,sub,sec) {
+	var count = 0;
+	var ar = '';
+	$('input[name=ccmat]').each(function () {
+		var chk = this;
+		if (chk.checked) {
+			ar += ""+chk.value+",";
+			count++;
+		};
+	});
+	$("#mlp").modal('hide');
+	if (count > 0) {
+		$.msgBox({
+			title : 'Confirmar?',
+			content : 'Realmente desea Copiar la lista materiales?',
+			opacity : 0.8,
+			type : 'confirm',
+			buttons : [{value:'Si'},{value:'No'}],
+			success : function  (response) {
+				if (response == 'Si') {
+					ar = ar.substring(0,(ar.length - 1));
+					$.ajax({
+						url : 'includes/incmeter.php',
+						type : 'POST',
+						data : { 'tra': 'savedcopy', 'pro':pro,'sub':sub, 'sec':sec, 'mat': ar,	'pron' : $("#pro").val(),'subn' : $("#sub").val(),'secn' : $("#sec").val() },
+						dataType : 'json',
+						success : function (response) {
+							console.log(response);
+							if (response.status == 'success') {
+								//alert(response.list);
+								location.reload();
+							};
+						},
+						error : function (obj,que,otr) {
+							msgError(null,null,null);
+						}
+					});
+				};
+			}
+		});
+	}else{
+		msgInfo("Info",'No se han seleccionado materiales para copiar.',true);
+		setTimeout(function() { $("#mlp").modal('show'); }, 2600);
+	}
 }

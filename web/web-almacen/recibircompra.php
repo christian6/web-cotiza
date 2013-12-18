@@ -170,7 +170,7 @@ include ("../datos/postgresHelper.php");
 					if ($cn->num_rows($query) > 0) {
 						$result = $cn->ExecuteNomQuery($query);
 						echo "<label>".$result['descri']."</label>";
-						echo "<input type='hidden' id='alid' name='alid' value-'".$result['almacenid']."'>";
+						echo "<input type='hidden' id='alid' name='alid' value='".$result['almacenid']."'>";
 					}else{
 						$c = new PostgreSQL();
 						$q = $c->consulta("SELECT almacenid,descri FROM ADMIN.ALMACENES WHERE esid LIKE '21'");
@@ -212,8 +212,8 @@ include ("../datos/postgresHelper.php");
 								<div class="control-group">
 									<label class="label label-info">Nro Guia:</label>
 									<div class="controls">
-										<input type="text" class="span2" id="txtnrog" placeholder="Nro Guia Remision" title="Ingrese Nro Guia Remision" />
-										<input type="hidden" id="ncom" name="ncom" value="<?php echo $_REQUEST['nro']; ?>" />
+										<input type="text" class="span2" id="txtnrog" maxlength="12" placeholder="Nro Guia Remision" title="Ingrese Nro Guia Remision" />
+										<input type="hidden" id="ncom" name="ncom"  maxlength="12" value="<?php echo $_REQUEST['nro']; ?>" />
 									</div>
 								</div>
 								<div class="control-group">
@@ -234,7 +234,7 @@ include ("../datos/postgresHelper.php");
 								<div class="control-group">
 									<label class="label label-info">Nro Factura</label>
 									<div class="controls">
-										<input type="text" class="span2" id='txtnrof' name="txtnrof" placeholder="Nro Factura" title="Ingrese Nro Factura" >
+										<input type="text" class="span2" id='txtnrof' name="txtnrof" maxlength="12" placeholder="Nro Factura" title="Ingrese Nro Factura" >
 									</div>
 								</div>
 								<div class="control-group">

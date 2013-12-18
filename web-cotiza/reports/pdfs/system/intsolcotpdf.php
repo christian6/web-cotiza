@@ -167,7 +167,7 @@ function Cab(){
 	}
   $cn = new PostgreSQL();
   $query = $cn->consulta("
-    SELECT c.tentr,c.contacto,c.fval,m.nomdes 
+    SELECT c.fecenv,c.contacto,c.fval,m.nomdes 
     FROM logistica.cotizacioncli c INNER JOIN admin.moneda m 
     ON m.monedaid=c.monedaid 
     WHERE c.nrocotizacion LIKE '".$this->nro_."' AND c.rucproveedor LIKE '".$this->ruc_."'
@@ -176,7 +176,7 @@ function Cab(){
   if ($cn->num_rows($query)>0) {
     while ($result =  $cn->ExecuteNomQuery($query)) {
       $this->SetXY(130,50);
-      $this->cell(150,0,'Tiempo de Entrega: '.$result['tentr'].' dias.',0,1,'L',false);
+      $this->cell(150,0,'Tiempo de Entrega: '.$result['fecenv'].' dias.',0,1,'L',false);
       $this->SetXY(130,55);
       $this->cell(150,0,'Contacto: '.$result['contacto'],0,1,'L',false);
       $this->SetXY(130,60);
@@ -234,15 +234,15 @@ function tfoot($sto)
   $this->SetX(130);
   $this->cell(40,0,'Sub-Total :',0,1,'R',false);
   $this->SetX(156);
-  $this->cell(40,0,$sto,0,0,'R',false);
+  $this->cell(40,0, number_format($sto,2,',','.'),0,0,'R',false);
   $this->SetX(130);
-  $this->cell(40,8,'IGV :',0,0,'R',false);
+  $this->cell(40,8,'IGV 18% :',0,0,'R',false);
   $this->SetX(156);
-  $this->cell(40,8,$igv,0,0,'R',false);
+  $this->cell(40,8,number_format($igv,2,',','.'),0,0,'R',false);
   $this->SetX(130);
   $this->cell(40,18,'Total :',0,0,'R',false);
   $this->SetX(156);
-  $this->cell(40,18,$tot,0,1,'R',false);
+  $this->cell(40,18,number_format($tot,2,',','.'),0,1,'R',false);
   $this->Ln(0);
   $let = new CNumeroaLetra;
   $let->setNumero($tot);
@@ -280,7 +280,7 @@ $query = $cn->consulta("SELECT * FROM logistica.spcondetcotizapro('".$nro."','".
   if ($cn->num_rows($query)>0) {
     $i = 1;
     while($fila = $cn->ExecuteNomQuery($query)){
-      $pdf->Row(array($fila['materialesid'],$fila['matnom'], $fila['matmed'], $fila['matund'], $fila['cantidad'],$fila['precio'],$fila['importe']));
+      $pdf->Row(array($fila['materialesid'],$fila['matnom'], $fila['matmed'], $fila['matund'], $fila['cantidad'],number_format($fila['precio'],2,',','.') ,number_format($fila['importe'],2,',','.') ));
       $sub += $fila['importe'];
       }
       $cn->close($query);

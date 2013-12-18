@@ -244,15 +244,15 @@ function tfoot($sto)
   $this->SetX(130);
   $this->cell(40,0,'Sub-Total :',0,1,'R',false);
   $this->SetX(156);
-  $this->cell(40,0,$sto,0,0,'R',false);
+  $this->cell(40,0,number_format($sto,2,'.',','),0,0,'R',false);
   $this->SetX(130);
-  $this->cell(40,8,'IGV :',0,0,'R',false);
+  $this->cell(40,8,'IGV 18%:',0,0,'R',false);
   $this->SetX(156);
-  $this->cell(40,8,$igv,0,0,'R',false);
+  $this->cell(40,8,number_format($igv,2,'.',','),0,0,'R',false);
   $this->SetX(130);
   $this->cell(40,18,'Total :',0,0,'R',false);
   $this->SetX(156);
-  $this->cell(40,18,$tot,0,1,'R',false);
+  $this->cell(40,18,number_format($tot,2,'.',','),0,1,'R',false);
   $this->Ln(0);
   $let = new CNumeroaLetra;
   $let->setNumero($tot);
@@ -268,6 +268,7 @@ function factura()
   $this->cell(0,4,'Facturar a:      ICR PERU S.A.','LR',1,'L',false);
   $this->cell(0,4,utf8_decode('Dirección:       Jr. Gral. José de San Martin Mz. E Lote 6 Huachipa - Lurigancho Lima'),'LR',1,'L',false);
   $this->cell(0,4,'Telefono:        51 1 371-0443','LBR',1,'L',false);
+  $this->cell(0,8,'* Adjuntar copia de esta orden a la factura original',1,0,'L',false);
 }
 //Pie de Pagina
 function Footer()
@@ -299,7 +300,7 @@ $query = $cn->consulta("SELECT * FROM logistica.spconsultardetcompra('".$nro."')
   if ($cn->num_rows($query)>0) {
     $i = 1;
     while($fila = $cn->ExecuteNomQuery($query)){
-      $pdf->Row(array($i++,$fila['matnom'], $fila['matmed'], $fila['matund'], $fila['cantidad'],$fila['precio'],$fila['importe']));
+      $pdf->Row(array($i++,utf8_decode($fila['matnom']),utf8_decode($fila['matmed']), $fila['matund'], $fila['cantidad'],number_format($fila['precio'],2,'.',','), number_format($fila['importe'],2,'.',',') ));
       $sub += $fila['importe'];
     }
       $cn->close($query);

@@ -223,7 +223,83 @@ include ("../datos/postgresHelper.php");
 											<small>Solo se admiten 320 caracteres.</small>
 										</div>
 									</div>
+
+									<div class="span5">
+									<div class="row show-grid">
+										<div class="span4">
+											<div class="well c-blue-light t-info">
+												<h4>Archivos Complementarios</h4>
+												<?php
+												function ListFolder($path)
+												{	
+													try {
+														//using the opendir function
+													    $dir_handle = @opendir($path) or die("Unable to open $path");
+													    
+													    //Leave only the lastest folder name
+													    $dirname = end(explode("/", $path));
+													    
+													    //display the target folder.
+													    echo ("<li><i class='icon-folder-open'></i> $dirname\n");
+													    echo "<ul>\n";
+													    while (false !== ($file = readdir($dir_handle))) 
+													    {
+													        if($file!="." && $file!="..")
+													        {
+													            if (is_dir($path."/".$file))
+													            {
+													                //Display a list of sub folders.
+													                ListFolder($path."/".$file);
+													            }
+													            else
+													            {
+													                //Display a list of files.
+													                echo "<li><i class='icon-file'></i> <a href='".$path.$file."' target='_blank'>$file</a></li>";
+													            }
+													        }
+													    }
+													    echo "</ul>\n";
+													    echo "</li>\n";
+													    
+													    //closing the directory
+													    closedir($dir_handle);
+													} catch (Exception $e) {
+														echo $e->getMessage();
+													}
+												}
+												try {
+													if ($_GET['sub'] != '') {
+														ListFolder("../project/".$_GET['pro']."/".$_GET['sub']."/comp/");
+													}else{
+														ListFolder('../project/'.$_GET['pro'].'/comp/');
+													}
+												} catch (Exception $e) {
+													echo $e->getMessage();
+												}
+												?>
+											</div>
+										</div>
+										<!--<div class="span4">
+											<div class="well c-blue-light t-info">
+												<h4>Archivos Administrativos</h4>
+												<?php/*
+												if ($_GET['sub'] != '') {
+													ListFolder("../project/".$_GET['pro']."/".$_GET['sub']."/adm/");
+												}else{
+													ListFolder("../project/".$_GET['pro']."/adm/");
+												}
+												//$adm = shell_exec($cmda);
+												//echo php_file_tree($_SERVER['DOCUMENT_ROOT'], "javascript:alert('You clicked on [link]');");												
+												*/?>
+											</div>
+										</div>-->
+									</div>
 								</div>
+								
+	
+
+								</div>
+
 							</div>
 						</div>
 					</div>

@@ -15,12 +15,18 @@
 						</a>
 					</li>
 					<li class="dropdown">
-			            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Proyectos <b class="caret"></b></a>
-			            <ul class="dropdown-menu">
-			               <li><a href="http://190.41.246.91/web/web-ventas/proyecto.php">Agregar Proyecto</a></li>
-			               <li><a href="http://190.41.246.91/web/web-ventas/manager-pro.php">Admin Proyectos</a></li>
-			            </ul>
-			        </li>
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown">Proyectos <b class="caret"></b></a>
+						<ul class="dropdown-menu">
+							<li><a href="http://190.41.246.91/web/web-ventas/proyecto.php">Agregar Proyecto</a></li>
+							<li><a href="http://190.41.246.91/web/web-ventas/manager-pro.php">Admin Proyectos</a></li>
+						</ul>
+					</li>
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown">Mantenimientos <b class="caret"></b></a>
+						<ul class="dropdown-menu">
+							<li><a href="http://190.41.246.91/web/web-ventas/customers.php">Clientes</a></li>
+						</ul>
+					</li>
 				</ul>
 				<ul class="nav pull-right">
 		          	<li class="dropdown">

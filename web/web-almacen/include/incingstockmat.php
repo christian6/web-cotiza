@@ -58,7 +58,7 @@ if ($_REQUEST['tra'] == 'tbl') {
 				$c = new PostgreSQL();
 				$q = $c->consulta("INSERT INTO almacen.inventario(materialesid, almacenid, precio, stockmin, stock, stockpen, stockdev, 
             						anio, fecing, nrocompra, rucproveedor, esid)
-    							VALUES ('".$result['materialesid']."', '".$result['almacenid']."', ".$result['precio'].", ".$result['stockmin'].",
+    							VALUES ('".$result['materialesid']."', '".$result['almacenid']."', ".$result['precio'].",0, ".$result['stockmin'].",
     							".$result['stock'].", 0, 0, '".date('Y')."',now()::date, '', '".$result['rucproveedor']."', '23')");
 				$c->affected_rows($q);
 				$c->close($q);
@@ -91,7 +91,7 @@ if ($_REQUEST['tra'] == 'tbl') {
 				$c = new PostgreSQL();
 				$q = $c->consulta("INSERT INTO almacen.inventario(materialesid, almacenid, precio, stockmin, stock, stockpen, stockdev, 
             						anio, fecing, nrocompra, rucproveedor, esid)
-    							VALUES ('".$result['materialesid']."', '".$result['almacenid']."', ".$result['precio'].", ".$result['stockmin'].",
+    							VALUES ('".$result['materialesid']."', '".$result['almacenid']."', ".$result['precio'].",0, ".$result['stockmin'].",
     							".$result['stock'].", 0, 0, '".date('Y')."',now()::date, '', '".$result['rucproveedor']."', '23')");
 				$c->affected_rows($q);
 				$c->close($q);
@@ -122,7 +122,7 @@ if ($_REQUEST['tra'] == 'tbl') {
 				$c = new PostgreSQL();
 				$q = $c->consulta("INSERT INTO almacen.inventario(materialesid, almacenid, precio, stockmin, stock, stockpen, stockdev, 
             						anio, fecing, nrocompra, rucproveedor, esid)
-    							VALUES ('".$result['materialesid']."', '".$_REQUEST['alid']."', 0, ".$_REQUEST['stk'].",
+    							VALUES ('".$result['materialesid']."', '".$_REQUEST['alid']."', 0,0 , ".$_REQUEST['stk'].",
     							0, 0, 0, '".date('Y')."',now()::date, '', '10704928501', '23')");
 				$c->affected_rows($q);
 				$c->close($q);

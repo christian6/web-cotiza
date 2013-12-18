@@ -98,7 +98,7 @@ function cabnro()
                           INNER JOIN admin.empleados e
                           ON i.empdni = e.empdni
                           INNER JOIN logistica.compras o
-                          ON n.nrocompra LIKE o.nrocompra
+                          ON TRIM(n.nrocompra) LIKE o.nrocompra
                           INNER JOIN admin.proveedor p
                           ON o.rucproveedor LIKE p.rucproveedor
                           INNER JOIN admin.almacenes a

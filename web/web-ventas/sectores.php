@@ -23,6 +23,7 @@ include ("../datos/postgresHelper.php");
     <script type="text/javascript" src="js/autocomplete.js"></script>
 	<script src="../bootstrap/js/bootstrap.js"></script>
 	<script src="js/sectores.js"></script>
+	<script src="js/newsector.js"></script>
 	<link rel="stylesheet" href="../css/msgBoxLight.css">
 	<script src="../modules/msgBox.js"></script>
 	<style>
@@ -77,6 +78,40 @@ include ("../datos/postgresHelper.php");
 			max-height: 16em;
 			overflow-y: auto;
 			overflow-x: hidden;
+		}
+		#onemat{
+			background-color: white;
+			border-radius: .5em;
+			margin-top: -.5em;
+			margin-left: -1.500%;
+			max-height: 16em;
+			padding-top: 1em;
+			padding-left: 1em;
+			padding-right: .5em;
+			padding-bottom: .5em;
+			overflow-y: auto;
+			overflow-x: hidden;
+		}
+		#onemat li{
+			display: block;
+		}
+		#onemat li:hover{
+			border: solid .1em rgba(40,40,40,1);
+			border-radius: .3em;
+			background-color: rgba(210,210,210,1);
+			color: rgba(2,2,2,1);
+			padding-left: .5em;
+		}
+		.selected{
+			border: solid .1em rgba(40,40,40,1);
+			border-radius: .3em;
+			background-color: rgba(180,180,180,1);
+			color: rgba(2,2,2,1);
+			padding-left: .5em;
+		}
+		#onemat li a{
+			cursor: pointer;
+			text-decoration: none;
 		}
 	</style>
 </head>
@@ -216,6 +251,9 @@ include ("../datos/postgresHelper.php");
 			              		<div class="btn-group">
 			              			 <button class="btn btn-success t-d" onClick="showaddmat();" <?php if($_GET['status'] == '55' || $_GET['status'] == '59'){ echo "DISABLED";} ?>><i class="icon-plus"></i> Agregar material</button>
 			              			 <button class="btn btn-success t-d" onClick="openfile();" <?php if($_GET['status'] == '55' || $_GET['status'] == '59'){ echo "DISABLED";} ?>><i class="icon-file"></i> Agregar Archivo</button>
+			              			 <button class="btn btn-info t-d" onClick="showOpenCopyPro();" <?php if($_GET['status'] == '55' || $_GET['status'] == '59'){ echo "DISABLED";} ?>>
+			              			 	<i class="icon-list"></i> Copiar Lista de Materiales
+			              			 </button>
 			              		</div>
 
 			              		</div>
@@ -225,20 +263,21 @@ include ("../datos/postgresHelper.php");
 										<div class="control-group info">
 											<label for="controls" class="t-info">Nombre o Descripción</label>
 											<div class="controls">
-												<div class="ui-widget">
+												<div class="ui-widget hide">
 												<select name="cbomat" id="combobox" class="span4 hide">
 													<?php
-													$cn = new PostgreSQL();
+													/*$cn = new PostgreSQL();
 													$query = $cn->consulta("SELECT DISTINCT TRIM(matnom) as matnom FROM admin.materiales ORDER BY matnom ASC;");
 													if ($cn->num_rows($query) > 0) {
 														while ($result = $cn->ExecuteNomQuery($query)) {
 															echo "<option value='".$result['matnom']."'>".$result['matnom']."</option>";
 														}
 													}
-													$cn->close($query);
+													$cn->close($query);*/
 													?>
 												</select>
 												</div>
+												<input type="text" class="span6" id="matnom" onBlur="" onKeyDown="moveTopBottom(event);" onKeyUp="filterNomMat(event);">
 											</div>
 										</div>
 									</div>
@@ -262,17 +301,11 @@ include ("../datos/postgresHelper.php");
 											<div class="control-group info">
 												<label for="controls" class="t-info">Resumen</label>
 												<div class="controls well c-red t-white">
-													<div class="row">
-														<div class="row">
-															<div class="row">
 																<div id="data"></div>
-															</div>
-														</div>
-													</div>
 												</div>
 											</div>
 										</div>
-										<div class="span4">
+										<div class="span2">
 											<div class="control-group info">
 												<label for="controls" class="t-info">Cantidad</label>
 												<div class="controls">
@@ -280,7 +313,8 @@ include ("../datos/postgresHelper.php");
 												</div>
 											</div>
 										</div>
-									<div class="span4">
+									<div class="span2">
+										<label>&nbsp;</label>
 										<div class="controls">
 											<button class="btn btn-info t-d" onClick="savemat();"><i class="icon-plus"></i> Agregar</button>
 										</div>
@@ -385,7 +419,7 @@ include ("../datos/postgresHelper.php");
 			<form method="POST" enctype="multipart/form-data" action="includes/incfile.php">
 			<div class="modal-header">
 				<a class="close" data-dismiss="modal">×</a>
-				<h4>Agragar Archivo</h4>
+				<h4>Agregar Archivo</h4>
 			</div>
 			<div class="modal-body">
 				<div class="well">
@@ -538,6 +572,118 @@ include ("../datos/postgresHelper.php");
 		<input type="hidden" id="pro" value="<?php echo $_GET['proid']; ?>" />
 		<input type="hidden" id="sub" value="<?php echo $_GET['sub']; ?>" />
 		<input type="hidden" id="sec" value="<?php echo $_GET['nropla']; ?>">
+	
+		<!-- Copy List materials of other's project -->
+
+		<div id="mlp" class="modal fade in span11 mitad11 hide" data-backdrop="statict">
+			<div class="modal-header">
+				<a data-dismiss="modal" class="close">&times;</a>
+				<h4 class="t-info"><em>Busqueda de Proyectos</em></h4>
+			</div>
+			<div class="modal-body" id="mb1">
+				<div class="row show-grid">
+					<div class="span8">
+						<div class="control-group info">
+							<label for="des" class="control-label">Descripción de Proyecto</label>
+							<div class="controls">
+								<input type="text" class="span8" id="des" onKeyUp="searchProyecto(this,event);">
+							</div>
+						</div>
+					</div>
+					<div class="span2">
+						<div class="control-group info">
+							<label for="nro" class="control-label">Codigo Proyecto</label>
+							<div class="controls">
+								<input type="text" class="span2" maxlength="7" id="nro" onKeyUp="searchProyecto(this,event);">
+							</div>
+						</div>
+					</div>
+					<div class="span10">
+						<table class="table table-condensed table-hover table-striped">
+							<thead>
+								<tr>
+									<th>Item</th>
+									<th>Codigo</th>
+									<th>Descripción de Proyecto</th>
+									<th>Cliente</th>
+									<th></th>
+								</tr>
+							</thead>
+							<tbody id="lpro">
+								
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div id="mb2" class="modal-body hide">
+				<div class="row show-grid">
+					
+					<div class="span5">
+						<table class="table table-condensed table-hover table-striped">
+							<thead>
+								<tr>
+									<th>item</th>
+									<th>Codigo</th>
+									<th>Descripción</th>
+									<th></th>
+								</tr>
+							</thead>
+							<tbody id="lsec">
+								
+							</tbody>
+						</table>
+					</div>
+					<div class="span5">
+						<table class="table table-condensed table-hover table-striped">
+							<thead>
+								<tr>
+									<th>item</th>
+									<th>Subproyecto</th>
+									<th></th>
+								</tr>
+							</thead>
+							<tbody id="lsub">
+								
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div id="mb3" class="modal-body hide">
+				<div class="span10">
+					<table class="table table-condensed table-striped table-hover">
+						<caption class="alert alert-info">
+							<div class="control-group">
+								<label class="radio inline"><input type="radio" name="rbt" value='f' onChange="chkccm();"> Seleccionar Todo</label>
+								<label class="radio inline"><input type="radio" name="rbt" value='n' onChange="chkccm();"> Seleccionar Ninguno</label>
+							</div>
+						</caption>
+						<thead>
+							<tr>
+								<th>item</th>
+								<th>Codigo</th>
+								<th>Descripción</th>
+								<th>Medida</th>
+								<th>Unidad</th>
+								<th>Cantidad</th>
+								<th>Chk</th>
+							</tr>
+						</thead>
+						<tbody id="lmat">
+							
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-warning t-d pull-left" data-dismiss="modal"><i class="icon-remove"></i> Salir</button>
+				<button class="btn btn-warning t-d" id="btnccm"><i class="icon-arrow-left"></i> Atrás</button>
+				<button class="btn btn-success t-d hide" id="btnccsaved" onClick=""><i class="icon-ok"></i> Copiar Materiales</button>
+			</div>
+		</div>
+
+
 	</section>
 	<div id="fullscreen-icr" class="pull-center">
 		<button class="btn btn-danger" onClick="closefull();"><i class="icon-remove"></i></button>

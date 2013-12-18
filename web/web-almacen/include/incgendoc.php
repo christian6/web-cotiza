@@ -45,7 +45,7 @@ switch ($_REQUEST['tipo']) {
 		$q = $c->consulta("SELECT COUNT(flag) FROM almacen.detpedidomat WHERE nropedido LIKE '$nrop' AND flag = '1'");
 		if ($c->num_rows($q)>0) {
 			$r = $c->ExecuteNomQuery($q);
-			$flag = $r[0];
+			$flag = intval($r[0]);
 		}
 		$c->close($q);
 		///
@@ -134,7 +134,7 @@ switch ($_REQUEST['tipo']) {
 					while ($rk = $ck->ExecuteNomQuery($qk)) {
 						$c = new PostgreSQL();
 						$q = $c->consulta("INSERT INTO almacen.entradasalida(tdoc,nrodoc,almacenid,materialesid,stkact,cantent,cantsal,saldo,precio,flag)
-    					VALUES ('NSAL',TRIM('$nnota'),'$alid','".$result['materialesid']."', ".(intval($result['cantidad']) + intval($rk['stock'])).", 0,".$result['cantidad'].", ".$rk['stock'].", ".$rk['precio'].",'1');");
+    					VALUES ('NSAL',TRIM('$nnota'),'$alid','".$result['materialesid']."', ".(intval($result['cantidad']) + intval($rk['stock'])).", 0, ".$result['cantidad'].", ".$rk['stock'].", ".$rk['precio'].",'1');");
     					$c->affected_rows($q);
     					$c->close($q);
 					}

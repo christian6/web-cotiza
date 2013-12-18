@@ -27,6 +27,7 @@
 			            <ul class="dropdown-menu">
 			               <li><a href="http://190.41.246.91/web/web-mantenice/materiales.php">Materiales</a></li>
 			               <li><a href="http://190.41.246.91/web/web-manager/solicitudmat.php">Solicitud de Materiales</a></li>
+			               <li><a href="http://190.41.246.91/web/web-manager/employee.php">Empleados</a></li>
 			            </ul>
 			        </li>
 			        <li class="divider-vertical"></li>

@@ -44,7 +44,7 @@ include ("../datos/postgresHelper.php");
 							<div class="control-group">
 								<label for="label" class="label label-info">Codigo</label>
 								<div class="controls">
-									<input type="text" id="txtnro" name="txtnro" class="span2" placeholder="Nro de Nota Ingreso" title="Ingrese el Nro de la Nota de Ingreso" REQUIRED DISABLED />
+									<input type="text" id="txtnro" maxlength="10" name="txtnro" class="span2" placeholder="Nro de Nota Ingreso" title="Ingrese el Nro de la Nota de Ingreso" REQUIRED DISABLED />
 								</div>	
 							</div>
 						</div>

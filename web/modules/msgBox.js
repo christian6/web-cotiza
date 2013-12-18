@@ -247,3 +247,30 @@ function msgError (title,content,close) {
         autoClose : close
     });
 }
+function msgInfo (title,content,close) {
+    if (title == null) { title = 'Information'; }
+    if (content == null) { content = 'Transacción Finalizada.' }
+    if (close == null) { close = true }
+    $.msgBox({
+        title : title,
+        content : content,
+        type : 'info',
+        opacity : 0.8,
+        autoClose : close
+    });
+}
+function msgConfirm (title,content,btns,prm) {
+    if (title == null) { title = 'Confirmar?'; }
+    if (content == null) { content = 'Seguro(a) que desea Confirmar la Transacción?' }
+    if (btns == null) { btns = [{value:'Si'},{value:'No'}]; }
+    $.msgBox({
+        title : title,
+        content : content,
+        type : 'confirm',
+        opacity : 0.8,
+        buttons : btns,
+        success : function (result) {
+            resultComfirm(result,prm);
+        }
+    });
+}

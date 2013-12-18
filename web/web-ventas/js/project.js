@@ -4,7 +4,7 @@ $(function  () {
 
 function showsector () {
 	$( "#msec" ).modal("show");
-	console.log('aqui');
+	//console.log('aqui');
 }
 function showsubpro () {
 	$("#msub").modal("show");
@@ -50,7 +50,7 @@ function savesec() {
 					$("#sasu").css('display','block');
 					setTimeout(function() {
 						$("#sasu").css('display','none');
-						location.href = '';
+						location.reload();
 					}, 2000);
 				}else{
 					$("#saer").css('display','block');
@@ -98,7 +98,7 @@ function savesub () {
 					$("#uasu").css('display','block');
 					setTimeout(function() {
 						$("#uasu").css('display','none');
-						location.href = '';
+						location.reload();
 					}, 2000);
 				}else{
 					$("#uaer").css('display','block');
@@ -154,14 +154,14 @@ function saveadi () {
 						url : 'includes/incmeter.php',
 						type : 'POST',
 						success : function (response) {
-							alert(response);
+							//alert(response);
 							if (response.length == 7) {
 								$("#dawa").css('display','none');
 								$("#daer").css('display','none');
 								$("#dasu").css('display','block');
 								setTimeout(function() {
 									$("#dasu").css('display','none');
-									location.href = '';
+									location.reload();
 								}, 3000);
 							}else{
 								$("#daer").css('display','block');
@@ -192,7 +192,12 @@ $(function(){
 });
 function addnew () {
 	$('#mpro').modal('show');
+	$("#pid").val('');
 	$("#new").val('TRUE');
+	$("input[id=pais]").remove();
+	$("input[id=dep]").remove();
+	$("input[id=pro]").remove();
+	$("input[id=dis]").remove();
 }
 function valid () {
 	var bool = false;
@@ -216,6 +221,7 @@ function saveproject () {
 			'tra' : 'savepro',
 			'nom' : $("#des").val(),
 			'fec' : $("#fec").val(),
+			'feci' : $("#feci").val(),
 			'cli' : $("#cli").val(),
 			'pais' : $("#pais").val(),
 			'dep' : $("#dep").val(),
@@ -237,7 +243,7 @@ function saveproject () {
 					$("#nro").html(response);
 					setTimeout(function() {
 						$("#asu").css('display','none');
-						location.href = '';
+						location.reload();
 					}, 3000);
 				}else{
 					$("#aer").css('display','block');
@@ -291,7 +297,7 @@ function projectstatus () {
 		dataType : 'html',
 		success : function (response) {
 			if (response == 'success') {
-				location.href = '';
+				location.reload();
 			}else{
 				alert("ERROR\r\nTransaction Fail.");
 			}
@@ -324,7 +330,7 @@ function esec () {
 		dataType : 'html',
 		success : function (response) {
 			if (response == 'success') {
-				location.href='';
+				location.reload();
 			}else{
 				$("#esec").modal('hide');
 				$.msgBox({
@@ -370,7 +376,7 @@ function delsec (sec) {
 					dataType : 'html',
 					success : function (response) {
 						if (response == 'success') {
-							location.href='';
+							location.reload();
 						}else{
 							$.msgBox({
 								title : 'ERROR',
@@ -425,7 +431,7 @@ function delsub (pro,sub) {
 					dataType : 'html',
 					success : function (response) {
 						if (response == 'success') {
-							location.href='';
+							location.reload();
 						}else{
 							$.msgBox({
 								title : 'ERROR',
@@ -466,7 +472,7 @@ function editsub () {
 		dataType : 'html',
 		success : function (response) {
 			if (response == 'success') {
-				location.href='';
+				location.reload();
 			}else{
 				$.msgBox({
 					title : 'ERROR',
@@ -518,9 +524,9 @@ function uploadfile () {
 			processData : false,
 			cache : false,
 			success : function (response) {
-				alert(response);
+				//alert(response);
 				if (response == 'success') {
-					location.href = '';
+					location.reload();
 				}else{
 					$("#mfiles").modal('hide');
 					$.msgBox({
@@ -551,3 +557,80 @@ function uploadfile () {
 function changestyle (id) {
 	$("#"+id).animate({backgroundColor: "#FACC2E",borderColor: "#2D2D2D"},1000);
 }
+var editpro = function (pro) {
+	if (pro != "") {
+		$.ajax({
+			url : 'includes/incsectores.php',
+			type : 'POST',
+			data : { 'tra' : 'editpro', 'pro' : pro },
+			dataType : 'json',
+			success : function (response) {
+				if (response.status == 'success') {
+					if (response.list.length > 0) {
+						var frm = document.getElementById('editer');
+						var pais = document.createElement('input'),
+								dep = document.createElement('input'),
+								pro = document.createElement('input'),
+								dis = document.createElement('input');
+						pais.setAttribute('class','pais');
+						pais.setAttribute('id','pais');
+						pais.setAttribute('type','hidden');
+						dep.setAttribute('class','dep');
+						dep.setAttribute('id','dep');
+						dep.setAttribute('type','hidden');
+						pro.setAttribute('class','pro');
+						pro.setAttribute('id','pro');
+						pro.setAttribute('type','hidden');
+						dis.setAttribute('class','dis');
+						dis.setAttribute('id','dis');
+						dis.setAttribute('type','hidden');
+						frm.appendChild(pais);
+						frm.appendChild(dep);
+						frm.appendChild(pro);
+						frm.appendChild(dis);
+						for (var i = 0; i < response.list.length; i++) {
+							$('#des').val(response.list[i].descripcion);
+							$('#feci').val(response.list[i].feccom);
+							$('#fec').val(response.list[i].fecent);
+							$('input[id=cli]').val(response.list[i].ruccliente);
+							$("#dir").val(response.list[i].direccion);
+							$("#obs").val(response.list[i].obser);
+							$("input[id=pais]").val(response.list[i].paisid);
+							$("input[id=dep]").val(response.list[i].departamentoid);
+							$("input[id=pro]").val(response.list[i].provinciaid);
+							$("input[id=dis]").val(response.list[i].distritoid);
+							$("#new").val('TRUE');
+							$("#pid").val(response.list[i].proyectoid);
+							//$("#mpro").modal('show');
+							frmproject.submit();
+						};
+					}
+				}
+			},
+			error : function (obj,que,otr) {
+				msgError(null,null,null);
+			}
+		});
+	};
+}
+/*
+function triggerChange (select,val) {
+	var obj = document.getElementById(select);
+	var A= obj.options, L= A.length;
+	if (L > 0) {
+		for (var i = 0; i < L; i++) {
+			if (A[i].value == val) {
+				obj.selectedIndex = i;
+				$("#"+select).trigger('change');
+				i = L;
+				return true;
+			}
+		}
+	}else{
+		console.log(select+'  '+val);
+		setTimeout(function() {
+			triggerChange(select,val);	
+		}, 2000);
+		
+	}
+}*/

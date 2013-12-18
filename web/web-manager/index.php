@@ -30,20 +30,41 @@ include ("../datos/postgresHelper.php");
           <div class="nav-header">Estados</div>
             <div class="msg">
               <div class="row-fuid">
-                <?php
+                 <?php
                   $cn = new PostgreSQL();
-                  $query = $cn->consulta("SELECT COUNT(*) FROM almacen.pedido WHERE esid LIKE '35'");
+                  $query = $cn->consulta("SELECT COUNT(*) FROM ventas.proyectos WHERE esid LIKE '17'");
                   $r = $cn->ExecuteNomQuery($query);
                   $cn->close($query);
                 ?>
-                <label for="label" class="label label-inverse">Pedidos Aprobados <span class="badge pull-right"><?php echo $r[0]; ?></span></label>
+                <label for="label" class="label label-inverse">Proyectos Pendientes <span class="badge pull-right"><?php echo $r[0]; ?></span></label>
                 <?php
                   $cn = new PostgreSQL();
-                  $query = $cn->consulta("SELECT COUNT(*) FROM almacen.pedido WHERE esid LIKE '38'");
+                  $query = $cn->consulta("SELECT COUNT(*) FROM ventas.proyectos WHERE esid LIKE '55'");
                   $r = $cn->ExecuteNomQuery($query);
                   $cn->close($query);
                 ?>
-                <label for="label" class="label label-inverse">Suministros Aprobados <span class="badge pull-right"><?php echo $r[0]; ?></span></label>
+                <label for="label" class="label label-inverse">Proyectos Aprobados <span class="badge pull-right"><?php echo $r[0]; ?></span></label>
+                 <?php
+                  $cn = new PostgreSQL();
+                  $query = $cn->consulta("SELECT COUNT(*) FROM ventas.proyectos WHERE esid LIKE '59'");
+                  $r = $cn->ExecuteNomQuery($query);
+                  $cn->close($query);
+                ?>
+                <label for="label" class="label label-inverse">Proyectos Apro.-Venta <span class="badge pull-right"><?php echo $r[0]; ?></span></label>
+                <?php
+                  $cn = new PostgreSQL();
+                  $query = $cn->consulta("SELECT COUNT(*) FROM admin.clientes WHERE esid LIKE '41'");
+                  $r = $cn->ExecuteNomQuery($query);
+                  $cn->close($query);
+                ?>
+                <label for="label" class="label label-inverse">Clientes <span class="badge pull-right"><?php echo $r[0]; ?></span></label>
+                <?php
+                  $cn = new PostgreSQL();
+                  $query = $cn->consulta("SELECT COUNT(*) FROM admin.empleados WHERE esid LIKE '19'");
+                  $r = $cn->ExecuteNomQuery($query);
+                  $cn->close($query);
+                ?>
+                <label for="label" class="label label-inverse">Empleados <span class="badge pull-right"><?php echo $r[0]; ?></span></label>
               </div>  
             </div>
         </div>

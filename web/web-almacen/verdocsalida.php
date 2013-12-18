@@ -129,7 +129,7 @@ include ("../datos/postgresHelper.php");
 						<div class="span3">
 							<label class="label label-info">Nro</label>
 							<div class="controls">
-								<input type="text" name="txtnro" id="txtnro" class="span2" title="Nro" maxlength="8" REQUIRED DISABLED>
+								<input type="text" name="txtnro" id="txtnro" class="span2" title="Nro" maxlength="12" REQUIRED DISABLED>
 							</div>
 						</div>
 						<div class="span3">

@@ -1,7 +1,7 @@
 <?php
-include("../../../datos/postgresHelper.php");
-include("../../../modules/CNumeroaLetra.php");
-require("../../../modules/fpdf.php");
+include("../../../../datos/postgresHelper.php");
+include("../../../../modules/CNumeroaLetra.php");
+require("../../../../modules/fpdf.php");
 
 $ruc = $_GET['ruc'];
 $nro = $_GET['nro'];
@@ -119,7 +119,7 @@ function NbLines($w,$txt)
 function Header()
 {
     // Logo
-    $this->Image('../../../source/icrlogo.png',10,8,0,0,'PNG');
+    $this->Image('../../../../resource/icrlogo.png',10,8,0,0,'PNG');
     // Font type
     $this->SetFont('Arial','B',7);
     // Mover a la derecha
@@ -134,25 +134,41 @@ function Header()
 function Cab(){
 	$this->SetFont('Arial','',8);
   $cn = new PostgreSQL();
-	$query = $cn->consulta("SELECT rucproveedor,razonsocial,direccion,distrito,provincia,departamento,pais FROM admin.proveedor WHERE rucproveedor LIKE '".$this->ruc_."'");
+	$query = $cn->consulta("SELECT c.rucproveedor,c.razonsocial,c.direccion,d.distnom,p.provnom,e.deparnom,a.paisnom FROM
+                           admin.proveedor c INNER JOIN admin.pais a
+                           ON c.paisid LIKE a.paisid
+                           INNER JOIN admin.departamento e
+                           ON c.departamentoid LIKE e.departamentoid
+                           INNER JOIN admin.provincia p
+                           ON c.provinciaid LIKE p.provinciaid
+                            INNER JOIN admin.distrito d
+                           ON c.distritoid LIKE d.distritoid
+                           WHERE d.provinciaid LIKE p.provinciaid AND p.departamentoid LIKE e.departamentoid AND e.paisid LIKE a.paisid AND rucproveedor LIKE '".$this->ruc_."'");
 	if ($cn->num_rows($query)>0) {
 		while ($result = $cn->ExecuteNomQuery($query)) {
-    	$this->cell(30,10,'RUC:                '.$result['rucproveedor'],0,0,'L',false);
-    	$this->cell(49,18,'Razon Social:    '.$result['razonsocial'],0,1,'R',false);
-			$this->cell(-4,-9,'Direccion:         '.$result['direccion'],0,1,'L',false);
-			$this->cell(-4,18,'Distrito:             '.$result['distrito'],0,1,'L',false);
-			$this->cell(-4,-9,'Provincia:         '.$result['provincia'],0,1,'L',false);
-			$this->cell(-4,18,'Departamento: '.$result['departamento'],0,1,'L',false);
-			$this->cell(-4,-9,'Pais:                 '.$result['pais'],0,2,'L',false);
+      $this->SetXY(10,40);
+    	$this->cell(30,0,'RUC:                '.$result['rucproveedor'],0,1,'L',false);
+      $this->SetXY(10,44);
+    	$this->cell(30,0,'Razon Social:   '.utf8_decode($result['razonsocial']),0,1,'L',false);
+      $this->SetXY(10,48);
+			$this->cell(30,0,'Direccion:         '.utf8_decode($result['direccion']),0,1,'L',false);
+      $this->SetXY(10,52);
+			$this->cell(30,0,'Distrito:             '.$result['distnom'],0,1,'L',false);
+      $this->SetXY(10,56);
+			$this->cell(30,0,'Provincia:         '.$result['provnom'],0,1,'L',false);
+      $this->SetXY(10,60);
+			$this->cell(30,0,'Departamento: '.$result['deparnom'],0,1,'L',false);
+      $this->SetXY(10,64);
+			$this->cell(30,0,'Pais:                 '.$result['paisnom'],0,1,'L',false);
 		}
 		$cn->close($query);
 	}
   $cn = new PostgreSQL();
-  $query = $cn->consulta("SELECT c.tentr,c.contacto,c.fval,m.nomdes FROM logistica.cotizacioncli c INNER JOIN admin.moneda m ON m.monedaid=c.monedaid WHERE nrocotizacion LIKE '".$this->nro_."' AND rucproveedor LIKE '".$this->ruc_."'");
+  $query = $cn->consulta("SELECT c.fecenv,c.contacto,c.fval,m.nomdes,c.obser FROM logistica.cotizacioncli c INNER JOIN admin.moneda m ON m.monedaid=c.monedaid WHERE nrocotizacion LIKE '".$this->nro_."' AND rucproveedor LIKE '".$this->ruc_."'");
   if ($cn->num_rows($query)>0) {
     while ($result =  $cn->ExecuteNomQuery($query)) {
       $this->SetXY(130,50);
-      $this->cell(150,0,'Tiempo de Entrega: '.$result['tentr'].' dias.',0,1,'L',false);
+      $this->cell(150,0,'Tiempo de Entrega: '.$result['fecenv'],0,1,'L',false);
       $this->SetXY(130,55);
       $this->cell(150,0,'Contacto: '.$result['contacto'],0,1,'L',false);
       $this->SetXY(130,60);
@@ -160,13 +176,17 @@ function Cab(){
       $this->SetXY(130,65);
       $this->cell(130,0,'Moneda: '.$result['nomdes'],0,0,'L',false);
       $this->mone = $result['nomdes'];
+      $this->SetXY(10,67);
+      $this->cell(130,0,utf8_decode('Observación: '),0,0,'L',false);
+      $this->SetXY(30,67);
+      $this->MultiCell(90,0,utf8_decode($result['obser']),0,'L',false);
     }
   }
   $cn->close($query);
   //-------------------------------------------------------------------------------------------
 	$this->SetFont('Arial','B',16);
   $this->SetXY(80,30);
-	$this->cell(150,0,'Nro Solicitud de Cotizacion',0,0,'C',false);
+	$this->cell(150,0,utf8_decode('Nro Solicitud de Cotización'),0,0,'C',false);
   $this->SetXY(80,38);
   $this->cell(150,0,$this->nro_,0,2,'C',false);
 }
@@ -188,7 +208,7 @@ function FancyTable()
     $this->SetLineWidth(.1);
     $this->SetFont('','B',8);
     // Cabecera
-    $header = array('Item','Descripcion','Medida','UND','Cantidad','Precio','Importe');
+    $header = array('Codigo','Descripcion','Medida','Und','Cantidad','Precio','Importe');
     $w = array(22, 70, 30, 18, 17, 17, 17);
     for($i=0;$i<count($header);$i++)
         $this->Cell($w[$i],7,$header[$i],1,0,'C',true);
@@ -208,17 +228,17 @@ function tfoot($sto)
   $tot = $sto+$igv;
   $this->SetFont('Arial','B',8.5);
   $this->SetX(130);
-  $this->cell(40,0,'Sub-Total :',0,1,'R',false);
+  $this->cell(40,0,'Precio Base :',0,1,'R',false);
   $this->SetX(156);
-  $this->cell(40,0,$sto,0,0,'R',false);
+  $this->cell(40,0,number_format($sto,2,',','.'),0,0,'R',false);
   $this->SetX(130);
-  $this->cell(40,8,'IGV :',0,0,'R',false);
+  $this->cell(40,8,'IGV 18% :',0,0,'R',false);
   $this->SetX(156);
-  $this->cell(40,8,$igv,0,0,'R',false);
+  $this->cell(40,8,number_format($igv,2,',','.'),0,0,'R',false);
   $this->SetX(130);
   $this->cell(40,18,'Total :',0,0,'R',false);
   $this->SetX(156);
-  $this->cell(40,18,$tot,0,1,'R',false);
+  $this->cell(40,18,number_format($tot,2,',','.'),0,1,'R',false);
   $this->Ln(0);
   $let = new CNumeroaLetra;
   $let->setNumero($tot);
@@ -245,8 +265,8 @@ $pdf->addprm($ruc,$nro);
 $pdf->AliasNbPages();
 $pdf->AddPage();
 $pdf->Cab();
-$pdf->SetY(68);
-$pdf->fnline();
+//$pdf->SetY(70);
+//$pdf->fnline();
 $pdf->SetY(73);
 $pdf->FancyTable();
 $pdf->SetWidths(array(22, 70, 30, 18, 17, 17, 17));
@@ -256,7 +276,7 @@ $query = $cn->consulta("SELECT * FROM logistica.spcondetcotizapro('".$nro."','".
   if ($cn->num_rows($query)>0) {
     $i = 1;
     while($fila = $cn->ExecuteNomQuery($query)){
-      $pdf->Row(array($fila['materialesid'],$fila['matnom'], $fila['matmed'], $fila['matund'], $fila['cantidad'],$fila['precio'],$fila['importe']));
+      $pdf->Row(array($fila['materialesid'],$fila['matnom'], $fila['matmed'], $fila['matund'], $fila['cantidad'],number_format($fila['precio'],2,',','.'),number_format($fila['importe'],2,',','.')));
       $sub += $fila['importe'];
       }
       $cn->close($query);

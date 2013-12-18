@@ -135,6 +135,7 @@ function valid () {
 	}
 	var h = document.getElementById("alid");
 	var cal = document.getElementById("cboal");
+
 	var alid ="";
 	if (h != null) {
 		alid = h.value;
@@ -142,43 +143,68 @@ function valid () {
 		alid = cal.options[cal.selectedIndex].value;
 	}else{
 		alert("Error en Codigo de almacen");
-		return;
+		return false;
 	}
+	var sts = false;
+
 	// validando nro de guia
 	var ng = document.getElementById("txtnrog");
 	if (ng.value == "") {
 		if (!confirm("El Número de Guia no se ha ingresado\r\n Desea continuar?")) {
 			ng.focus();
-			return;
+			sts = false;
+		}else{
+			sts = true;
 		}
+	}else{
+		sts = true;
 	}
 	// Validando numero de factura
 	var nf = document.getElementById("txtnrof");
 	if (nf.value == "") {
 		if (!confirm("El Número de la Factura no se ha ingresado\r\n Desea continuar?")) {
 			nf.focus();
-			return;
+			sts = false;
+		}else{
+			sts = true;
 		}
+	}else{
+		sts = true;
 	}
 	// Validando motivo
 	var mot = document.getElementById("txtmot");
 	if (mot.value == "") {
 		if (!confirm("No se ha ingresado el Motivo de Ingreso\r\n Desea continuar?")) {
 			mot.focus();
-			return;
+			sts = false;
+		}else{
+			sts = true;
 		}
+	}else{
+		sts = true;
 	}
 	// observacion
 	var obser = document.getElementById("txtobser");
 	if (obser.value == "") {
 		if (!confirm("No ha ingresado una observacion\r\n Desea continuar?")) {
 			obser.focus();
-			return;
+			sts = false;
+		}else{
+			sts = true;
 		}
+	}else{
+		sts = true;
 	}
-	guardar();
+	console.log(' Listo para guardar');
+	console.log(sts);
+	if (sts) {
+		guardar();
+	}else{
+		return sts;
+	}
 }
 function guardar () {
+	console.log('Ingresamos a guardar!!!');
 	// validando si todos los check del detalle estan marcados
 	var ch = 0;
 	var matid =  document.getElementsByName("matid");
@@ -251,9 +277,11 @@ function guardar () {
 		}
 	}*/
 	if (confirm("Seguro(a) que desea generar la Nota de Ingreso?")) {
+		console.log('Enviando datos a include');
 		xmlhttp = peticion();
 		xmlhttp.onreadystatechange=function()
 		{
+			console.log(xmlhttp.responseText);
 			if (xmlhttp.readyState==4 && xmlhttp.status==200)
 			{
 				if(xmlhttp.responseText=="hecho"){
@@ -274,6 +302,7 @@ function guardar () {
   		requestUrl = "include/incnotaingreso.php"+"?tra=addc"+"&alid="+encodeURIComponent(alid)+"&ng="+encodeURIComponent(ng.value)+"&ncom="+
   		encodeURIComponent(ncom.value)+"&nc="+encodeURIComponent(nc.value)+"&nf="+encodeURIComponent(nf.value)+"&mot="+encodeURIComponent(mot.value)+"&obser="+
   		encodeURIComponent(obser.value)+"&rec="+encodeURIComponent(ore)+"&ins="+encodeURIComponent(oins)+"&vb="+encodeURIComponent(ovb);
+  		console.log(requestUrl);
 		xmlhttp.open("POST",requestUrl,true);
 		xmlhttp.send();
 	}
@@ -281,6 +310,7 @@ function guardar () {
 
 function guardardet(){
 	// Recuperando los id de los materiales y las Cantidades
+	console.log("Alistando detalle de para saved!");
 	var matid =  document.getElementsByName("matid");
 	var c = document.getElementsByName("cants");
 	var pre = document.getElementsByName("precios");

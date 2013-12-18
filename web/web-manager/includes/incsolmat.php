@@ -39,7 +39,7 @@ if ($_POST['tra'] == 'det') {
 	echo "success";
 }else if($_POST['tra'] == 'inve'){
 	$cn = new PostgreSQL();
-	$query = $cn->consulta("INSERT INTO almacen.inventario VALUES('".$_POST['cod']."','".$_POST['alm']."',0,'".$_POST['stk']."',
+	$query = $cn->consulta("INSERT INTO almacen.inventario VALUES('".$_POST['cod']."','".$_POST['alm']."',0,0,'".$_POST['stk']."',
 		0,0,0,'".date('Y')."',now()::DATE,'0000000000','10704928501','23');");
 	$cn->affected_rows($query);
 	$cn->close($query);

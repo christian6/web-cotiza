@@ -145,7 +145,7 @@ function cabnro()
 	$this->SetXY(88,33);
 	$this->Cell(20,0,'MOTIVO:',0,1,'L',false);
 	$this->SetXY(220,17);
-	$this->Cell(32,7,'NRO GUIA REMISION',1,1,'L',false);
+	$this->Cell(32,7,utf8_decode('NRO GUIA REMISIÓN'),1,1,'L',false);
 	$this->SetXY(252,17);
 	$this->Cell(38,7,'',1,1,'L',false);
 	$this->SetXY(220,24);
@@ -153,7 +153,7 @@ function cabnro()
 	$this->SetXY(252,24);
 	$this->Cell(38,7,'',1,1,'L',false);
 	$this->SetXY(220,31);
-	$this->Cell(32,7,'NRO COTIZACION',1,1,'L',false);
+	$this->Cell(32,7,utf8_decode('NRO COTIZACIÓN'),1,1,'L',false);
 	$this->SetXY(252,31);
 	$this->Cell(38,7,'',1,1,'L',false);
   $this->SetXY(5,38);
@@ -184,11 +184,11 @@ function cabnro()
     $this->SetXY(116,17.5);
     $this->Cell(20,5,$result['rucproveedor'],0,1,'L',false);
     $this->SetXY(116,18.9);
-    $this->MultiCell(110,10,$result['razonsocial'],0,'L',false);
+    $this->MultiCell(110,10,utf8_decode($result['razonsocial']),0,'L',false);
     $this->SetXY(116,23);
-    $this->MultiCell(110,10,$result['direccion'],0,'L',false);
+    $this->MultiCell(110,10,utf8_decode($result['direccion']),0,'L',false);
     $this->SetXY(116,28);
-    $this->MultiCell(110,10,$result['motivo'],0,'L',false);
+    $this->MultiCell(110,10,utf8_decode($result['motivo']),0,'L',false);
     $this->SetXY(255,18);
     $this->Cell(30,5,$result['nroguia'],0,1,'C',false);
     $this->SetXY(255,25);
@@ -200,11 +200,11 @@ function cabnro()
     $this->SetXY(55,44);
     $this->Cell(30,5,$result['fecha'],0,1,'C',false);
     $this->SetXY(112,39);
-    $this->MultiCell(166,4,$result['obser'],0,'L',false);
+    $this->MultiCell(166,4,utf8_decode($result['obser']),0,'L',false);
     $this->SetXY(8,188);
     $this->Cell(20,0,'DNI :'.$result['empdni'],0,1,'L',false);
     $this->SetXY(5,189);
-    $this->MultiCell(71,8,$result['nombre'],0,'C',false);
+    $this->MultiCell(71,8,utf8_decode($result['nombre']),0,'C',false);
     $this->SetXY(79,188);
     $this->Cell(20,0,'DNI :'.$result['recdni'],0,1,'L',false);
     $this->SetXY(76,189);
@@ -258,7 +258,7 @@ function postbody()
 	$this->SetXY(147,185);
 	$this->Cell(71,12,'',1,1,'C',false);
 	$this->SetXY(218,180);
-	$this->Cell(72,5,'V.B. JEFE ALMACEN:',1,1,'C',false);
+	$this->Cell(72,5,utf8_decode('V.B. JEFE ALMACÉN:'),1,1,'C',false);
 	$this->SetXY(218,185);
 	$this->Cell(72,12,'',1,1,'C',false);
 }
@@ -271,7 +271,7 @@ function Footer()
 	$this->SetFont('Arial','I',8);
 	$this->Cell(285,0,'Page '.$this->PageNo().'/{nb}',0,0,'C');
   $this->SetXY(0,205);
-  $this->Cell(0,0,'Fecha Impresion: '.date("d-m-Y H:i:s"),0,1,'L',false);
+  $this->Cell(0,0,utf8_decode('Fecha Impresión: ').date("d-m-Y H:i:s"),0,1,'L',false);
 }
 
 }
@@ -294,7 +294,7 @@ $query = $cn->consulta("SELECT * FROM ALMACEN.SP_CONSULTARDETNOTAINGRESO('".$nro
     $i = 1;
     while($fila = $cn->ExecuteNomQuery($query)){
       $pdf->SetX(5);
-      $pdf->Row(array($i++,$fila['materialesid'],$fila['matnom'], $fila['matmed'], $fila['matund'], $fila['cantidad']));
+      $pdf->Row(array($i++,$fila['materialesid'],utf8_decode($fila['matnom']),utf8_decode($fila['matmed']), $fila['matund'], $fila['cantidad']));
       }
     }
 $cn->close($query);

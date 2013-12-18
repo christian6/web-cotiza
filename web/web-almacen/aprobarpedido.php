@@ -39,11 +39,11 @@ include ("../datos/postgresHelper.php");
 	</hgroup>
 </header>
 <div id="sess">
-	<?php
+	<?php/*
 	$nom = $_SESSION['nom-icr'];
 	$car = $_SESSION['car-icr'];
 	$dni = $_SESSION['dni-icr'];
-	$user = $_SESSION['user-icr'];
+	$user = $_SESSION['user-icr'];*/
 	?>
 	<p>
 	<label for="user" style="font-weight: bold;">Cargo:</label>

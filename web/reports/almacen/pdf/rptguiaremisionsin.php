@@ -144,7 +144,7 @@ function cabnro()
 	$this->SetXY(126,32);
 	$this->SetFont('Arial','B',10);
 	$this->SetTextColor(0,0,0);
-	$this->Cell(60,6,'001-'.$this->nro_,0,1,'C',false);
+	$this->Cell(60,6,''.$this->nro_,0,1,'C',false);
 }
 
 function cabdatos()

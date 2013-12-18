@@ -1,6 +1,6 @@
 <?php
-include("../../datos/postgresHelper.php");
-require("../../modules/fpdf.php");
+include("../../../datos/postgresHelper.php");
+require("../../../modules/fpdf.php");
 
 $ruc = $_GET['ruc'];
 $nro = $_GET['nro'];
@@ -36,12 +36,14 @@ function Row($data)
       $nb=max($nb,$this->NbLines($this->widths[$i],$data[$i]));
    $h=4*$nb; 
    $this->CheckPageBreak($h);
-   $algs = 'L';
+   $algs = '';
    for($i=0;$i<count($data);$i++)
    {
       $w=$this->widths[$i];
-      //if ($w == 10) {$algs = 'C';}
-      	
+      $algs = 'L';
+      if ($w == 10) {$algs = 'C';}
+      if ($w == 18) {$algs = 'C';}
+      if ($w == 20) {$algs = 'R';}
       $a=isset($this->aligns[$i]) ? $this->aligns[$i] : $algs;
       $x=$this->GetX();
       $y=$this->GetY();
@@ -112,7 +114,7 @@ function NbLines($w,$txt)
 function Header()
 {
     // Logo
-    $this->Image('../../source/icrlogo.png',10,8,0,0,'PNG');
+    $this->Image('../../../resource/icrlogo.png',10,8,0,0,'PNG');
     // Font type
     $this->SetFont('Arial','B',7);
     // Mover a la derecha
@@ -125,24 +127,40 @@ function Header()
 }
 
 function Cab(){
-	$this->SetFont('Arial','',9);
+	 $this->SetFont('Arial','',8);
   $cn = new PostgreSQL();
-	$query = $cn->consulta("SELECT rucproveedor,razonsocial,direccion,distrito,provincia,departamento,pais FROM admin.proveedor WHERE rucproveedor LIKE '".$this->ruc_."'");
-	if ($cn->num_rows($query)>0) {
-		while ($result = $cn->ExecuteNomQuery($query)) {
-    		$this->cell(30,10,'RUC:                '.$result['rucproveedor'],0,0,'L',false);
-    		$this->cell(59,18,'Razon Social:    '.$result['razonsocial'],0,1,'R',false);
-			$this->cell(-4,-9,'Direccion:         '.$result['direccion'],0,1,'L',false);
-			$this->cell(-4,18,'Distrito:             '.$result['distrito'],0,1,'L',false);
-			$this->cell(-4,-9,'Provincia:         '.$result['provincia'],0,1,'L',false);
-			$this->cell(-4,18,'Departamento: '.$result['departamento'],0,1,'L',false);
-			$this->cell(-4,-9,'Pais:                 '.$result['pais'],0,0,'L',false);
-		}
-		$cn->close($query);
-	}
+  $query = $cn->consulta("SELECT c.rucproveedor,c.razonsocial,c.direccion,d.distnom,p.provnom,e.deparnom,a.paisnom FROM
+                           admin.proveedor c INNER JOIN admin.pais a
+                           ON c.paisid LIKE a.paisid
+                           INNER JOIN admin.departamento e
+                           ON c.departamentoid LIKE e.departamentoid
+                           INNER JOIN admin.provincia p
+                           ON c.provinciaid LIKE p.provinciaid
+                            INNER JOIN admin.distrito d
+                           ON c.distritoid LIKE d.distritoid
+                           WHERE d.provinciaid LIKE p.provinciaid AND p.departamentoid LIKE e.departamentoid AND e.paisid LIKE a.paisid AND rucproveedor LIKE '".$this->ruc_."'");
+  if ($cn->num_rows($query)>0) {
+    while ($result = $cn->ExecuteNomQuery($query)) {
+      $this->SetXY(10,40);
+      $this->cell(30,0,'RUC:                '.$result['rucproveedor'],0,1,'L',false);
+      $this->SetXY(10,44);
+      $this->cell(30,0,'Razon Social:   '.utf8_decode($result['razonsocial']),0,1,'L',false);
+      $this->SetXY(10,48);
+      $this->cell(30,0,'Direccion:         '.utf8_decode($result['direccion']),0,1,'L',false);
+      $this->SetXY(10,52);
+      $this->cell(30,0,'Distrito:             '.$result['distnom'],0,1,'L',false);
+      $this->SetXY(10,56);
+      $this->cell(30,0,'Provincia:         '.$result['provnom'],0,1,'L',false);
+      $this->SetXY(10,60);
+      $this->cell(30,0,'Departamento: '.$result['deparnom'],0,1,'L',false);
+      $this->SetXY(10,64);
+      $this->cell(30,0,'Pais:                 '.$result['paisnom'],0,1,'L',false);
+    }
+    $cn->close($query);
+  }
 	$this->SetFont('Arial','B',16);
 	$this->cell(300,-65,$this->nro_,0,2,'C');
-	$this->cell(300,50,'Nro Solicitud de Cotizacion',0,2,'C',false);
+	$this->cell(300,50,utf8_decode('Nro Solicitud de Cotización'),0,2,'C',false);
 	$this->Ln(10);
 	$this->cell(0,10,'____________________________________________________________',0,2,'C',false);
 }
@@ -164,7 +182,7 @@ function FancyTable()
     $this->SetLineWidth(.1);
     $this->SetFont('','B',10);
     // Cabecera
-    $header = array('Item','Descripcion','Medida','UND','Cantidad');
+    $header = array('Item','Descripcion','Medida','Und','Cantidad');
     $w = array(10, 82, 60, 18, 20);
     for($i=0;$i<count($header);$i++)
         $this->Cell($w[$i],7,$header[$i],1,0,'C',true);
@@ -224,7 +242,7 @@ $query = $cn->consulta("SELECT * FROM logistica.spconsultardetcotizacion('".$nro
 	if ($cn->num_rows($query)>0) {
 		$i = 1;
 		while($fila = $cn->ExecuteNomQuery($query)){
-			$pdf->Row(array($i++,$fila['matnom'], $fila['matmed'], $fila['matund'], $fila['cantidad']));
+			$pdf->Row(array($i++,utf8_decode($fila['matnom']), utf8_decode($fila['matmed']), $fila['matund'], number_format($fila['cantidad'],2) ));
     	}
       $cn->close($query);
     }

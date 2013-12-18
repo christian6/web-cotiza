@@ -15,7 +15,7 @@ if ($_REQUEST['tra']=='iii') {
 		$cn = new PostgreSQL();
 		$query = $cn->consulta("
 			INSERT INTO almacen.inventario VALUES('".$_REQUEST['matid']."',
-			'".$_REQUEST['cboal']."',0,10,0,0,0,'".date('Y')."',now()::date,'','10704928501','23'
+			'".$_REQUEST['cboal']."',0,0,10,0,0,0,'".date('Y')."',now()::date,'','10704928501','23'
 			);");
 		$cn->affected_rows($query);
 		$cn->close($query);

@@ -143,7 +143,7 @@ function cabnro()
 	$this->Cell(74,8,'GUIA REMISION REMITENTE',0,1,'C',true);
 	$this->SetXY(127,30);
 	$this->SetTextColor(80,80,80);
-	$this->Cell(0,8,'001-'.$this->nro_,0,1,'C',false);
+	$this->Cell(0,8,''.$this->nro_,0,1,'C',false);
 }
 
 function cabdatos()

@@ -32,12 +32,34 @@ include ("../datos/postgresHelper.php");
               <div class="row-fuid">
                 <?php
                   $cn = new PostgreSQL();
+                  $query = $cn->consulta("SELECT COUNT(*) FROM ventas.proyectos WHERE esid LIKE '55'");
+                  $r = $cn->ExecuteNomQuery($query);
+                  $cn->close($query);
+                ?>
+                <label for="label" class="label label-inverse">Proyectos Aprobados <span class="badge pull-right"><?php echo $r[0]; ?></span></label> 
+                 <?php
+                  $cn = new PostgreSQL();
+                  $query = $cn->consulta("SELECT COUNT(*) FROM almacen.pedido WHERE esid LIKE '32'");
+                  $r = $cn->ExecuteNomQuery($query);
+                  $cn->close($query);
+                ?>
+                <label for="label" class="label label-inverse">Pedidos Pendientes <span class="badge pull-right"><?php echo $r[0]; ?></span></label>
+                <?php
+                  $cn = new PostgreSQL();
                   $query = $cn->consulta("SELECT COUNT(*) FROM almacen.pedido WHERE esid LIKE '35'");
                   $r = $cn->ExecuteNomQuery($query);
                   $cn->close($query);
                 ?>
                 <label for="label" class="label label-inverse">Pedidos Aprobados <span class="badge pull-right"><?php echo $r[0]; ?></span></label>
-                <?php
+                 <?php
+                  $cn = new PostgreSQL();
+                  $query = $cn->consulta("SELECT COUNT(*) FROM almacen.pedido WHERE esid LIKE '37'");
+                  $r = $cn->ExecuteNomQuery($query);
+                  $cn->close($query);
+                ?>
+                <label for="label" class="label label-inverse">Pedidos Incompletos <span class="badge pull-right"><?php echo $r[0]; ?></span></label>
+                
+               <?php
                   $cn = new PostgreSQL();
                   $query = $cn->consulta("SELECT COUNT(*) FROM almacen.pedido WHERE esid LIKE '38'");
                   $r = $cn->ExecuteNomQuery($query);

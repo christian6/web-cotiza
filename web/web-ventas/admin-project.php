@@ -130,7 +130,7 @@ include ("../datos/postgresHelper.php");
 
 						<h5 class="t-warning"> Nombre Proyecto : <?php echo $nom_pro[0]; ?></h5>
 						<?php if( $_GET['sub'] != '') {?>
-							<h5 class="t-warning"> Nombre Proyecto : <?php echo $nom_sub[0]; ?></h5>
+							<h5 class="t-warning"> Nombre SubProyecto : <?php echo $nom_sub[0]; ?></h5>
 						<?php } ?>
 
 						<input type="hidden" id="txtproid" name="txtproid" value="<?php echo $_REQUEST['id']; ?>">
@@ -221,9 +221,9 @@ include ("../datos/postgresHelper.php");
 						$cn = new PostgreSQL();
 						$sql = "SELECT nroplano,sector,descripcion FROM ventas.sectores WHERE ";
 						if ($_GET['sub'] != "") {
-							$sql .= "proyectoid LIKE '".$_GET['id']."' AND TRIM(subproyectoid) LIKE '".$_GET['sub']."' ORDER BY nroplano asc";
+							$sql .= "proyectoid LIKE '".$_GET['id']."' AND TRIM(subproyectoid) LIKE '".$_GET['sub']."' ORDER BY sector ASC";
 						}else{
-							$sql .= "proyectoid LIKE '".$_GET['id']."' AND TRIM(subproyectoid) LIKE '' ORDER BY nroplano asc";
+							$sql .= "proyectoid LIKE '".$_GET['id']."' AND TRIM(subproyectoid) LIKE '' ORDER BY sector ASC";
 						}
 						$query = $cn->consulta($sql);
 						if ($cn->num_rows($query) > 0) {
@@ -255,7 +255,7 @@ include ("../datos/postgresHelper.php");
 						<div id="cont">
 							<?php
 							$cn = new PostgreSQL();
-							$query = $cn->consulta("SELECT proyectoid,subproyectoid,subproyecto,fecent,obser FROM ventas.subproyectos WHERE proyectoid LIKE '".$_REQUEST['id']."'");
+							$query = $cn->consulta("SELECT proyectoid,subproyectoid,subproyecto,fecent,obser FROM ventas.subproyectos WHERE proyectoid LIKE '".$_REQUEST['id']."' ORDER BY subproyecto ASC");
 							if ($cn->num_rows($query) > 0) {
 								while ($result = $cn->ExecuteNomQuery($query)) {
 									echo "<span>";
@@ -593,75 +593,80 @@ include ("../datos/postgresHelper.php");
 				</div>
 			</div>
 			-->
-			<div class="span6">
-				<div class="well c-blue-light t-info">
-					<h4>Archivos Complementarios</h4>
-					<?php
-					function ListFolder($path)
-					{	
-						try {
-							//using the opendir function
-						    $dir_handle = @opendir($path) or die("Unable to open $path");
-						    
-						    //Leave only the lastest folder name
-						    $dirname = end(explode("/", $path));
-						    
-						    //display the target folder.
-						    echo ("<li>$dirname\n");
-						    echo "<ul>\n";
-						    while (false !== ($file = readdir($dir_handle))) 
-						    {
-						        if($file!="." && $file!="..")
-						        {
-						            if (is_dir($path."/".$file))
-						            {
-						                //Display a list of sub folders.
-						                ListFolder($path."/".$file);
-						            }
-						            else
-						            {
-						                //Display a list of files.
-						                echo "<li>$file</li>";
-						            }
-						        }
-						    }
-						    echo "</ul>\n";
-						    echo "</li>\n";
-						    
-						    //closing the directory
-						    closedir($dir_handle);
-						} catch (Exception $e) {
-							echo $e->getMessage();
-						}
-					}
-					try {
-						if ($_GET['sub'] != '') {
-							ListFolder("../project/".$_GET['id']."/".$_GET['sub']."/comp/");
-						}else{
-							ListFolder('../project/'.$_GET['id'].'/comp/');
-						}
-					} catch (Exception $e) {
-						echo $e->getMessage();
-					}
-					?>
-				</div>
-			</div>
-			<div class="span6">
-				<div class="well c-blue-light t-info">
-					<h4>Archivos Administrativos</h4>
-					<?php
-					if ($_GET['sub'] != '') {
-						ListFolder("../project/".$_GET['id']."/".$_GET['sub']."/adm/");
-					}else{
-						ListFolder("../project/".$_GET['id']."/adm/");
-					}
-					//$adm = shell_exec($cmda);
-					//echo php_file_tree($_SERVER['DOCUMENT_ROOT'], "javascript:alert('You clicked on [link]');");
-					
 
-					?>
-				</div>
-			</div>
+	<div class="span10">
+									<div class="row show-grid">
+										<div class="span5">
+											<div class="well c-blue-light t-info">
+												<h4>Archivos Complementarios</h4>
+												<?php
+												function ListFolder($path)
+												{	
+													try {
+														//using the opendir function
+													    $dir_handle = @opendir($path) or die("Unable to open $path");
+													    
+													    //Leave only the lastest folder name
+													    $dirname = end(explode("/", $path));
+													    
+													    //display the target folder.
+													    echo ("<li><i class='icon-folder-open'></i> $dirname\n");
+													    echo "<ul>\n";
+													    while (false !== ($file = readdir($dir_handle))) 
+													    {
+													        if($file!="." && $file!="..")
+													        {
+													            if (is_dir($path."/".$file))
+													            {
+													                //Display a list of sub folders.
+													                ListFolder($path."/".$file);
+													            }
+													            else
+													            {
+													                //Display a list of files.
+													                echo "<li><i class='icon-file'></i> <a href='".$path.$file."' target='_blank'>$file</a></li>";
+													            }
+													        }
+													    }
+													    echo "</ul>\n";
+													    echo "</li>\n";
+													    
+													    //closing the directory
+													    closedir($dir_handle);
+													} catch (Exception $e) {
+														echo $e->getMessage();
+													}
+												}
+												try {
+													if ($_GET['sub'] != '') {
+														ListFolder("../project/".$_GET['id']."/".$_GET['sub']."/comp/");
+													}else{
+														ListFolder('../project/'.$_GET['id'].'/comp/');
+													}
+												} catch (Exception $e) {
+													echo $e->getMessage();
+												}
+												?>
+											</div>
+										</div>
+										<div class="span5">
+											<div class="well c-blue-light t-info">
+												<h4>Archivos Administrativos</h4>
+												<?php
+												if ($_GET['sub'] != '') {
+													ListFolder("../project/".$_GET['id']."/".$_GET['sub']."/adm/");
+												}else{
+													ListFolder("../project/".$_GET['id']."/adm/");
+												}
+												//$adm = shell_exec($cmda);
+												//echo php_file_tree($_SERVER['DOCUMENT_ROOT'], "javascript:alert('You clicked on [link]');");												
+												?>
+											</div>
+										</div>
+									</div>
+								</div>
+								
+
 		</div>
 		</div>
 		

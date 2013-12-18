@@ -158,7 +158,7 @@ function gensuministro () {
 	$("#mos").modal('hide');
 	$.msgBox({
 		title : 'Orden de Suministro',
-		content : 'Suguro(a) que desea generar la Orden de Suministro?',
+		content : 'Seguro(a) que desea generar la Orden de Suministro?',
 		type : 'confirm',
 		opacity : 0.6,
 		buttons : [{value:'Si'},{value:'No'}],
@@ -184,10 +184,10 @@ function gensuministro () {
 								content : 'Se ha generado correctamente el Nro Suminsitro es '+response[0],
 								type : 'info',
 								opacity : 0.6,
-								buttons : [{value : 'Esta bien'}],
+								buttons : [{value : 'OK'}],
 								success : function (result) {
-									if (result == 'Esta bien') {
-										location.href='';
+									if (result == 'OK') {
+										location.reload();
 									}else{
 										alert('No se Guardo '+response[0]);
 									}

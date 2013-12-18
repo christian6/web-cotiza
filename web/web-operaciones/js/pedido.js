@@ -159,6 +159,8 @@ function addniple (med,mat) {
 						success : function (response) {
 							//alert(response);
 							if (response == 'success') {
+								console.log(mat);
+								console.log(med);
 								tmplist(mat,med);
 							}else{
 								$.msgBox({
@@ -206,9 +208,10 @@ function tmplist (mat,med) {
 		url : 'includes/incpedido.php',
 		type : 'POST',
 		success : function (response) {
+			console.log(response);
 			var cad = response.split('|');
-			alert(med);
-			alert(response);
+			//alert(med);
+			//alert(response);
 			if (cad[1] == 'success') {
 				document.getElementById("nip"+med+"").innerHTML = cad[0];
 				document.getElementById("qd"+med).innerHTML = cad[2];
@@ -360,7 +363,7 @@ function niplesock (nro,mat) {
 		url : 'includes/incpedido.php',
 		type : 'POST',
 		success : function (response) {
-			alert(response);
+			//alert(response);
 			if (response != 'success') {
 				$.msgBox({
 					title : 'Error',
